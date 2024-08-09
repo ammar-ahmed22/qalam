@@ -61,10 +61,12 @@ shart(a wa b) {
 
 
 ### Loops
-`tawaf` (circumbulate) - for loop
-`baynama` (while) - while loop
-`iftar` (breaking fast) - break statement
-`safar` (travel, journey) - continue statement
+| Syntax | Meaning/Inspiration | Usage |
+| :----: | :------------------ | :---- |
+| `tawaf` | Circumbulate. The name for circumbulating around the Ka'bah for Hajj. Signifies going around and around. | For loop |
+| `baynama` | While (Arabic). Self-explanatory | While loop |
+| `iftar` | Breaking fast. The time when Muslims break fast is called `iftar`. | Break statement |
+| `safar` | Journey or travel. Signifies the loop is going to continue on it's journey. | Continue statement |
 
 ```text
 tawaf(niyya i = 0; i < 10; i = i + 1) {
@@ -87,8 +89,11 @@ baynama(a) {
 ```
 
 ### Objects (Classes)
-`kitab` (section, chapter) - class definition
-`khalaq` (to create) - class constructor function
+| Syntax | Meaning/Inspiration | Usage |
+| :----: | :------------------ | :---- |
+| `kitab` | Chapter (literal: Book) (Arabic). In Islamic books, chapters are called kitab. Classes are similar to chapters as they group related data together. | Class definition |
+| `khalaq` | To create (Arabic). The constructor creates the class object. | Class constructor function |
+
 
 ```text
 kitab Animal {
