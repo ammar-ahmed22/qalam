@@ -16,7 +16,7 @@ WIP
 ## Syntax
 ### Keywords
 | Syntax | Meaning/Inspiration | Usage |
-| :====: | :=================: | :===: |
+| :----: | :-----------------: | :---: |
 | `niyya` | Intention | Variable declarations |
 | `amal` | Good Deeds/Actions | Function declarations |
 | `radd` | to return | Return statement |
