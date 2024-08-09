@@ -35,14 +35,16 @@ qul add(a, b);
 ```
 
 ### Conditionals
-`shart` (condition) - if statement
-`illa` (else) - else statement
-`ilshart` - else if statement
-`haqq` (truth) - boolean true
-`batil` (falsehood) - boolean false
-`wa` (and) - and operator (can also use &&)
-`aw` (or) - or operator (can also use ||)
-`la` (not) - not operator (can also use !)
+| Syntax | Meaning/Inspiration | Usage |
+| :----: | :------------------ | :---- |
+| `shart` | Condition. If a condition is satisifed, do something. | If statement |
+| `illa` | Else. Self-explanatory | Else statement |
+| `ilshart` | Combination of `shart` and `illa` | Else-if statement |
+| `haqq` | Truth. A boolean `true` is the epitome of truth. | Boolean `true` value |
+| `batil` | Falsehood. A boolean `false` is the epitome of falsehood. | Boolean `false` value |
+| `wa` | and (Arabic). Self-explanatory. | And operator. Can also use `&&` |
+| `aw` | or (Arabic). Self-explanatory. | Or operator. Can also use `\|\|` |
+| `la` | not (Arabic). Self-explanatory. | Not operator. Can also use `!` |
 
 ```text
 niyya a = haqq;
