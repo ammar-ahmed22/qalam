@@ -1,0 +1,217 @@
+use crate::token::{Token, TokenType};
+use crate::{ ErrorReporter, ErrorType };
+use std::any::Any;
+
+pub struct Scanner<'a> {
+  source: String,
+  tokens: Vec<Token>,
+  start: usize,
+  current: usize,
+  line: i64,
+  error_reporter: &'a mut ErrorReporter,
+}
+
+impl <'a> Scanner<'a> {
+  pub fn init(source: &String, error_reporter: &'a mut ErrorReporter) -> Self {
+    Self {
+      source: source.to_string(),
+      tokens: Vec::new(),
+      start: 0,
+      current: 0,
+      line: 1,
+      error_reporter
+    }
+  }
+
+  /// Checks if we have reached the end of the source string
+  fn end(&self) -> bool {
+    return self.current >= self.source.len();
+  }
+
+  /// Advances to the next character of the source string
+  /// 
+  /// ### Returns
+  /// `char` - the character at the current spot
+  fn advance(&mut self) -> char {
+    let c = self.source.chars().nth(self.current);
+    self.current += 1;
+    return match c {
+      Some(c) => c,
+      None => {
+        eprintln!("Scanner went too far!");
+        std::process::exit(1);
+      }
+    };
+  }
+
+  /// Checks if the next character matches a provided value
+  /// If it does match, the character is advanced
+  /// ### Arguments
+  /// `expected` - the character to check
+  /// ### Returns
+  /// `bool` - Whether it was matched or not
+  fn match_next(&mut self, expected: char) -> bool {
+    if self.end() {
+      return false;
+    }
+
+    match self.source.chars().nth(self.current) {
+      Some(c) => {
+        if expected == c {
+          self.current += 1;
+          return true;
+        } else {
+          return false;
+        }
+      },
+      None => {
+        return false;
+      }
+    }
+
+  }
+
+  /// Peeks at the next character without advancing
+  /// ### Returns
+  /// `char` - the next character
+  fn peek(&mut self) -> char {
+    if self.end() {
+      return '\0'
+    } else {
+      return match self.source.chars().nth(self.current) {
+        Some(c) => c,
+        None => {
+          eprintln!("Cannot find character!");
+          std::process::exit(1);
+        }
+      }
+    }
+  }
+
+  /// Adds a token to the tokens vec
+  /// ### Arguments
+  /// `token_type` - the type of the token
+  /// `literal` - the object literal
+  fn add_token(&mut self, token_type: TokenType, literal: Option<Box<dyn Any>>) {
+    let text = self.source.get(self.start..self.current);
+    match text {
+      Some(t) => {
+        self.tokens.push(Token::init(token_type, &t.to_string(), literal, self.line))
+      },
+      None => {
+        eprintln!("Cannot get lexeme!");
+        std::process::exit(1);
+      }
+    }
+  }
+
+  /// Handles tokens for strings
+  fn string(&mut self) {
+    // Iterate while the next character is not a quote
+    while self.peek() != '"' && !self.end() {
+      // Here we can also support escaping characters
+      // if we peek and see a '\' we can ignore the next character
+      if self.peek() == '\\' {
+        self.advance();
+      }
+      if self.peek() == '\n' { // Supports multiline strings
+        self.line += 1;
+      }
+      self.advance();
+    }
+
+    // If we reached the end the string is not terminated
+    if self.end() {
+      self.error_reporter.error(self.line, "Unterminated string.", ErrorType::Syntax);
+      return;
+    }
+
+    // Advance to the ending quote
+    self.advance();
+    let value = self.source.get((self.start + 1)..(self.current - 1));
+    match value {
+      Some(val) => {
+        self.add_token(TokenType::String, Some(Box::new(val.to_string())))
+      },
+      None => {
+        eprintln!("Cannot get string!");
+        std::process::exit(1);
+      }
+    }
+  }
+
+  /// Scans the current character to generate the token
+  fn scan_token(&mut self) {
+    let c = self.advance();
+    match c {
+      '(' => self.add_token(TokenType::LeftParen, None),
+      ')' => self.add_token(TokenType::RightParen, None),
+      '{' => self.add_token(TokenType::RightBrace, None),
+      '}' => self.add_token(TokenType::LeftBrace, None),
+      ',' => self.add_token(TokenType::Comma, None),
+      '.' => self.add_token(TokenType::Dot, None),
+      '-' => self.add_token(TokenType::Minus, None),
+      '+' => self.add_token(TokenType::Plus, None),
+      ';' => self.add_token(TokenType::Semicolon, None),
+      '*' => self.add_token(TokenType::Star, None),
+      '!' => {
+        if self.match_next('=') {
+          self.add_token(TokenType::BangEqual, None)
+        } else {
+          self.add_token(TokenType::Bang, None)
+        }
+      },
+      '=' => {
+        if self.match_next('=') {
+          self.add_token(TokenType::EqualEqual, None)
+        } else {
+          self.add_token(TokenType::Equal, None)
+        }
+      },
+      '<' => {
+        if self.match_next('=') {
+          self.add_token(TokenType::LessEqual, None)
+        } else {
+          self.add_token(TokenType::Less, None)
+        }
+      },
+      '>' => {
+        if self.match_next('=') {
+          self.add_token(TokenType::GreaterEqual, None)
+        } else {
+          self.add_token(TokenType::Greater, None)
+        }
+      },
+      '/' => {
+        if self.match_next('/') { // comment
+          // comments goes to to end of line
+          while self.peek() != '\n' && !self.end() {
+            self.advance();
+          }
+        } else {
+          self.add_token(TokenType::Slash, None);
+        }
+      },
+      ' ' | '\r' | '\t' => {},
+      '\n' => {
+        self.line += 1;
+      },
+      '"' => {
+        self.string();
+      }
+      _ => {
+        self.error_reporter.error(self.line, "Unexpected character.", ErrorType::Syntax);
+      }
+    }
+  }
+
+  pub fn scan_tokens(&mut self) -> &Vec<Token> {
+    while !self.end() {
+      self.start = self.current;
+      self.scan_token();
+    }
+
+    self.tokens.push(Token::init(TokenType::Eof, &String::from(""), None, self.line));
+    return &self.tokens;
+  }
+}
