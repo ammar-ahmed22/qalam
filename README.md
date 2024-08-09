@@ -16,7 +16,7 @@ WIP
 ## Syntax
 ### Keywords
 | Syntax | Meaning/Inspiration | Usage |
-| :----: | :-----------------: | :---: |
+| :----: | :----------------- | :---: |
 | `niyya` | Intention. Signifies the intention to store a value. | Variable declarations |
 | `amal` | Good Deeds/Actions. Functions do things (actions/deeds) | Function declarations |
 | `radd` | To return (Arabic) | Return statement |
