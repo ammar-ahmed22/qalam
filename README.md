@@ -15,10 +15,12 @@ WIP
 
 ## Syntax
 ### Keywords
-`niyya` (intention) - variable declarations
-`amal` (deeds/action) - function declarations
-`radd` (to return) - return statement
-`qul` (to say) - print statement
+| Syntax | Meaning/Inspiration | Usage |
+| :====: | :=================: | :===: |
+| `niyya` | Intention | Variable declarations |
+| `amal` | Good Deeds/Actions | Function declarations |
+| `radd` | to return | Return statement |
+| `qul` | to say | Print statement |
 
 ```text
 niyya a = 1;
