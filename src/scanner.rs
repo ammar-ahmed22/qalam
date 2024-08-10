@@ -163,6 +163,20 @@ impl <'a> Scanner<'a> {
     return c >= '0' && c <= '9';
   }
 
+  /// Checks if a character is alphabetical
+  /// ### Returns
+  /// `bool` - whether it is alphabetical or not
+  fn is_alpha(&self, c: char) -> bool {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+  }
+
+  /// Checks if a character is alphanumeric
+  /// ### Returns
+  /// `bool` - whether it is alphanumeric or not
+  fn is_alphanumeric(&self, c: char) -> bool {
+    return self.is_alpha(c) || self.is_digit(c)
+  }
+
   /// Handles tokens for numbers
   fn number(&mut self) {
     let mut peek = self.peek();
@@ -202,6 +216,31 @@ impl <'a> Scanner<'a> {
       },
       None => {
         eprintln!("Cannot get number string!");
+        std::process::exit(1);
+      }
+    }
+  }
+
+  /// Handles tokens for identifiers
+  fn identifier(&mut self) {
+    let mut peek = self.peek();
+    while self.is_alphanumeric(peek) {
+      self.advance();
+      peek = self.peek();
+    }
+    match self.source.get(self.start..self.current) {
+      Some(text) => {
+        match TokenType::from_keyword(text) {
+          Some(token_type) => {
+            self.add_token(token_type, None);
+          },
+          None => {
+            self.add_token(TokenType::Identifier, None);
+          }
+        }
+      },
+      None => {
+        eprintln!("Cannot get string!");
         std::process::exit(1);
       }
     }
@@ -269,6 +308,8 @@ impl <'a> Scanner<'a> {
       _ => {
         if self.is_digit(c) {
           self.number();
+        } else if self.is_alpha(c) {
+          self.identifier();
         } else {
           self.error_reporter.error(self.line, "Unexpected character.", ErrorType::Syntax);
         } 

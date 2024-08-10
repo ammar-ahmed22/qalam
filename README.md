@@ -21,6 +21,7 @@ WIP
 | `amal` | Good Deeds/Actions. Functions do things (actions/deeds) | Function declarations |
 | `radd` | To return (Arabic) | Return statement |
 | `qul` | To say (Arabic) | Print statement |
+| `ghaib` | Unseen, hidden. Signifies a value is not present | Null value |
 
 ```text
 niyya a = 1;

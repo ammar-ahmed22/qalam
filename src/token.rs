@@ -12,10 +12,38 @@ pub enum TokenType {
 
   Identifier, String, Number,
 
-  And, Class, Else, False, Fun, If, Nil, Or,
-  Print, Return, Super, This, True, Var, While,
+  And, Class, Else, ElseIf, False, Fun, If, Nil, Or,
+  Print, Return, Super, This, True, Var, While, For,
+  Break, Continue,
 
   Eof
+}
+
+impl TokenType {
+  pub fn from_keyword(keyword: &str) -> Option<Self> {
+    match keyword {
+      "wa" => Some(Self::And),
+      "kitab" => Some(Self::Class),
+      "illa" => Some(Self::Else),
+      "ilshart" => Some(Self::ElseIf),
+      "batil" => Some(Self::False),
+      "tawaf" => Some(Self::For),
+      "amal" => Some(Self::Fun),
+      "shart" => Some(Self::If),
+      "ghaib" => Some(Self::Nil),
+      "aw" => Some(Self::Or),
+      "qul" => Some(Self::Print),
+      "radd" => Some(Self::Return),
+      "super" => Some(Self::Super),
+      "this" => Some(Self::This),
+      "haqq" => Some(Self::True),
+      "niyya" => Some(Self::Var),
+      "baynama" => Some(Self::While),
+      "iftar" => Some(Self::Break),
+      "safar" => Some(Self::Continue),
+      _ => None
+    }
+  }
 }
 
 #[derive(Debug)]
