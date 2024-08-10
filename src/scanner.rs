@@ -88,6 +88,22 @@ impl <'a> Scanner<'a> {
     }
   }
 
+  /// Peeks at the next next character without advancing
+  /// ### Returns
+  /// `char` - the next next character
+  fn peek_next(&mut self) -> char {
+    if self.current + 1 >= self.source.len() {
+      return '\0';
+    }
+    return match self.source.chars().nth(self.current + 1) {
+      Some(c) => c,
+      None => {
+        eprintln!("Cannot find character!");
+        std::process::exit(1);
+      }
+    }
+  }
+
   /// Adds a token to the tokens vec
   /// ### Arguments
   /// `token_type` - the type of the token
@@ -135,6 +151,57 @@ impl <'a> Scanner<'a> {
       },
       None => {
         eprintln!("Cannot get string!");
+        std::process::exit(1);
+      }
+    }
+  }
+
+  /// Checks if a character is a digit
+  /// ### Returns
+  /// `bool` - whether it is a digit or not
+  fn is_digit(&self, c: char) -> bool {
+    return c >= '0' && c <= '9';
+  }
+
+  /// Handles tokens for numbers
+  fn number(&mut self) {
+    let mut peek = self.peek();
+    let mut is_digit = self.is_digit(peek);
+    while is_digit {
+      self.advance();
+      peek = self.peek();
+      is_digit = self.is_digit(peek);
+    }
+
+    let next_peek = self.peek_next();
+    if self.peek() == '.' && self.is_digit(next_peek) {
+      // Consume the "."
+      self.advance();
+
+      // Get digits after the .
+      peek = self.peek();
+      is_digit = self.is_digit(peek);
+      while is_digit {
+        self.advance();
+        peek = self.peek();
+        is_digit = self.is_digit(peek);
+      }
+    }
+
+    let value = self.source.get(self.start..self.current);
+    match value {
+      Some(val) => {
+        let as_float = match val.parse::<f64>() {
+          Ok(f) => f,
+          Err(err) => {
+            eprintln!("{}", err);
+            std::process::exit(1);
+          }
+        };
+        self.add_token(TokenType::Number, Some(Box::new(as_float)));
+      },
+      None => {
+        eprintln!("Cannot get number string!");
         std::process::exit(1);
       }
     }
@@ -200,7 +267,11 @@ impl <'a> Scanner<'a> {
         self.string();
       }
       _ => {
-        self.error_reporter.error(self.line, "Unexpected character.", ErrorType::Syntax);
+        if self.is_digit(c) {
+          self.number();
+        } else {
+          self.error_reporter.error(self.line, "Unexpected character.", ErrorType::Syntax);
+        } 
       }
     }
   }

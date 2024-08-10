@@ -40,6 +40,8 @@ impl Token {
     if let Some(literal) = &self.literal {
       if let Some(string_value) = literal.downcast_ref::<String>() {
         return string_value.to_owned();
+      } else if let Some(float_value) = literal.downcast_ref::<f64>() {
+        return format!("{}", float_value);
       } else {
         return String::from("Unhandled type.")
       }
