@@ -1,5 +1,6 @@
 pub mod scanner;
 pub mod token;
+pub mod ast;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use scanner::Scanner;

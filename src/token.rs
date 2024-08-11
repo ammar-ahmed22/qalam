@@ -48,10 +48,10 @@ impl TokenType {
 
 #[derive(Debug)]
 pub struct Token {
-  token_type: TokenType,
-  lexeme: String,
-  literal: Option<Box<dyn Any>>,
-  line: i64
+  pub token_type: TokenType,
+  pub lexeme: String,
+  pub literal: Option<Box<dyn Any>>,
+  pub line: i64
 }
 
 impl Token {
