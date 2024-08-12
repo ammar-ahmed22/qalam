@@ -1,10 +1,12 @@
-use crate::ast::Expr;
-use crate::ast::expressions::{ Binary, Grouping, Literal, Unary };
+use std::any::Any;
+use crate::ast::expressions::Expr;
+use crate::token::Token;
+
 
 pub trait Visitor {
   type R;
-  fn visit_binary<LT: Expr, RT: Expr>(&mut self, expr: &Binary<LT, RT>) -> Self::R;
-  fn visit_grouping<E: Expr>(&mut self, expr: &Grouping<E>) -> Self::R;
-  fn visit_literal(&mut self, expr: &Literal) -> Self::R;
-  fn visit_unary<E: Expr>(&mut self, expr: &Unary<E>) -> Self::R;
+  fn visit_binary(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R;
+  fn visit_grouping(&mut self, expression: &Box<Expr>) -> Self::R;
+  fn visit_literal(&mut self, expr: &Option<Box<dyn Any>>) -> Self::R;
+  fn visit_unary(&mut self, operator: &Token, right: &Box<Expr>) -> Self::R;
 }
