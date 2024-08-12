@@ -55,32 +55,4 @@ impl Visitor for ASTParenString {
   fn visit_unary(&mut self, operator: &crate::token::Token, right: &Box<Expr>) -> Self::R {
       self.parenthesize(&operator.lexeme, &[right])
   }
-  // fn visit_binary<LT: Expr, RT: Expr>(&mut self, expr: &Binary<LT, RT>) -> Self::R {
-  //     self.parenthesize::<LT, RT>(&expr.operator.lexeme, &expr.left, Some(&expr.right))
-  // }
-
-  // fn visit_grouping<E: Expr>(&mut self, expr: &Grouping<E>) -> Self::R {
-  //     self.parenthesize::<E, E>(&String::from("grouping"), &expr.expression, None)
-  // }
-
-  // fn visit_literal(&mut self, expr: &Literal) -> Self::R {
-  //     match &expr.value {
-  //       Some(val) => {
-  //         if let Some(string_val) = val.downcast_ref::<String>() {
-  //           return string_val.to_owned();
-  //         } else if let Some(num_val) = val.downcast_ref::<f64>() {
-  //           return format!("{}", num_val);
-  //         } else {
-  //           return String::from("Unhandled type.");
-  //         }
-  //       },
-  //       None => {
-  //         return String::from("null");
-  //       }
-  //     }
-  // }
-
-  // fn visit_unary<E: Expr>(&mut self, expr: &Unary<E>) -> Self::R {
-  //     self.parenthesize::<E, E>(&expr.operator.lexeme, &expr.right, None)
-  // }
 }
