@@ -9,7 +9,8 @@ use std::cell::RefCell;
 use scanner::Scanner;
 use token::{Token, TokenType};
 use parser::Parser;
-use ast::utils::ASTParenString;
+// use ast::utils::ASTParenString;
+use interpreter::Interpreter;
 
 #[derive(Debug, Clone)]
 pub enum Literal {
@@ -18,39 +19,50 @@ pub enum Literal {
   Bool(bool),
 }
 
-// impl Copy for Literal { }
-// impl Clone for Literal {
-//   fn clone(&self) -> Self {
-//       match self {
-//         Self::Number { value } => Self::Number{ value: *value },
-//         Self::String { value } => Self::String { value: value.to_owned() },
-//         Self::Bool { value } => Self::Bool { value: *value }
-//       }
-//   }
-// }
+impl Literal {
+  pub fn to_string(&self) -> String {
+    match self {
+      Self::Bool(val) => format!("{}", val),
+      Self::Number(val) => format!("{}", val),
+      Self::String(val) => val.to_owned()
+    }
+  }
+
+  pub fn to_qalam_string(&self) -> String {
+    match self {
+      Self::Bool(val) => format!("{}", if *val { "haqq" } else { "batil" }),
+      Self::Number(val) => format!("{}", val),
+      Self::String(val) => val.to_owned()
+    }
+  }
+}
 
 pub enum ErrorType {
   Error,
   Syntax,
+  Runtime,
 }
 
 impl ErrorType {
   pub fn to_string(&self) -> &str {
     match self {
       Self::Error => "Error",
-      Self::Syntax => "SyntaxError"
+      Self::Syntax => "SyntaxError",
+      Self::Runtime => "RuntimeError"
     }
   }
 }
 
 pub struct ErrorReporter {
-  had_error: bool
+  had_error: bool,
+  had_runtime_error: bool
 }
 
 impl ErrorReporter {
   pub fn init() -> Self {
     return Self {
-      had_error: false
+      had_error: false,
+      had_runtime_error: false
     }
   }
 
@@ -67,6 +79,12 @@ impl ErrorReporter {
 
   pub fn error(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType) {
     self.report(line, message, loc, err_type);
+  }
+
+  pub fn runtime_error(&mut self, token: &Token, message: &str, err_type: ErrorType) {
+    eprintln!("{}: {}", err_type.to_string(), message);
+    eprintln!("\t at line {}", token.line);
+    self.had_runtime_error = true;
   }
 
   pub fn report(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType) {
@@ -99,10 +117,23 @@ impl Qalam {
     let tokens = scanner.scan_tokens();
     // let mut parser_reporter = self.error_reporter.borrow_mut();
     let mut parser = Parser::init(tokens);
-    let mut ast_string_generator = ASTParenString {};
+    // let mut ast_string_generator = ASTParenString {};
     match parser.parse() {
       Ok(expr) => {
-        println!("{}", ast_string_generator.to_string(expr))
+        // println!("{}", ast_string_generator.to_string(expr))
+        let mut interpreter = Interpreter::init();
+        match interpreter.interpret(&expr) {
+          Ok(val) => {
+            if let Some(val) = val {
+              println!("{}", val.to_qalam_string());
+            } else {
+              println!("ghaib");
+            }
+          },
+          Err(e) => {
+            scanner_reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime);
+          }
+        }
       },
       Err(e) => {
         scanner_reporter.error_token(&e.token, &e.message, ErrorType::Syntax)
@@ -140,7 +171,11 @@ impl Qalam {
         .with_context(|| format!("Cannot read file"))?;
     self.run_source(&file_content);
     if self.error_reporter.borrow().had_error {
-      std::process::exit(1);
+      std::process::exit(65);
+    }
+
+    if self.error_reporter.borrow().had_runtime_error {
+      std::process::exit(75);
     }
     return Ok(());
   }

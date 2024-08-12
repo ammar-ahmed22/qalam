@@ -1,6 +1,29 @@
 use crate::{ast::{expressions::Expr, visitor::Visitor}, token::TokenType, Literal};
 use crate::token::Token;
 
+#[derive(Debug)]
+pub struct RuntimeError {
+  pub message: String,
+  pub token: Token
+}
+
+impl std::fmt::Display for RuntimeError {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "RuntimeError")
+  }
+}
+
+impl std::error::Error for RuntimeError {}
+
+impl RuntimeError {
+  pub fn init(token: &Token, message: String) -> Self {
+    return Self {
+      token: Token::copy(token),
+      message
+    }
+  }
+}
+
 pub struct Interpreter {}
 
 impl Interpreter {
@@ -8,7 +31,7 @@ impl Interpreter {
     return Self {}
   }
 
-  fn evaluate(&mut self, expr: &Expr) -> Option<Literal> {
+  fn evaluate(&mut self, expr: &Expr) -> Result<Option<Literal>, RuntimeError> {
     expr.accept(self)
   }
 
@@ -50,6 +73,8 @@ impl Interpreter {
             if let (Literal::String(a_val), Literal::String(b_val)) = (a_val, b_val) {
               return Some(Literal::Bool(Self::flip_bool(a_val == b_val, flip)));
             }
+
+            return Some(Literal::Bool(Self::flip_bool(false, flip)))
           },
           None => {
             return Some(Literal::Bool(Self::flip_bool(false, flip)))
@@ -67,15 +92,17 @@ impl Interpreter {
         }
       }
     }
+  }
 
-    return None;
+  pub fn interpret(&mut self, expr: &Expr) -> Result<Option<Literal>, RuntimeError> {
+    self.evaluate(expr)
   }
 }
 
 impl Visitor for Interpreter {
-  type R = Option<Literal>;
+  type R = Result<Option<Literal>, RuntimeError>;
   fn visit_literal(&mut self, expr: &Option<Literal>) -> Self::R {
-      return expr.clone()
+      return Ok(expr.clone())
   }
 
   fn visit_grouping(&mut self, expression: &Box<Expr>) -> Self::R {
@@ -83,85 +110,101 @@ impl Visitor for Interpreter {
   }
 
   fn visit_unary(&mut self, operator: &Token, right: &Box<Expr>) -> Self::R {
-      let right_val = self.evaluate(right);
+      let right_val = self.evaluate(right)?;
       match operator.token_type {
         TokenType::Minus => {
           if let Some(val) = right_val {
             match val {
               Literal::Number(num) => {
-                return Some(Literal::Number(-num))
+                return Ok(Some(Literal::Number(-num)))
               },
               _ => {
-                // throw error wrong type
+                return Err(RuntimeError::init(operator, String::from("Operand must be a number.")))
               }
             }
           } else {
-            // throw error undefined
+            return Err(RuntimeError::init(operator, String::from("Operand must be a number.")))
           }
         },
         TokenType::Bang => {
-          return self.is_truthy(right_val, true)
+          return Ok(self.is_truthy(right_val, true))
         },
         _ => {}
       }
-      return None;
+      return Ok(None); // idk about this??
   }
 
   fn visit_binary(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R {
-      let left_val = self.evaluate(left);
-      let right_val = self.evaluate(right);
+      let left_val = self.evaluate(left)?;
+      let right_val = self.evaluate(right)?;
 
       if let (Some(left_val), Some(right_val)) = (left_val.clone(), right_val.clone()) {
         match operator.token_type {
           TokenType::Minus => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
-              return Some(Literal::Number(left_val - right_val));
+              return Ok(Some(Literal::Number(left_val - right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
             }
           },
           TokenType::Slash => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
-              return Some(Literal::Number(left_val / right_val));
+              return Ok(Some(Literal::Number(left_val / right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
             }
           },
           TokenType::Star => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
-              return Some(Literal::Number(left_val * right_val));
+              return Ok(Some(Literal::Number(left_val * right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
             }
           },
           TokenType::Plus => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val.clone(), right_val.clone()) {
-              return Some(Literal::Number(left_val + right_val));
+              return Ok(Some(Literal::Number(left_val + right_val)));
             }
 
             if let (Literal::String(left_val), Literal::String(right_val)) = (left_val, right_val) {
-              return Some(Literal::String(left_val + right_val.as_str()));
+              return Ok(Some(Literal::String(left_val + right_val.as_str())));
             }
+
+            return Err(RuntimeError::init(operator, String::from("Operands must be two numbers or two strings.")))
           },
           TokenType::Greater => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
-              return Some(Literal::Bool(left_val > right_val));
+              return Ok(Some(Literal::Bool(left_val > right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
             }
           },
           TokenType::GreaterEqual=> {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
-              return Some(Literal::Bool(left_val >= right_val));
+              return Ok(Some(Literal::Bool(left_val >= right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
             }
           },
           TokenType::Less => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
-              return Some(Literal::Bool(left_val < right_val));
+              return Ok(Some(Literal::Bool(left_val < right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
             }
           },
           TokenType::LessEqual => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
-              return Some(Literal::Bool(left_val <= right_val));
+              return Ok(Some(Literal::Bool(left_val <= right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
             }
           },
           TokenType::BangEqual => {
-            return self.is_equal(Some(left_val), Some(right_val), true)
+            return Ok(self.is_equal(Some(left_val), Some(right_val), true))
           },
           TokenType::EqualEqual => {
-            return self.is_equal(Some(left_val), Some(right_val), false)
+            return Ok(self.is_equal(Some(left_val), Some(right_val), false))
           }
           _ => {}
         }
@@ -169,15 +212,17 @@ impl Visitor for Interpreter {
         // handle equality here for both null
         match operator.token_type {
           TokenType::EqualEqual => {
-            return self.is_equal(left_val, right_val, false)
+            return Ok(self.is_equal(left_val, right_val, false))
           },
           TokenType::BangEqual => {
-            return self.is_equal(left_val, right_val, true)
+            return Ok(self.is_equal(left_val, right_val, true))
           },
-          _ => {}
+          _ => {
+            return Err(RuntimeError::init(operator, String::from("Invalid operation. This should not happen!")))
+          }
         }
       }
     
-      return None;
+      return Ok(None); // idk about this??
   }
 }
