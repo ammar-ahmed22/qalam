@@ -1,4 +1,5 @@
 use std::any::Any;
+use crate::Literal;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum TokenType {
@@ -50,12 +51,12 @@ impl TokenType {
 pub struct Token {
   pub token_type: TokenType,
   pub lexeme: String,
-  pub literal: Option<Box<dyn Any>>,
+  pub literal: Option<Literal>,
   pub line: i64
 }
 
 impl Token {
-  pub fn init(token_type: TokenType, lexeme: &String, literal: Option<Box<dyn Any>>, line: i64) -> Self {
+  pub fn init(token_type: TokenType, lexeme: &String, literal: Option<Literal>, line: i64) -> Self {
     return Self {
       token_type,
       lexeme: lexeme.to_string(),
@@ -85,19 +86,17 @@ impl Token {
     return Self {
       token_type: token.token_type,
       lexeme: token.lexeme.to_string(),
-      literal: Token::copy_literal(&token.literal),
+      literal: token.literal.clone(),
       line: token.line
     }
   }
 
-  fn get_literal_string(&self) -> String {
-    if let Some(literal) = &self.literal {
-      if let Some(string_value) = literal.downcast_ref::<String>() {
-        return string_value.to_owned();
-      } else if let Some(float_value) = literal.downcast_ref::<f64>() {
-        return format!("{}", float_value);
-      } else {
-        return String::from("Unhandled type.")
+  pub fn get_literal_string(literal: &Option<Literal>) -> String {
+    if let Some(literal) = literal {
+      match literal {
+        Literal::Bool(val) => format!("{}", val),
+        Literal::String(val) => val.to_owned(),
+        Literal::Number(val) => format!("{}", val)
       }
     } else {
       return String::from("None");
@@ -105,6 +104,6 @@ impl Token {
   }
 
   pub fn to_string(&self) -> String {
-    return format!("{:?} {} {:?}", self.token_type, self.lexeme, self.get_literal_string())
+    return format!("{:?} {} {:?}", self.token_type, self.lexeme, Self::get_literal_string(&self.literal))
   }
 }

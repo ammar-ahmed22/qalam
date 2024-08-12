@@ -11,6 +11,23 @@ use token::{Token, TokenType};
 use parser::Parser;
 use ast::utils::ASTParenString;
 
+#[derive(Debug, Clone)]
+pub enum Literal {
+  Number(f64),
+  String(String),
+  Bool(bool),
+}
+
+// impl Copy for Literal { }
+// impl Clone for Literal {
+//   fn clone(&self) -> Self {
+//       match self {
+//         Self::Number { value } => Self::Number{ value: *value },
+//         Self::String { value } => Self::String { value: value.to_owned() },
+//         Self::Bool { value } => Self::Bool { value: *value }
+//       }
+//   }
+// }
 
 pub enum ErrorType {
   Error,

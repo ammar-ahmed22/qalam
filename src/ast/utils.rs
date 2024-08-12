@@ -1,5 +1,7 @@
 use crate::ast::expressions::Expr;
 use crate::ast::visitor::Visitor;
+use crate::token::Token;
+use crate::Literal;
 // use crate::ast::expressions::{ Binary, Unary, Literal, Grouping };
 
 pub struct ASTParenString {}
@@ -33,23 +35,8 @@ impl Visitor for ASTParenString {
       self.parenthesize("grouping", &[expression])
   }
 
-  fn visit_literal(&mut self, expr: &Option<Box<dyn std::any::Any>>) -> Self::R {
-      match expr {
-        Some(val) => {
-          if let Some(string_val) = val.downcast_ref::<&str>() {
-            return string_val.to_string()
-          } else if let Some(num_val) = val.downcast_ref::<f64>() {
-            return format!("{}", num_val);
-          } else if let Some(bool_val) = val.downcast_ref::<bool>() {
-            return format!("{}", bool_val)
-          } else {
-            return "Unhandled type".to_string()
-          }
-        },
-        None => {
-          return "null".to_string();
-        }
-      }
+  fn visit_literal(&mut self, expr: &Option<Literal>) -> Self::R {
+      Token::get_literal_string(expr)
   }
 
   fn visit_unary(&mut self, operator: &crate::token::Token, right: &Box<Expr>) -> Self::R {

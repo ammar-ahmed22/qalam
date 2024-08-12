@@ -1,6 +1,7 @@
 use crate::token::{Token, TokenType};
 use crate::{ ErrorReporter, ErrorType };
 use std::any::Any;
+use crate::Literal;
 
 pub struct Scanner<'a> {
   source: String,
@@ -108,7 +109,7 @@ impl <'a> Scanner<'a> {
   /// ### Arguments
   /// `token_type` - the type of the token
   /// `literal` - the object literal
-  fn add_token(&mut self, token_type: TokenType, literal: Option<Box<dyn Any>>) {
+  fn add_token(&mut self, token_type: TokenType, literal: Option<Literal>) {
     let text = self.source.get(self.start..self.current);
     match text {
       Some(t) => {
@@ -147,7 +148,7 @@ impl <'a> Scanner<'a> {
     let value = self.source.get((self.start + 1)..(self.current - 1));
     match value {
       Some(val) => {
-        self.add_token(TokenType::String, Some(Box::new(val.to_string())))
+        self.add_token(TokenType::String, Some(Literal::String(val.to_string())))
       },
       None => {
         eprintln!("Cannot get string!");
@@ -212,7 +213,7 @@ impl <'a> Scanner<'a> {
             std::process::exit(1);
           }
         };
-        self.add_token(TokenType::Number, Some(Box::new(as_float)));
+        self.add_token(TokenType::Number, Some(Literal::Number(as_float)));
       },
       None => {
         eprintln!("Cannot get number string!");

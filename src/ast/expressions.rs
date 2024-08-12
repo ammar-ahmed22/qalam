@@ -1,7 +1,6 @@
 use crate::token::Token;
-use std::any::Any;
 use crate::ast::visitor::Visitor;
-
+use crate::Literal;
 
 pub enum Expr {
   Binary {
@@ -13,7 +12,7 @@ pub enum Expr {
     expression: Box<Expr>
   },
   Literal {
-    value: Option<Box<dyn Any>>
+    value: Option<Literal>
   },
   Unary {
     operator: Token,

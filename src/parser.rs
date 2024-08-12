@@ -2,6 +2,7 @@ use std::fmt;
 
 use crate::token::{Token, TokenType};
 use crate::ast::expressions::Expr;
+use crate::Literal;
 // use crate::ast::expressions::{ Binary, Unary, Literal, Grouping };
 
 
@@ -209,11 +210,11 @@ impl <'a> Parser<'a> {
   /// Parses a primary value 
   fn primary(&mut self) -> Result<Expr, ParseError> {
     if self.match_types(&[TokenType::False]) {
-      return Ok(Expr::Literal { value: Some(Box::new(false)) })
+      return Ok(Expr::Literal { value: Some(Literal::Bool(false)) })
     }
 
     if self.match_types(&[TokenType::True]) {
-      return Ok(Expr::Literal { value: Some(Box::new(true)) })
+      return Ok(Expr::Literal { value: Some(Literal::Bool(true)) })
     }
 
     if self.match_types(&[TokenType::Nil]) {
@@ -222,7 +223,7 @@ impl <'a> Parser<'a> {
 
     if self.match_types(&[TokenType::String, TokenType::Number]) {
       let prev = self.previous();
-      return Ok(Expr::Literal { value: Token::copy_literal(&prev.literal) })
+      return Ok(Expr::Literal { value: prev.literal.clone() })
     }
 
     if self.match_types(&[TokenType::LeftParen]) {
