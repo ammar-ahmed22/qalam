@@ -112,8 +112,8 @@ impl Qalam {
   }
 
   fn run_source(&mut self, source: &String) {
-    let mut scanner_reporter = self.error_reporter.borrow_mut();
-    let mut scanner = Scanner::init(source, &mut scanner_reporter);
+    let mut reporter = self.error_reporter.borrow_mut();
+    let mut scanner = Scanner::init(source, &mut reporter);
     let tokens = scanner.scan_tokens();
     // let mut parser_reporter = self.error_reporter.borrow_mut();
     let mut parser = Parser::init(tokens);
@@ -131,13 +131,12 @@ impl Qalam {
             }
           },
           Err(e) => {
-            scanner_reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime);
+            reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime);
           }
         }
       },
       Err(e) => {
-        scanner_reporter.error_token(&e.token, &e.message, ErrorType::Syntax)
-        // do nothing
+        reporter.error_token(&e.token, &e.message, ErrorType::Syntax)
       }
     }
     // for token in tokens.iter() {
