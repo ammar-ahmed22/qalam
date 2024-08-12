@@ -40,6 +40,8 @@ impl Visitor for ASTParenString {
             return string_val.to_string()
           } else if let Some(num_val) = val.downcast_ref::<f64>() {
             return format!("{}", num_val);
+          } else if let Some(bool_val) = val.downcast_ref::<bool>() {
+            return format!("{}", bool_val)
           } else {
             return "Unhandled type".to_string()
           }

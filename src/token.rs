@@ -1,6 +1,6 @@
 use std::any::Any;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum TokenType {
   LeftParen, RightParen, LeftBrace, RightBrace,
   Comma, Dot, Minus, Plus, Semicolon, Slash, Star,
@@ -61,6 +61,32 @@ impl Token {
       lexeme: lexeme.to_string(),
       literal,
       line
+    }
+  }
+
+  pub fn copy_literal(literal: &Option<Box<dyn Any>>) -> Option<Box<dyn Any>> {
+    match literal {
+      Some(ref boxed) => {
+        if let Some(string_val) = boxed.downcast_ref::<String>() {
+          Some(Box::new(string_val.to_string()))
+        } else if let Some(num_val) = boxed.downcast_ref::<f64>() {
+          Some(Box::new(num_val.clone()))
+        } else if let Some(bool_val) = boxed.downcast_ref::<bool>() {
+          Some(Box::new(bool_val.clone()))
+        } else {
+          Some(Box::new(String::from("Unhandled type in copy.")))
+        }
+      },
+      None => None
+    }
+  }
+
+  pub fn copy(token: &Token) -> Self {
+    return Self {
+      token_type: token.token_type,
+      lexeme: token.lexeme.to_string(),
+      literal: Token::copy_literal(&token.literal),
+      line: token.line
     }
   }
 

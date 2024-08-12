@@ -138,7 +138,7 @@ impl <'a> Scanner<'a> {
 
     // If we reached the end the string is not terminated
     if self.end() {
-      self.error_reporter.error(self.line, "Unterminated string.", ErrorType::Syntax);
+      self.error_reporter.error(self.line, "Unterminated string.", None,ErrorType::Syntax);
       return;
     }
 
@@ -311,7 +311,7 @@ impl <'a> Scanner<'a> {
         } else if self.is_alpha(c) {
           self.identifier();
         } else {
-          self.error_reporter.error(self.line, "Unexpected character.", ErrorType::Syntax);
+          self.error_reporter.error(self.line, "Unexpected character.", None, ErrorType::Syntax);
         } 
       }
     }
