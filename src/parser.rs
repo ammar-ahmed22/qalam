@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::token::{Token, TokenType};
-use crate::ast::expressions::Expr;
+use crate::ast::expressions::{ Expr, Stmt };
 use crate::Literal;
 // use crate::ast::expressions::{ Binary, Unary, Literal, Grouping };
 
@@ -278,8 +278,33 @@ impl <'a> Parser<'a> {
 
   }
 
+  fn print_stmt(&mut self) -> Result<Stmt, ParseError> {
+    let value = self.expression()?;
+    self.consume(&TokenType::Semicolon, "Expect ';' after value.")?;
+    return Ok(Stmt::Print { expression: value })
+  }
+
+  fn expression_stmt(&mut self) -> Result<Stmt, ParseError> {
+    let value = self.expression()?;
+    self.consume(&TokenType::Semicolon, "Expect ';' after value.")?;
+    return Ok(Stmt::Expression { expression: value })
+  }
+
+  fn statements(&mut self) -> Result<Stmt, ParseError> {
+    if self.match_types(&[TokenType::Print]) {
+      return self.print_stmt();
+    }
+
+    return self.expression_stmt();
+  } 
+
   /// Entry function
-  pub fn parse(&mut self) -> Result<Expr, ParseError> {
-    self.expression()
+  pub fn parse(&mut self) -> Result<Vec<Stmt>, ParseError> {
+    let mut statements: Vec<Stmt> = Vec::new();
+    // self.expression()
+    while !self.end() {
+      statements.push(self.statements()?)
+    }
+    return Ok(statements);
   }
 }

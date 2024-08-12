@@ -1,5 +1,5 @@
 use crate::ast::expressions::Expr;
-use crate::ast::visitor::Visitor;
+use crate::ast::visitor::ExprVisitor;
 use crate::token::Token;
 use crate::Literal;
 // use crate::ast::expressions::{ Binary, Unary, Literal, Grouping };
@@ -25,7 +25,7 @@ impl ASTParenString {
   }
 }
 
-impl Visitor for ASTParenString {
+impl ExprVisitor for ASTParenString {
   type R = String;
   fn visit_binary(&mut self, left: &Box<Expr>, operator: &crate::token::Token, right: &Box<Expr>) -> Self::R {
       self.parenthesize(&operator.lexeme, &[left, right])

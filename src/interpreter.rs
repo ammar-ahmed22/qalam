@@ -1,4 +1,4 @@
-use crate::{ast::{expressions::Expr, visitor::Visitor}, token::TokenType, Literal};
+use crate::{ast::{expressions::{ Expr, Stmt }, visitor::{ExprVisitor, StmtVisitor}}, token::TokenType, Literal};
 use crate::token::Token;
 
 #[derive(Debug)]
@@ -94,12 +94,19 @@ impl Interpreter {
     }
   }
 
-  pub fn interpret(&mut self, expr: &Expr) -> Result<Option<Literal>, RuntimeError> {
-    self.evaluate(expr)
+  pub fn interpret(&mut self, mut statements: Vec<Stmt>) -> Result<(), RuntimeError> {
+    for stmt in statements.iter_mut() {
+      self.execute(stmt)?;
+    }
+    Ok(())
+  }
+
+  fn execute(&mut self, stmt: &mut Stmt) -> Result<(), RuntimeError> {
+    stmt.accept(self)
   }
 }
 
-impl Visitor for Interpreter {
+impl ExprVisitor for Interpreter {
   type R = Result<Option<Literal>, RuntimeError>;
   fn visit_literal(&mut self, expr: &Option<Literal>) -> Self::R {
       return Ok(expr.clone())
@@ -224,5 +231,34 @@ impl Visitor for Interpreter {
       }
     
       return Ok(None); // idk about this??
+  }
+}
+
+impl StmtVisitor for Interpreter {
+  type R = Result<(), RuntimeError>;
+  fn visit_expression(&mut self, expression: &Expr) -> Self::R {
+      match self.evaluate(expression) {
+        Ok(_) => {
+          return Ok(())
+        },
+        Err(e) => {
+          return Err(e)
+        }
+      }
+  }
+
+  fn visit_print(&mut self, expression: &Expr) -> Self::R {
+      let value = match self.evaluate(expression) {
+        Ok(val) => val,
+        Err(e) => {
+          return Err(e)
+        }
+      };
+      if let Some(val) = value {
+        println!("{}", val.to_qalam_string());
+      } else {
+        println!("ghaib")
+      }
+      Ok(())
   }
 }

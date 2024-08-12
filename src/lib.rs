@@ -119,19 +119,15 @@ impl Qalam {
     let mut parser = Parser::init(tokens);
     // let mut ast_string_generator = ASTParenString {};
     match parser.parse() {
-      Ok(expr) => {
+      Ok(statements) => {
         // println!("{}", ast_string_generator.to_string(expr))
         let mut interpreter = Interpreter::init();
-        match interpreter.interpret(&expr) {
-          Ok(val) => {
-            if let Some(val) = val {
-              println!("{}", val.to_qalam_string());
-            } else {
-              println!("ghaib");
-            }
+        match interpreter.interpret(statements) {
+          Ok(_) => {
+            // do nothing
           },
           Err(e) => {
-            reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime);
+            reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime)
           }
         }
       },
