@@ -129,7 +129,7 @@ impl <'a> Parser<'a> {
   fn equality(&mut self) -> Result<Expr, ParseError>
   {
     let mut expr = self.comparison()?;
-    while self.match_types(&[TokenType::Bang, TokenType::BangEqual]) {
+    while self.match_types(&[TokenType::BangEqual, TokenType::EqualEqual]) {
       let operator = Self::previous_free(&self.tokens, self.current);
       let right = self.comparison()?;
       let prev = expr;
