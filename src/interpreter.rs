@@ -34,7 +34,7 @@ pub struct Interpreter {
 impl Interpreter {
   pub fn init() -> Self {
     return Self {
-      environment: Environment::init()
+      environment: Environment::init(None)
     }
   }
 

@@ -4,12 +4,14 @@ use crate::interpreter::RuntimeError;
 use crate::Token;
 
 pub struct Environment {
+  enclosing: Option<Box<Environment>>,
   values: HashMap<String, Option<Literal>>
 }
 
 impl Environment {
-  pub fn init() -> Self {
+  pub fn init(enclosing: Option<Box<Environment>>) -> Self {
     Self {
+      enclosing,
       values: HashMap::new()
     }
   }
@@ -24,6 +26,14 @@ impl Environment {
       return Ok(());
     }
 
+    match &mut self.enclosing {
+      Some(enclosed) => {
+        enclosed.assign(name, value)?;
+        return Ok(());
+      },
+      None => {}
+    }
+
     return Err(RuntimeError::init(name, format!("Undefined variable '{}'.", name.lexeme)))
   }
 
@@ -33,6 +43,12 @@ impl Environment {
         return Ok(value.clone())
       },
       None => {
+        match &self.enclosing {
+          Some(enclosed) => {
+            return enclosed.get(name)
+          },
+          None => {}
+        }
         return Err(RuntimeError::init(name, format!("Undefined variable '{}'.", name.lexeme)))
       }
     }
