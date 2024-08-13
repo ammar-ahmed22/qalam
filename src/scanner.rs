@@ -298,6 +298,16 @@ impl <'a> Scanner<'a> {
           self.add_token(TokenType::Slash, None);
         }
       },
+      '&' => {
+        if self.match_next('&') {
+          self.add_token(TokenType::And, None)
+        }
+      },
+      '|' => {
+        if self.match_next('|') {
+          self.add_token(TokenType::Or, None)
+        }
+      },
       ' ' | '\r' | '\t' => {},
       '\n' => {
         self.line += 1;

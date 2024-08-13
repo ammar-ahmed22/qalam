@@ -1,0 +1,12 @@
+niyya x = 10;
+
+// prints x is positive
+shart(x > 0) {
+  qul "x is positive";
+} illa {
+  shart(x == 0) {
+    qul "x is zero";
+  } illa {
+    qul "x is negative";
+  }
+}

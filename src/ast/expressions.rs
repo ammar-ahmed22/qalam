@@ -26,6 +26,11 @@ pub enum Expr {
   },
   Variable {
     name: Token
+  },
+  Logical {
+    left: Box<Expr>,
+    operator: Token,
+    right: Box<Expr>
   }
 }
 
@@ -39,7 +44,8 @@ impl Expr {
       Self::Grouping { expression } => visitor.visit_grouping(expression),
       Self::Literal { value } => visitor.visit_literal(value),
       Self::Unary { operator, right } => visitor.visit_unary(operator, right),
-      Self::Variable { name } => visitor.visit_variable(name)
+      Self::Variable { name } => visitor.visit_variable(name),
+      Self::Logical { left, operator, right } => visitor.visit_logical(left, operator, right)
      }
   }
 }
@@ -57,6 +63,11 @@ pub enum Stmt {
   },
   Block {
     statements: Vec<Stmt>
+  },
+  If {
+    condition: Expr,
+    then: Box<Stmt>,
+    else_branch: Option<Box<Stmt>>
   }
 }
 
@@ -68,7 +79,8 @@ impl Stmt {
       Self::Expression { expression } => visitor.visit_expression(expression),
       Self::Print { expression } => visitor.visit_print(expression),
       Self::Var { name, initializer } => visitor.visit_var(name, initializer),
-      Self::Block { statements } => visitor.visit_block(statements)
+      Self::Block { statements } => visitor.visit_block(statements),
+      Self::If { condition, then, else_branch } => visitor.visit_if(condition, then, else_branch)
     }
   }
 }

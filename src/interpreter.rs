@@ -266,6 +266,56 @@ impl ExprVisitor for Interpreter {
       self.environment.assign(name, value.clone())?;
       return Ok(value)
   }
+
+  fn visit_logical(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R {
+      let left = self.evaluate(left)?;
+      match operator.token_type {
+        TokenType::Or => {
+          match self.is_truthy(left.clone(), false) {
+            Some(val) => {
+              match val {
+                Literal::Bool(val) => {
+                  if val {
+                    return Ok(left)
+                  }
+                },
+                _ => {
+                  eprintln!("Something went wrong in Interpreter.visit_logical.");
+                  // this should never happen, is_truthy always returns bool literal
+                }
+              }
+            },
+            None => {
+              eprintln!("Something went wrong in Interpreter.visit_logical.");
+              // this should never happen, is_truthy always returns bool literal
+            }
+          }
+        },
+        _ => {
+          match self.is_truthy(left.clone(), true) {
+            Some(val) => {
+              match val {
+                Literal::Bool(val) => {
+                  if val {
+                    return Ok(left)
+                  }
+                },
+                _ => {
+                  eprintln!("Something went wrong in Interpreter.visit_logical.");
+                  // this should never happen, is_truthy always returns bool literal
+                }
+              }
+            },
+            None => {
+              eprintln!("Something went wrong in Interpreter.visit_logical.");
+              // this should never happen, is_truthy always returns bool literal
+            }
+          }
+        }
+      };
+
+      return self.evaluate(right);
+  }
 }
 
 impl StmtVisitor for Interpreter {
@@ -309,6 +359,40 @@ impl StmtVisitor for Interpreter {
 
   fn visit_block(&mut self, statements: &mut Vec<Stmt>) -> Self::R {
       self.execute_block(statements, Environment::init(Some(Box::new(self.environment.clone()))))?;
+      return Ok(())
+  }
+
+  fn visit_if(&mut self, condition: &Expr, then: &mut Box<Stmt>, else_branch: &mut Option<Box<Stmt>>) -> Self::R {
+      let eval_cond = self.evaluate(condition)?;
+      match self.is_truthy(eval_cond, false) {
+        Some(val) => {
+          match val {
+            Literal::Bool(cond) => {
+              if cond {
+                self.execute( then)?;
+              } else {
+                match else_branch {
+                  Some(else_stmt) => {
+                    self.execute(else_stmt)?;
+                  },
+                  None => {
+                    // do nothing
+                  }
+                }
+              }
+            },
+            _ => {
+              eprintln!("Something went wrong in Interpreter.visit_if")
+              // this should never happen, is_truthy always returns a bool literal
+            }
+          }
+        },
+        None => {
+          eprintln!("Something went wrong in Interpreter.visit_if")
+          // this should never happen, is_truthy always returns a bool literal
+        }
+      }
+
       return Ok(())
   }
 }

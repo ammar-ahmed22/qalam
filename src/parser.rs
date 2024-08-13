@@ -127,7 +127,7 @@ impl <'a> Parser<'a> {
   }
 
   fn assignment(&mut self) -> Result<Expr, ParseError> {
-    let expr = self.equality()?;
+    let expr = self.or()?;
     if self.match_types(&[TokenType::Equal]) {
       let equals = Self::previous_free(&self.tokens, self.current);
       let value = self.assignment()?;
@@ -139,6 +139,28 @@ impl <'a> Parser<'a> {
           return Err(self.error(equals, "Invalid assignment target."));
         }
       };
+    }
+
+    return Ok(expr)
+  }
+
+  fn or(&mut self) -> Result<Expr, ParseError> {
+    let mut expr = self.and()?;
+    while self.match_types(&[TokenType::Or]) {
+      let operator = Self::previous_free(&self.tokens, self.current);
+      let right = self.and()?;
+      expr = Expr::Logical { left: Box::new(expr), operator: Token::copy(operator), right: Box::new(right) };
+    }
+
+    return Ok(expr)
+  }
+
+  fn and(&mut self) -> Result<Expr, ParseError> {
+    let mut expr = self.equality()?;
+    while self.match_types(&[TokenType::And]) {
+      let operator = Self::previous_free(&self.tokens, self.current);
+      let right = self.equality()?;
+      expr = Expr::Logical { left: Box::new(expr), operator: Token::copy(operator), right: Box::new(right) };
     }
 
     return Ok(expr)
@@ -338,6 +360,10 @@ impl <'a> Parser<'a> {
   }
 
   fn statement(&mut self) -> Result<Stmt, ParseError> {
+    if self.match_types(&[TokenType::If]) {
+      return self.if_statement();
+    }
+
     if self.match_types(&[TokenType::Print]) {
       return self.print_stmt();
     }
@@ -346,7 +372,23 @@ impl <'a> Parser<'a> {
       return Ok(Stmt::Block { statements: self.block()? })
     }
 
+    
+
     return self.expression_stmt();
+  }
+
+  fn if_statement(&mut self) -> Result<Stmt, ParseError> {
+    self.consume(&TokenType::LeftParen, "Expect '(' after 'shart'")?;
+    let condition = self.expression()?;
+    self.consume(&TokenType::RightParen, "Expect ')' after shart condition")?;
+
+    let then = self.statement()?;
+    let mut else_branch = None;
+    if self.match_types(&[TokenType::Else]) {
+      else_branch = Some(Box::new(self.statement()?));
+    }
+
+    return Ok(Stmt::If { condition, then: Box::new(then), else_branch })
   }
 
   fn declaration(&mut self) -> Result<Stmt, ParseError> {
