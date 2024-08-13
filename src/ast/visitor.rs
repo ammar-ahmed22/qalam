@@ -8,10 +8,12 @@ pub trait ExprVisitor {
   fn visit_grouping(&mut self, expression: &Box<Expr>) -> Self::R;
   fn visit_literal(&mut self, expr: &Option<Literal>) -> Self::R;
   fn visit_unary(&mut self, operator: &Token, right: &Box<Expr>) -> Self::R;
+  fn visit_variable(&mut self, name: &Token) -> Self::R;
 }
 
 pub trait StmtVisitor {
   type R;
   fn visit_expression(&mut self, expression: &Expr) -> Self::R;
   fn visit_print(&mut self, expression: &Expr) -> Self::R;
+  fn visit_var(&mut self, name: &Token, initializer: &Option<Expr>) -> Self::R;
 }

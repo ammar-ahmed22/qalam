@@ -226,6 +226,11 @@ impl <'a> Parser<'a> {
       return Ok(Expr::Literal { value: prev.literal.clone() })
     }
 
+    if self.match_types(&[TokenType::Identifier]) {
+      let prev = self.previous();
+      return Ok(Expr::Variable { name: Token::copy(prev) })
+    }
+
     if self.match_types(&[TokenType::LeftParen]) {
       let expr = self.expression()?;
       self.consume(&TokenType::RightParen, "Expect ')' after expression.")?;
@@ -290,20 +295,48 @@ impl <'a> Parser<'a> {
     return Ok(Stmt::Expression { expression: value })
   }
 
-  fn statements(&mut self) -> Result<Stmt, ParseError> {
+  fn var_declaration(&mut self) -> Result<Stmt, ParseError> {
+    let name = self.consume(&TokenType::Identifier, "Expect variable name.")?;
+    let copied = Token::copy(name);
+    let mut initializer = None;
+    if self.match_types(&[TokenType::Equal]) {
+      initializer = Some(self.expression()?);
+    }
+
+    self.consume(&TokenType::Semicolon, "Expect ';' after variable declaration.")?;
+    return Ok(Stmt::Var { name: copied, initializer })
+  }
+
+  fn statement(&mut self) -> Result<Stmt, ParseError> {
     if self.match_types(&[TokenType::Print]) {
       return self.print_stmt();
     }
 
     return self.expression_stmt();
-  } 
+  }
+
+  fn declaration(&mut self) -> Result<Stmt, ParseError> {
+    let res;
+    if self.match_types(&[TokenType::Var]) {
+      res = self.var_declaration();
+    } else {
+      res = self.statement();
+    }    
+    match res {
+      Ok(r) => Ok(r),
+      Err(e) => {
+        self.synchronize();
+        return Err(e)
+      }
+    }
+  }
 
   /// Entry function
   pub fn parse(&mut self) -> Result<Vec<Stmt>, ParseError> {
     let mut statements: Vec<Stmt> = Vec::new();
     // self.expression()
     while !self.end() {
-      statements.push(self.statements()?)
+      statements.push(self.declaration()?)
     }
     return Ok(statements);
   }

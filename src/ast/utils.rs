@@ -36,10 +36,18 @@ impl ExprVisitor for ASTParenString {
   }
 
   fn visit_literal(&mut self, expr: &Option<Literal>) -> Self::R {
-      Token::get_literal_string(expr)
+      if let Some(expr) = expr {
+        return expr.to_string()
+      } else {
+        return String::from("null")
+      }
   }
 
   fn visit_unary(&mut self, operator: &crate::token::Token, right: &Box<Expr>) -> Self::R {
       self.parenthesize(&operator.lexeme, &[right])
+  }
+
+  fn visit_variable(&mut self, name: &Token) -> Self::R {
+      return name.lexeme.to_owned()
   }
 }

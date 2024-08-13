@@ -1,5 +1,8 @@
-use crate::{ast::{expressions::{ Expr, Stmt }, visitor::{ExprVisitor, StmtVisitor}}, token::TokenType, Literal};
-use crate::token::Token;
+use crate::ast::expressions::{ Expr, Stmt };
+use crate::ast::visitor::{ ExprVisitor, StmtVisitor };
+use crate::token::{ Token, TokenType };
+use crate::Literal;
+use crate::environment::Environment;
 
 #[derive(Debug)]
 pub struct RuntimeError {
@@ -24,11 +27,15 @@ impl RuntimeError {
   }
 }
 
-pub struct Interpreter {}
+pub struct Interpreter {
+  environment: Environment
+}
 
 impl Interpreter {
   pub fn init() -> Self {
-    return Self {}
+    return Self {
+      environment: Environment::init()
+    }
   }
 
   fn evaluate(&mut self, expr: &Expr) -> Result<Option<Literal>, RuntimeError> {
@@ -232,6 +239,10 @@ impl ExprVisitor for Interpreter {
     
       return Ok(None); // idk about this??
   }
+  
+  fn visit_variable(&mut self, name: &Token) -> Self::R {
+      self.environment.get(name)
+  }
 }
 
 impl StmtVisitor for Interpreter {
@@ -259,6 +270,17 @@ impl StmtVisitor for Interpreter {
       } else {
         println!("ghaib")
       }
+      Ok(())
+  }
+
+  fn visit_var(&mut self, name: &Token, initializer: &Option<Expr>) -> Self::R {
+      let value = match initializer {
+        Some(val) => {
+          self.evaluate(val)?
+        },
+        None => None
+      };
+      self.environment.define(name.lexeme.to_owned(), value);
       Ok(())
   }
 }

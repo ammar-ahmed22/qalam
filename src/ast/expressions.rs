@@ -19,6 +19,9 @@ pub enum Expr {
   Unary {
     operator: Token,
     right: Box<Expr>
+  },
+  Variable {
+    name: Token
   }
 }
 
@@ -30,7 +33,8 @@ impl Expr {
       Self::Binary { left, operator, right } => visitor.visit_binary(left, operator, right),
       Self::Grouping { expression } => visitor.visit_grouping(expression),
       Self::Literal { value } => visitor.visit_literal(value),
-      Self::Unary { operator, right } => visitor.visit_unary(operator, right)
+      Self::Unary { operator, right } => visitor.visit_unary(operator, right),
+      Self::Variable { name } => visitor.visit_variable(name)
      }
   }
 }
@@ -41,6 +45,10 @@ pub enum Stmt {
   },
   Print {
     expression: Expr
+  },
+  Var {
+    name: Token,
+    initializer: Option<Expr>
   }
 }
 
@@ -50,7 +58,8 @@ impl Stmt {
   {
     match self {
       Self::Expression { expression } => visitor.visit_expression(expression),
-      Self::Print { expression } => visitor.visit_print(expression)
+      Self::Print { expression } => visitor.visit_print(expression),
+      Self::Var { name, initializer } => visitor.visit_var(name, initializer)
     }
   }
 }

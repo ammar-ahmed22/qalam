@@ -3,6 +3,7 @@ pub mod token;
 pub mod ast;
 pub mod parser;
 pub mod interpreter;
+pub mod environment;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use std::cell::RefCell;
