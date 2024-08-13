@@ -325,9 +325,25 @@ impl <'a> Parser<'a> {
     return Ok(Stmt::Var { name: copied, initializer })
   }
 
+  fn block(&mut self) -> Result<Vec<Stmt>, ParseError> {
+    let mut statements: Vec<Stmt> = Vec::new();
+
+    while !self.check(&TokenType::RightBrace) && !self.end() {
+      statements.push(self.declaration()?);
+    }
+
+    self.consume(&TokenType::RightBrace, "Expect '}' after block.")?;
+
+    return Ok(statements);
+  }
+
   fn statement(&mut self) -> Result<Stmt, ParseError> {
     if self.match_types(&[TokenType::Print]) {
       return self.print_stmt();
+    }
+
+    if self.match_types(&[TokenType::LeftBrace]) {
+      return Ok(Stmt::Block { statements: self.block()? })
     }
 
     return self.expression_stmt();

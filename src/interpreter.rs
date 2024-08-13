@@ -101,6 +101,23 @@ impl Interpreter {
     }
   }
 
+  fn execute_block(&mut self, statements: &mut Vec<Stmt>, environment: Environment) -> Result<(), RuntimeError> {
+    let previous = self.environment.clone();
+    self.environment = environment;
+    for stmt in statements.iter_mut() {
+      match self.execute(stmt) {
+        Ok(_) => {},
+        Err(e) => {
+          self.environment = previous.clone();
+          return Err(e)
+        }
+      }
+    }
+
+    self.environment = previous.clone();
+    return Ok(());
+  }
+
   pub fn interpret(&mut self, mut statements: Vec<Stmt>) -> Result<(), RuntimeError> {
     for stmt in statements.iter_mut() {
       self.execute(stmt)?;
@@ -288,5 +305,10 @@ impl StmtVisitor for Interpreter {
       };
       self.environment.define(name.lexeme.to_owned(), value);
       Ok(())
+  }
+
+  fn visit_block(&mut self, statements: &mut Vec<Stmt>) -> Self::R {
+      self.execute_block(statements, Environment::init(Some(Box::new(self.environment.clone()))))?;
+      return Ok(())
   }
 }

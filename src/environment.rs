@@ -3,6 +3,7 @@ use crate::Literal;
 use crate::interpreter::RuntimeError;
 use crate::Token;
 
+#[derive(Debug, Clone)]
 pub struct Environment {
   enclosing: Option<Box<Environment>>,
   values: HashMap<String, Option<Literal>>

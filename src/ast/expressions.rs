@@ -54,17 +54,21 @@ pub enum Stmt {
   Var {
     name: Token,
     initializer: Option<Expr>
+  },
+  Block {
+    statements: Vec<Stmt>
   }
 }
 
 impl Stmt {
-  pub fn accept<V>(&self, visitor: &mut V) -> V::R 
+  pub fn accept<V>(&mut self, visitor: &mut V) -> V::R 
   where V: StmtVisitor
   {
     match self {
       Self::Expression { expression } => visitor.visit_expression(expression),
       Self::Print { expression } => visitor.visit_print(expression),
-      Self::Var { name, initializer } => visitor.visit_var(name, initializer)
+      Self::Var { name, initializer } => visitor.visit_var(name, initializer),
+      Self::Block { statements } => visitor.visit_block(statements)
     }
   }
 }
