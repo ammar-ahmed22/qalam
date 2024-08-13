@@ -1,12 +1,20 @@
-niyya x = 10;
+niyya has_wudu = batil;
+niyya magrib_time_started = haqq;
+niyya age = 16;
 
-// prints x is positive
-shart(x > 0) {
-  qul "x is positive";
+
+shart(age >= 15 wa magrib_time_started wa has_wudu) {
+  qul("You MUST pray magrib now!");
 } illa {
-  shart(x == 0) {
-    qul "x is zero";
+  shart(age < 15) {
+    qul("You are not baligh, you do NOT NEED to pray but you should!");
   } illa {
-    qul "x is negative";
+    shart(!has_wudu && magrib_time_started) {
+      qul("Go make wudu and pray magrib now!");
+    } illa {
+      shart(!magrib_time_started) {
+        qul("It is not time for magrib yet!");
+      }
+    }
   }
 }
