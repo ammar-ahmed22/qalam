@@ -116,9 +116,7 @@ impl Qalam {
     let mut reporter = self.error_reporter.borrow_mut();
     let mut scanner = Scanner::init(source, &mut reporter);
     let tokens = scanner.scan_tokens();
-    // let mut parser_reporter = self.error_reporter.borrow_mut();
     let mut parser = Parser::init(tokens);
-    // let mut ast_string_generator = ASTParenString {};
     match parser.parse() {
       Ok(statements) => {
         // println!("{}", ast_string_generator.to_string(expr))
@@ -136,9 +134,6 @@ impl Qalam {
         reporter.error_token(&e.token, &e.message, ErrorType::Syntax)
       }
     }
-    // for token in tokens.iter() {
-    //     println!("{:?}", token.to_string())
-    // }
   }
   
   fn run_prompt(&mut self) {
