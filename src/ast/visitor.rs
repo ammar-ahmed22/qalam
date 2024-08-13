@@ -4,6 +4,7 @@ use crate::Literal;
 
 pub trait ExprVisitor {
   type R;
+  fn visit_assign(&mut self, name: &Token, value: &Box<Expr>) -> Self::R;
   fn visit_binary(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R;
   fn visit_grouping(&mut self, expression: &Box<Expr>) -> Self::R;
   fn visit_literal(&mut self, expr: &Option<Literal>) -> Self::R;

@@ -5,6 +5,10 @@ use crate::Literal;
 
 
 pub enum Expr {
+  Assign {
+    name: Token,
+    value: Box<Expr>
+  },
   Binary {
     left: Box<Expr>,
     operator: Token,
@@ -30,6 +34,7 @@ impl Expr {
   where V: ExprVisitor
   {
     match self {
+      Self::Assign { name, value } => visitor.visit_assign(name, value),
       Self::Binary { left, operator, right } => visitor.visit_binary(left, operator, right),
       Self::Grouping { expression } => visitor.visit_grouping(expression),
       Self::Literal { value } => visitor.visit_literal(value),

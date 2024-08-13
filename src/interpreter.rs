@@ -243,6 +243,12 @@ impl ExprVisitor for Interpreter {
   fn visit_variable(&mut self, name: &Token) -> Self::R {
       self.environment.get(name)
   }
+
+  fn visit_assign(&mut self, name: &Token, value: &Box<Expr>) -> Self::R {
+      let value = self.evaluate(value)?;
+      self.environment.assign(name, value.clone())?;
+      return Ok(value)
+  }
 }
 
 impl StmtVisitor for Interpreter {

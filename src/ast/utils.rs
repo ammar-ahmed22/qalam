@@ -50,4 +50,8 @@ impl ExprVisitor for ASTParenString {
   fn visit_variable(&mut self, name: &Token) -> Self::R {
       return name.lexeme.to_owned()
   }
+
+  fn visit_assign(&mut self, name: &Token, value: &Box<Expr>) -> Self::R {
+      self.parenthesize(&name.lexeme, &[value])
+  }
 }
