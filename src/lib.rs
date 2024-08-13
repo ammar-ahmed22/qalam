@@ -119,7 +119,6 @@ impl Qalam {
     let mut parser = Parser::init(tokens);
     match parser.parse() {
       Ok(statements) => {
-        // println!("{}", ast_string_generator.to_string(expr))
         let mut interpreter = Interpreter::init();
         match interpreter.interpret(statements) {
           Ok(_) => {
