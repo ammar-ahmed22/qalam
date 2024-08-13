@@ -1,0 +1,21 @@
+niyya a = "global a";
+niyya b = "global b";
+niyya c = "global c";
+
+{
+  niyya a = "outer a";
+  niyya b = "outer b";
+  {
+    niyya a = "inner a";
+    qul a;
+    qul b;
+    qul c;
+  }
+  qul a;
+  qul b;
+  qul c;
+}
+
+qul a;
+qul b;
+qul c;
