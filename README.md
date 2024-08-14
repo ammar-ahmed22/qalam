@@ -11,7 +11,21 @@ While Robert goes through the entire process, step-by-step, to create a programm
 In order to do this, I decided to create my own syntax for the language with the same general features as Lox. I also decided to use Rust to make the language instead of Java so that I cannot possibly copy-paste code.
 
 ## Using `qalam`
-WIP
+1. Install the `qalam` interpreter
+```bash
+cargo install qalam
+```
+
+2. Create a `.qlm` file with your source code
+```bash
+echo "qul \"hello world!\"" > main.qlm
+```
+
+3. Run the `qalam` code
+```bash
+qalam main.qlm
+>> hello world!
+```
 
 ## Syntax
 ### Keywords
