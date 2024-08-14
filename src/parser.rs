@@ -362,7 +362,7 @@ impl <'a> Parser<'a> {
 
   fn for_statement(&mut self) -> Result<Stmt, ParseError> {
     self.consume(&TokenType::LeftParen, "Expect '(' after 'tawaf'")?;
-    let mut initializer = None;
+    let initializer;
     if self.match_types(&[TokenType::Semicolon]) {
       initializer = None;
     } else if self.match_types(&[TokenType::Var]) {
