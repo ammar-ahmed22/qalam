@@ -1,9 +1,8 @@
-use std::fmt;
-
+use crate::error::ParseError;
 use crate::token::{Token, TokenType};
 use crate::ast::expr::Expr;
 use crate::ast::stmt::Stmt;
-use crate::Literal;
+use crate::literal::Literal;
 
 
 // /// Parsing tokens into an AST using the below expression grammar:
@@ -18,30 +17,7 @@ use crate::Literal;
 // /// primary        → NUMBER | STRING | "true" | "false" | "nil"  
 // ///               | "(" expression ")"
 
-#[derive(Debug)]
-pub struct ParseError {
-  pub token: Token,
-  pub message: String
-}
 
-impl fmt::Display for ParseError {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-      write!(f, "ParseError")
-  }
-}
-
-impl std::error::Error for ParseError {
-  
-}
-
-impl ParseError {
-  fn init(token: Token, message: String) -> Self {
-    return Self {
-      token,
-      message
-    }
-  }
-}
 
 
 pub struct Parser<'a> {

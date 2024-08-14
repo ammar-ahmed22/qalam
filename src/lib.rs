@@ -4,109 +4,17 @@ pub mod ast;
 pub mod parser;
 pub mod interpreter;
 pub mod environment;
+pub mod literal;
+pub mod error;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use std::cell::RefCell;
 use scanner::Scanner;
-use token::{Token, TokenType};
+use token::Token;
 use parser::Parser;
-// use ast::utils::ASTParenString;
 use interpreter::Interpreter;
+use error::{ ErrorReporter, ErrorType };
 
-#[derive(Debug, Clone)]
-pub enum Literal {
-  Number(f64),
-  String(String),
-  Bool(bool),
-}
-
-impl Literal {
-  pub fn to_string(&self) -> String {
-    match self {
-      Self::Bool(val) => format!("{}", val),
-      Self::Number(val) => format!("{}", val),
-      Self::String(val) => val.to_owned()
-    }
-  }
-
-  pub fn to_qalam_string(&self) -> String {
-    match self {
-      Self::Bool(val) => format!("{}", if *val { "haqq" } else { "batil" }),
-      Self::Number(val) => format!("{}", val),
-      Self::String(val) => val.to_owned()
-    }
-  }
-
-  pub fn string(value: Option<Literal>) -> String {
-    match value {
-      Some(val) => val.to_qalam_string(),
-      None => String::from("ghaib")
-    }
-  }
-}
-
-pub enum ErrorType {
-  Error,
-  Syntax,
-  Runtime,
-}
-
-impl ErrorType {
-  pub fn to_string(&self) -> &str {
-    match self {
-      Self::Error => "Error",
-      Self::Syntax => "SyntaxError",
-      Self::Runtime => "RuntimeError"
-    }
-  }
-}
-
-pub struct ErrorReporter {
-  had_error: bool,
-  had_runtime_error: bool
-}
-
-impl ErrorReporter {
-  pub fn init() -> Self {
-    return Self {
-      had_error: false,
-      had_runtime_error: false
-    }
-  }
-
-  pub fn error_token(&mut self, token: &Token, message: &str, err_type: ErrorType) {
-    match token.token_type {
-      TokenType::Eof => {
-        self.report(token.line, message, Some("at end"), err_type)
-      },
-      _ => {
-        self.report(token.line, message, Some(&format!("at '{}'", token.lexeme)), err_type)
-      }
-    }
-  }
-
-  pub fn error(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType) {
-    self.report(line, message, loc, err_type);
-  }
-
-  pub fn runtime_error(&mut self, token: &Token, message: &str, err_type: ErrorType) {
-    eprintln!("{}: {}", err_type.to_string(), message);
-    eprintln!("\t at line {}", token.line);
-    self.had_runtime_error = true;
-  }
-
-  pub fn report(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType) {
-    eprintln!("{}: {}", err_type.to_string(), message);
-    eprintln!("\t at line {}", line);
-    match loc {
-      Some(val) => {
-        eprintln!("\t {}", val)
-      },
-      None => {}
-    };
-    self.had_error = true;
-  }
-}
 
 pub struct Qalam {
   error_reporter: RefCell<ErrorReporter>

@@ -1,5 +1,4 @@
-use std::any::Any;
-use crate::Literal;
+use crate::literal::Literal;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum TokenType {
@@ -65,23 +64,6 @@ impl Token {
     }
   }
 
-  pub fn copy_literal(literal: &Option<Box<dyn Any>>) -> Option<Box<dyn Any>> {
-    match literal {
-      Some(ref boxed) => {
-        if let Some(string_val) = boxed.downcast_ref::<String>() {
-          Some(Box::new(string_val.to_string()))
-        } else if let Some(num_val) = boxed.downcast_ref::<f64>() {
-          Some(Box::new(num_val.clone()))
-        } else if let Some(bool_val) = boxed.downcast_ref::<bool>() {
-          Some(Box::new(bool_val.clone()))
-        } else {
-          Some(Box::new(String::from("Unhandled type in copy.")))
-        }
-      },
-      None => None
-    }
-  }
-
   pub fn copy(token: &Token) -> Self {
     return Self {
       token_type: token.token_type,
@@ -91,19 +73,7 @@ impl Token {
     }
   }
 
-  pub fn get_literal_string(literal: &Option<Literal>) -> String {
-    if let Some(literal) = literal {
-      match literal {
-        Literal::Bool(val) => format!("{}", val),
-        Literal::String(val) => val.to_owned(),
-        Literal::Number(val) => format!("{}", val)
-      }
-    } else {
-      return String::from("None");
-    }
-  }
-
   pub fn to_string(&self) -> String {
-    return format!("{:?} {} {:?}", self.token_type, self.lexeme, Self::get_literal_string(&self.literal))
+    return format!("{:?} {} {:?}", self.token_type, self.lexeme, Literal::option_string(self.literal.clone()))
   }
 }

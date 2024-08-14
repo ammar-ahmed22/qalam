@@ -1,6 +1,6 @@
 use crate::token::Token;
 use crate::ast::visitor::expr::ExprVisitor;
-use crate::Literal;
+use crate::literal::Literal;
 
 pub enum Expr {
   Assign {

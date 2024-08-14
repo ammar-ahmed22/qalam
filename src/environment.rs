@@ -1,6 +1,6 @@
 use std::collections::HashMap;
-use crate::Literal;
-use crate::interpreter::RuntimeError;
+use crate::literal::Literal;
+use crate::error::RuntimeError;
 use crate::Token;
 
 #[derive(Debug, Clone)]

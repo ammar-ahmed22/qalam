@@ -3,31 +3,9 @@ use crate::ast::stmt::Stmt;
 use crate::ast::visitor::expr::ExprVisitor;
 use crate::ast::visitor::stmt::StmtVisitor;
 use crate::token::{ Token, TokenType };
-use crate::Literal;
+use crate::literal::Literal;
 use crate::environment::Environment;
-
-#[derive(Debug)]
-pub struct RuntimeError {
-  pub message: String,
-  pub token: Token
-}
-
-impl std::fmt::Display for RuntimeError {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "RuntimeError")
-  }
-}
-
-impl std::error::Error for RuntimeError {}
-
-impl RuntimeError {
-  pub fn init(token: &Token, message: String) -> Self {
-    return Self {
-      token: Token::copy(token),
-      message
-    }
-  }
-}
+use crate::error::RuntimeError;
 
 pub struct Interpreter {
   environment: Environment

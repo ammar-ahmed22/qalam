@@ -1,6 +1,6 @@
 use crate::token::{Token, TokenType};
 use crate::{ ErrorReporter, ErrorType };
-use crate::Literal;
+use crate::literal::Literal;
 
 pub struct Scanner<'a> {
   source: String,

@@ -1,6 +1,6 @@
 use crate::token::Token;
 use crate::ast::expr::Expr;
-use crate::Literal;
+use crate::literal::Literal;
 
 pub trait ExprVisitor {
   type R;
