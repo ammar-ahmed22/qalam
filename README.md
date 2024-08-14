@@ -3,6 +3,16 @@
 <p>Islamic/Arabic terminology inspired, dead-simple, programming language</p>
 </div>
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Using `qalam`](#using--qalam-)
+- [Syntax](#syntax)
+  * [Keywords](#keywords)
+  * [Conditionals](#conditionals)
+  * [Loops](#loops)
+  * [Objects (Classes)](#objects--classes-)
+- [Native Functions](#native-functions)
+
 ## Introduction
 As a learning exercise, to really hone my skills, I wanted to write a programming language myself. In order to accomplish this, I'm following the amazing tutorial called [Crafting Interpreters by Robert Nystrom](https://craftinginterpreters.com/).
 
