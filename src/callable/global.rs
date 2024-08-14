@@ -190,7 +190,7 @@ impl QalamCallable for LenFn {
   }
 
   fn to_string(&self) -> String {
-      return String::from("<native amal len(string)>");
+      return String::from("<native amal len(arg)>");
   }
 }
 
@@ -234,7 +234,7 @@ impl QalamCallable for NumFn {
   }
 
   fn to_string(&self) -> String {
-      return String::from("<native amal str2num(string)>")
+      return String::from("<native amal str2num(arg)>")
   }
 }
 
@@ -263,7 +263,7 @@ impl QalamCallable for StrFn {
   }
 
   fn to_string(&self) -> String {
-      return String::from("<native amal str(val)>")
+      return String::from("<native amal str(arg)>")
   }
 }
 
@@ -304,6 +304,6 @@ impl QalamCallable for TypeofFn {
   }
 
   fn to_string(&self) -> String {
-      return String::from("<native amal typeof(val)>")
+      return String::from("<native amal typeof(arg)>")
   }
 }

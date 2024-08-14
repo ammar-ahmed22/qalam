@@ -124,3 +124,16 @@ cat.speak();
 cat.purr()
 // prints "purr"
 ```
+
+## Native Functions
+I've implemented a few native functions to the program:
+| Function Name | Parameters                  | Return Type | Description                                                      | 
+| ------------- | --------------------------- | ----------- | ---------------------------------------------------------------- |
+| `clock`       |                             | `number`    | Returns the time elapsed since the epoch in seconds              |
+| `typeof`      | `arg: any`                  | `string`    | Returns type of argument as a string                             |
+| `str`         | `arg: any`                  | `string`    | Converts the argument to a string                                |
+| `str2num`     | `arg: string`               | `number`    | Converts the argument to a number. Throws error if not possible. |
+| `len`         | `arg: string`               | `number`    | Returns the length of a string.                                  |
+| `max`         | `a: number, b: number`      | `number`    | Returns the maximum of the inputs                                |
+| `min`         | `a: number, b: number`      | `number`    | Returns the minimum of the inputs                                |
+| `pow`         | `base: number, exp: number` | `number`    | Raises the base to the power of the exponent                     |
