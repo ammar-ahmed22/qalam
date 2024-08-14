@@ -5,7 +5,7 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Using `qalam`](#using--qalam-)
+- [Using `qalam`](#using-qalam)
 - [Syntax](#syntax)
   * [Keywords](#keywords)
   * [Conditionals](#conditionals)
