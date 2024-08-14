@@ -336,6 +336,10 @@ impl <'a> Parser<'a> {
   }
 
   fn statement(&mut self) -> Result<Stmt, ParseError> {
+    if self.match_types(&[TokenType::For]) {
+      return self.for_statement();
+    }
+
     if self.match_types(&[TokenType::If]) {
       return self.if_statement();
     }
@@ -354,6 +358,54 @@ impl <'a> Parser<'a> {
 
 
     return self.expression_stmt();
+  }
+
+  fn for_statement(&mut self) -> Result<Stmt, ParseError> {
+    self.consume(&TokenType::LeftParen, "Expect '(' after 'tawaf'")?;
+    let mut initializer = None;
+    if self.match_types(&[TokenType::Semicolon]) {
+      initializer = None;
+    } else if self.match_types(&[TokenType::Var]) {
+      initializer = Some(self.var_declaration()?);
+    } else {
+      initializer = Some(self.expression_stmt()?);
+    }
+
+    let mut condition = None;
+    if !self.check(&TokenType::Semicolon) {
+      condition = Some(self.expression()?);
+    }
+
+    self.consume(&TokenType::Semicolon, "Expect ';' after loop condition.")?;
+    let mut increment = None;
+    if !self.check(&TokenType::RightParen) {
+      increment = Some(self.expression()?);
+    }
+    self.consume(&TokenType::RightParen, "Expect ')' after 'tawaf' clauses.")?;
+    let mut body = self.statement()?;
+
+    match increment {
+      Some(inc) => {
+        body = Stmt::Block { statements: vec![body, Stmt::Expression { expression: inc }] }
+      },
+      None => {}
+    }
+
+    let while_cond = match condition {
+      Some(c) => c,
+      None => Expr::Literal { value: Some(Literal::Bool(true)) }
+    };
+
+    body = Stmt::While { condition: while_cond, body: Box::new(body) };
+
+    match initializer {
+      Some(initializer) => {
+        body = Stmt::Block { statements: vec![initializer, body] };
+      },
+      None => {}
+    }
+
+    return Ok(body);
   }
 
   fn while_statement(&mut self) -> Result<Stmt, ParseError> {
