@@ -1,0 +1,5 @@
+niyya i = 0;
+baynama(i < 10) {
+  qul i;
+  i = i + 1;
+}

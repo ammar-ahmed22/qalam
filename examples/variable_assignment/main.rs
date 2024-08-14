@@ -1,10 +1,12 @@
 use std::process::Command;
 
+static EXAMPLE_NAME: &str = "variable_assignment";
+
 fn main () {
   let status = Command::new("cargo")
     .arg("run")
     .arg("--")
-    .arg("./examples/variable_assignment/main.qlm")
+    .arg(format!("./examples/{}/main.qlm", EXAMPLE_NAME))
     .status()
     .expect("Failed to execute process");
 

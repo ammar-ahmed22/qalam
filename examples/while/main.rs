@@ -1,6 +1,6 @@
 use std::process::Command;
 
-static EXAMPLE_NAME: &str = "scoped_variables";
+static EXAMPLE_NAME: &str = "while";
 
 fn main () {
   let status = Command::new("cargo")
