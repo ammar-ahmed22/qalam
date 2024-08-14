@@ -1,0 +1,5 @@
+amal add(a, b) {
+  radd a + b;
+}
+
+qul add(1, 2);

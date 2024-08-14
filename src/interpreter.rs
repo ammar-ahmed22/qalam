@@ -6,15 +6,43 @@ use crate::token::{ Token, TokenType };
 use crate::literal::Literal;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
+use crate::literal::{ QalamCallable, QalamFunction };
+#[derive(Clone, Debug)]
+struct ClockFn {}
+
+impl QalamCallable for ClockFn {
+  fn call(&mut self, _interpreter: &mut Interpreter, _arguments: Vec<Option<Literal>>) -> Result<Option<Literal>, RuntimeError> {
+      let start = std::time::SystemTime::now();
+      let since_epoch = start.duration_since(std::time::UNIX_EPOCH).expect("Time went backwards.");
+      let millis = since_epoch.as_millis() as f64;
+      return Ok(Some(Literal::Number(millis / 1000.0)));
+  }
+
+  fn arity(&self) -> usize {
+      return 0;
+  }
+
+  fn to_string(&self) -> String {
+      return String::from("<native fn>")
+  }
+
+  fn clone_box(&self) -> Box<dyn QalamCallable> {
+      return Box::new(self.clone())
+  }
+}
 
 pub struct Interpreter {
-  environment: Environment
+  pub globals: Environment,
+  pub environment: Environment
 }
 
 impl Interpreter {
   pub fn init() -> Self {
+    let mut globals = Environment::init(None);
+    globals.define("clock".to_string(), Some(Literal::Callable(Box::new(ClockFn{}))));
     return Self {
-      environment: Environment::init(None)
+      globals: globals.clone(),
+      environment: globals
     }
   }
 
@@ -81,7 +109,7 @@ impl Interpreter {
     }
   }
 
-  fn execute_block(&mut self, statements: &mut Vec<Stmt>, environment: Environment) -> Result<(), RuntimeError> {
+  pub fn execute_block(&mut self, statements: &mut Vec<Stmt>, environment: Environment) -> Result<(), RuntimeError> {
     let previous = self.environment.clone();
     // println!("execute_block, previous env: {:?}", previous);
     self.environment = environment;
@@ -300,6 +328,35 @@ impl ExprVisitor for Interpreter {
 
       return self.evaluate(right);
   }
+
+  fn visit_call(&mut self, callee: &Box<Expr>, paren: &Token, arguments: &Vec<Expr>) -> Self::R {
+      let callee = self.evaluate(&callee)?;
+      let mut args = Vec::new();
+      for arg in arguments.iter() {
+        args.push(self.evaluate(arg)?);
+      }
+
+      match callee {
+        Some(literal) => {
+          match literal {
+            Literal::Callable(mut function) => {
+              if args.len() != function.arity() {
+                return Err(RuntimeError::init(paren, format!("Expected {} arguments but got {}.", function.arity(), args.len())))
+              }
+              return Ok(function.call(self, args)?)
+            },  
+            _ => {
+              return Err(RuntimeError::init(paren, String::from("Can only call functions and classes.")))
+              // throw runtime error, can ONLY call callable
+            }
+          }
+        },
+        None => {
+          return Err(RuntimeError::init(paren, String::from("Can only call functions and classes.")))
+          // throw runtime error, cannot call null
+        }
+      }
+  }
 }
 
 impl StmtVisitor for Interpreter {
@@ -417,5 +474,23 @@ impl StmtVisitor for Interpreter {
         };
       }
       return Ok(())
+  }
+
+  fn visit_function(&mut self, name: &Token, params: &Vec<Token>, body: &mut Vec<Stmt>) -> Self::R {
+      let function = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() });
+      self.environment.define(name.lexeme.to_string(), Some(Literal::Callable(Box::new(function))));
+      return Ok(());
+  }
+
+  fn visit_return(&mut self, _keyword: &Token, value: &Option<Expr>) -> Self::R {
+      let mut val = None;
+      match value {
+        Some(expr) => {
+          val = self.evaluate(expr)?
+        },
+        None => {}
+      };
+
+      return Err(RuntimeError::init_return(val));
   }
 }

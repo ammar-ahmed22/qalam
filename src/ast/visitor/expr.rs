@@ -11,4 +11,5 @@ pub trait ExprVisitor {
   fn visit_unary(&mut self, operator: &Token, right: &Box<Expr>) -> Self::R;
   fn visit_variable(&mut self, name: &Token) -> Self::R;
   fn visit_logical(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R;
+  fn visit_call(&mut self, callee: &Box<Expr>, paren: &Token, arguments: &Vec<Expr>) -> Self::R;
 }

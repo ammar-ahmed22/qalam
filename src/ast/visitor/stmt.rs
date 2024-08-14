@@ -10,4 +10,6 @@ pub trait StmtVisitor {
   fn visit_block(&mut self, statements: &mut Vec<Stmt>) -> Self::R;
   fn visit_if(&mut self, condition: &Expr, then: &mut Box<Stmt>, else_branch: &mut Option<Box<Stmt>>) -> Self::R;
   fn visit_while(&mut self, condition: &Expr, body: &mut Box<Stmt>) -> Self::R;
+  fn visit_function(&mut self, name: &Token, params: &Vec<Token>, body: &mut Vec<Stmt>) -> Self::R;
+  fn visit_return(&mut self, keyword: &Token, value: &Option<Expr>) -> Self::R;
 }

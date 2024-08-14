@@ -1,5 +1,6 @@
 use crate::token::{ Token, TokenType };
 use std::fmt; 
+use crate::literal::Literal;
 
 pub enum ErrorType {
   Error,
@@ -92,7 +93,8 @@ impl ParseError {
 #[derive(Debug)]
 pub struct RuntimeError {
   pub message: String,
-  pub token: Token
+  pub token: Token,
+  pub return_value: Option<Literal>
 }
 
 impl std::fmt::Display for RuntimeError {
@@ -107,7 +109,16 @@ impl RuntimeError {
   pub fn init(token: &Token, message: String) -> Self {
     return Self {
       token: Token::copy(token),
-      message
+      message,
+      return_value: None
+    }
+  }
+
+  pub fn init_return(value: Option<Literal>) -> Self {
+    return Self {
+      token: Token::dummy(),
+      message: String::from("dummy"),
+      return_value: value
     }
   }
 }

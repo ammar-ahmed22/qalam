@@ -2,6 +2,7 @@ use crate::token::Token;
 use crate::ast::visitor::expr::ExprVisitor;
 use crate::literal::Literal;
 
+#[derive(Clone, Debug)]
 pub enum Expr {
   Assign {
     name: Token,
@@ -29,6 +30,11 @@ pub enum Expr {
     left: Box<Expr>,
     operator: Token,
     right: Box<Expr>
+  },
+  Call {
+    callee: Box<Expr>,
+    paren: Token,
+    arguments: Vec<Expr>
   }
 }
 
@@ -43,7 +49,8 @@ impl Expr {
       Self::Literal { value } => visitor.visit_literal(value),
       Self::Unary { operator, right } => visitor.visit_unary(operator, right),
       Self::Variable { name } => visitor.visit_variable(name),
-      Self::Logical { left, operator, right } => visitor.visit_logical(left, operator, right)
+      Self::Logical { left, operator, right } => visitor.visit_logical(left, operator, right),
+      Self::Call { callee, paren, arguments } => visitor.visit_call(callee, paren, arguments)
      }
   }
 }

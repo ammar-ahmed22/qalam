@@ -54,6 +54,17 @@ pub struct Token {
   pub line: i64
 }
 
+impl Clone for Token {
+  fn clone(&self) -> Self {
+      return Self {
+        token_type: self.token_type,
+        lexeme: self.lexeme.to_string(),
+        literal: self.literal.clone(),
+        line: self.line
+      }
+  }
+}
+
 impl Token {
   pub fn init(token_type: TokenType, lexeme: &String, literal: Option<Literal>, line: i64) -> Self {
     return Self {
@@ -61,6 +72,15 @@ impl Token {
       lexeme: lexeme.to_string(),
       literal,
       line
+    }
+  }
+
+  pub fn dummy() -> Self {
+    return Self {
+      token_type: TokenType::Eof,
+      lexeme: String::from("dummy"),
+      literal: None,
+      line: -1
     }
   }
 
