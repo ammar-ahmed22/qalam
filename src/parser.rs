@@ -1,9 +1,9 @@
 use std::fmt;
 
 use crate::token::{Token, TokenType};
-use crate::ast::expressions::{ Expr, Stmt };
+use crate::ast::expr::Expr;
+use crate::ast::stmt::Stmt;
 use crate::Literal;
-// use crate::ast::expressions::{ Binary, Unary, Literal, Grouping };
 
 
 // /// Parsing tokens into an AST using the below expression grammar:
@@ -368,13 +368,24 @@ impl <'a> Parser<'a> {
       return self.print_stmt();
     }
 
+    if self.match_types(&[TokenType::While]) {
+      return self.while_statement();
+    }
+
     if self.match_types(&[TokenType::LeftBrace]) {
       return Ok(Stmt::Block { statements: self.block()? })
     }
 
-    
 
     return self.expression_stmt();
+  }
+
+  fn while_statement(&mut self) -> Result<Stmt, ParseError> {
+    self.consume(&TokenType::LeftParen, "Expect '(' after 'baynama'")?;
+    let condition = self.expression()?;
+    self.consume(&TokenType::RightParen, "Expect ')' after condition")?;
+    let body = self.statement()?;
+    return Ok(Stmt::While { condition, body: Box::new(body) })
   }
 
   fn if_statement(&mut self) -> Result<Stmt, ParseError> {

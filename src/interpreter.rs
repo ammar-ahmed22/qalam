@@ -1,5 +1,7 @@
-use crate::ast::expressions::{ Expr, Stmt };
-use crate::ast::visitor::{ ExprVisitor, StmtVisitor };
+use crate::ast::expr::Expr;
+use crate::ast::stmt::Stmt;
+use crate::ast::visitor::expr::ExprVisitor;
+use crate::ast::visitor::stmt::StmtVisitor;
 use crate::token::{ Token, TokenType };
 use crate::Literal;
 use crate::environment::Environment;
@@ -50,7 +52,7 @@ impl Interpreter {
     }
   }
 
-  fn is_truthy(&mut self, value: Option<Literal>, flip: bool) -> Option<Literal> {
+  fn is_truthy(value: Option<Literal>, flip: bool) -> Option<Literal> {
     match value {
       Some(val) => {
         if let Literal::Bool(bool_val) = val {
@@ -103,6 +105,7 @@ impl Interpreter {
 
   fn execute_block(&mut self, statements: &mut Vec<Stmt>, environment: Environment) -> Result<(), RuntimeError> {
     let previous = self.environment.clone();
+    // println!("execute_block, previous env: {:?}", previous);
     self.environment = environment;
     for stmt in statements.iter_mut() {
       match self.execute(stmt) {
@@ -114,7 +117,10 @@ impl Interpreter {
       }
     }
 
-    self.environment = previous.clone();
+    self.environment = match &self.environment.enclosing {
+      Some(env) => *env.clone(),
+      None => previous.clone()
+    };
     return Ok(());
   }
 
@@ -158,7 +164,7 @@ impl ExprVisitor for Interpreter {
           }
         },
         TokenType::Bang => {
-          return Ok(self.is_truthy(right_val, true))
+          return Ok(Self::is_truthy(right_val, true))
         },
         _ => {}
       }
@@ -258,7 +264,7 @@ impl ExprVisitor for Interpreter {
   }
   
   fn visit_variable(&mut self, name: &Token) -> Self::R {
-      self.environment.get(name)
+      return Ok(self.environment.get(name)?);
   }
 
   fn visit_assign(&mut self, name: &Token, value: &Box<Expr>) -> Self::R {
@@ -271,7 +277,7 @@ impl ExprVisitor for Interpreter {
       let left = self.evaluate(left)?;
       match operator.token_type {
         TokenType::Or => {
-          match self.is_truthy(left.clone(), false) {
+          match Self::is_truthy(left.clone(), false) {
             Some(val) => {
               match val {
                 Literal::Bool(val) => {
@@ -292,7 +298,7 @@ impl ExprVisitor for Interpreter {
           }
         },
         _ => {
-          match self.is_truthy(left.clone(), true) {
+          match Self::is_truthy(left.clone(), true) {
             Some(val) => {
               match val {
                 Literal::Bool(val) => {
@@ -364,7 +370,7 @@ impl StmtVisitor for Interpreter {
 
   fn visit_if(&mut self, condition: &Expr, then: &mut Box<Stmt>, else_branch: &mut Option<Box<Stmt>>) -> Self::R {
       let eval_cond = self.evaluate(condition)?;
-      match self.is_truthy(eval_cond, false) {
+      match Self::is_truthy(eval_cond, false) {
         Some(val) => {
           match val {
             Literal::Bool(cond) => {
@@ -393,6 +399,45 @@ impl StmtVisitor for Interpreter {
         }
       }
 
+      return Ok(())
+  }
+
+  fn visit_while(&mut self, condition: &Expr, body: &mut Box<Stmt>) -> Self::R {
+      // let eval = self.evaluate(condition)?;
+      // match self.is_truthy(eval, false) {
+      //   Some(val) => {
+      //     match val {
+      //       Literal::Bool(val) => {
+      //         while val {
+      //           self.execute(body)?;
+      //         }
+      //       },
+      //       _ => {}
+      //     }
+      //   },
+      //   None => {}
+      // }
+      let mut iterate = match Self::is_truthy(self.evaluate(condition)?, false) {
+        Some(val) => {
+          match val {
+            Literal::Bool(val) => val,
+            _ => false
+          }
+        },
+        None => false
+      };
+      while iterate {
+        self.execute(body)?;
+        iterate = match Self::is_truthy(self.evaluate(condition)?, false) {
+          Some(val) => {
+            match val {
+              Literal::Bool(val) => val,
+              _ => false
+            }
+          },
+          None => false
+        };
+      }
       return Ok(())
   }
 }

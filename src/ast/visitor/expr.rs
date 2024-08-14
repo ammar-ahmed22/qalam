@@ -1,5 +1,5 @@
- use crate::ast::expressions::{ Expr, Stmt };
 use crate::token::Token;
+use crate::ast::expr::Expr;
 use crate::Literal;
 
 pub trait ExprVisitor {
@@ -11,13 +11,4 @@ pub trait ExprVisitor {
   fn visit_unary(&mut self, operator: &Token, right: &Box<Expr>) -> Self::R;
   fn visit_variable(&mut self, name: &Token) -> Self::R;
   fn visit_logical(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R;
-}
-
-pub trait StmtVisitor {
-  type R;
-  fn visit_expression(&mut self, expression: &Expr) -> Self::R;
-  fn visit_print(&mut self, expression: &Expr) -> Self::R;
-  fn visit_var(&mut self, name: &Token, initializer: &Option<Expr>) -> Self::R;
-  fn visit_block(&mut self, statements: &mut Vec<Stmt>) -> Self::R;
-  fn visit_if(&mut self, condition: &Expr, then: &mut Box<Stmt>, else_branch: &mut Option<Box<Stmt>>) -> Self::R;
 }

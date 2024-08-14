@@ -1,8 +1,6 @@
 use crate::token::Token;
-use crate::ast::visitor::{ ExprVisitor, StmtVisitor };
+use crate::ast::visitor::expr::ExprVisitor;
 use crate::Literal;
-
-
 
 pub enum Expr {
   Assign {
@@ -50,37 +48,3 @@ impl Expr {
   }
 }
 
-pub enum Stmt {
-  Expression {
-    expression: Expr
-  },
-  Print {
-    expression: Expr
-  },
-  Var {
-    name: Token,
-    initializer: Option<Expr>
-  },
-  Block {
-    statements: Vec<Stmt>
-  },
-  If {
-    condition: Expr,
-    then: Box<Stmt>,
-    else_branch: Option<Box<Stmt>>
-  }
-}
-
-impl Stmt {
-  pub fn accept<V>(&mut self, visitor: &mut V) -> V::R 
-  where V: StmtVisitor
-  {
-    match self {
-      Self::Expression { expression } => visitor.visit_expression(expression),
-      Self::Print { expression } => visitor.visit_print(expression),
-      Self::Var { name, initializer } => visitor.visit_var(name, initializer),
-      Self::Block { statements } => visitor.visit_block(statements),
-      Self::If { condition, then, else_branch } => visitor.visit_if(condition, then, else_branch)
-    }
-  }
-}

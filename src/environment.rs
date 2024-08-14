@@ -5,7 +5,7 @@ use crate::Token;
 
 #[derive(Debug, Clone)]
 pub struct Environment {
-  enclosing: Option<Box<Environment>>,
+  pub enclosing: Option<Box<Environment>>,
   values: HashMap<String, Option<Literal>>
 }
 
@@ -29,8 +29,7 @@ impl Environment {
 
     match &mut self.enclosing {
       Some(enclosed) => {
-        enclosed.assign(name, value)?;
-        return Ok(());
+        return enclosed.assign(name, value);
       },
       None => {}
     }

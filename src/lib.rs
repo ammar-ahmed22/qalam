@@ -36,6 +36,13 @@ impl Literal {
       Self::String(val) => val.to_owned()
     }
   }
+
+  pub fn string(value: Option<Literal>) -> String {
+    match value {
+      Some(val) => val.to_qalam_string(),
+      None => String::from("ghaib")
+    }
+  }
 }
 
 pub enum ErrorType {
