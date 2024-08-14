@@ -6,30 +6,10 @@ use crate::token::{ Token, TokenType };
 use crate::literal::Literal;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
-use crate::literal::{ QalamCallable, QalamFunction };
-#[derive(Clone, Debug)]
-struct ClockFn {}
+use crate::callable::global::ClockFn;
+use crate::callable::function::QalamFunction;
 
-impl QalamCallable for ClockFn {
-  fn call(&mut self, _interpreter: &mut Interpreter, _arguments: Vec<Option<Literal>>) -> Result<Option<Literal>, RuntimeError> {
-      let start = std::time::SystemTime::now();
-      let since_epoch = start.duration_since(std::time::UNIX_EPOCH).expect("Time went backwards.");
-      let millis = since_epoch.as_millis() as f64;
-      return Ok(Some(Literal::Number(millis / 1000.0)));
-  }
 
-  fn arity(&self) -> usize {
-      return 0;
-  }
-
-  fn to_string(&self) -> String {
-      return String::from("<native fn>")
-  }
-
-  fn clone_box(&self) -> Box<dyn QalamCallable> {
-      return Box::new(self.clone())
-  }
-}
 
 pub struct Interpreter {
   pub globals: Environment,
@@ -39,7 +19,7 @@ pub struct Interpreter {
 impl Interpreter {
   pub fn init() -> Self {
     let mut globals = Environment::init(None);
-    globals.define("clock".to_string(), Some(Literal::Callable(Box::new(ClockFn{}))));
+    globals.define("clock".to_string(), Some(Literal::Callable(Box::new(ClockFn::init()))));
     return Self {
       globals: globals.clone(),
       environment: globals

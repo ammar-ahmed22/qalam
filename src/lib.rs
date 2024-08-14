@@ -6,6 +6,7 @@ pub mod interpreter;
 pub mod environment;
 pub mod literal;
 pub mod error;
+pub mod callable;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use std::cell::RefCell;
