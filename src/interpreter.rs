@@ -6,7 +6,7 @@ use crate::token::{ Token, TokenType };
 use crate::literal::Literal;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
-use crate::callable::global::ClockFn;
+use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn, TypeofFn };
 use crate::callable::function::QalamFunction;
 
 
@@ -20,6 +20,13 @@ impl Interpreter {
   pub fn init() -> Self {
     let mut globals = Environment::init(None);
     globals.define("clock".to_string(), Some(Literal::Callable(Box::new(ClockFn::init()))));
+    globals.define("pow".to_string(), Some(Literal::Callable(Box::new(PowFn::init()))));
+    globals.define("max".to_string(), Some(Literal::Callable(Box::new(MaxFn::init()))));
+    globals.define("min".to_string(), Some(Literal::Callable(Box::new(MinFn::init()))));
+    globals.define("len".to_string(), Some(Literal::Callable(Box::new(LenFn::init()))));
+    globals.define("str2num".to_string(), Some(Literal::Callable(Box::new(NumFn::init()))));
+    globals.define("str".to_owned(), Some(Literal::Callable(Box::new(StrFn::init()))));
+    globals.define("typeof".to_string(), Some(Literal::Callable(Box::new(TypeofFn::init()))));
     return Self {
       globals: globals.clone(),
       environment: globals
@@ -323,7 +330,7 @@ impl ExprVisitor for Interpreter {
               if args.len() != function.arity() {
                 return Err(RuntimeError::init(paren, format!("Expected {} arguments but got {}.", function.arity(), args.len())))
               }
-              return Ok(function.call(self, args)?)
+              return Ok(function.call(self, args, paren)?)
             },  
             _ => {
               return Err(RuntimeError::init(paren, String::from("Can only call functions and classes.")))

@@ -3,9 +3,10 @@ pub mod global;
 use crate::interpreter::Interpreter;
 use crate::literal::Literal;
 use crate::error::RuntimeError;
+use crate::token::Token;
 
 pub trait QalamCallable: std::fmt::Debug {
-  fn call(&mut self, interpreter: &mut Interpreter, arguments: Vec<Option<Literal>>) -> Result<Option<Literal>, RuntimeError>;
+  fn call(&mut self, interpreter: &mut Interpreter, arguments: Vec<Option<Literal>>, paren: &Token) -> Result<Option<Literal>, RuntimeError>;
   fn clone_box(&self) -> Box<dyn QalamCallable>;
   fn to_string(&self) -> String;
   fn arity(&self) -> usize;

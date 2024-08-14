@@ -4,7 +4,7 @@ use crate::literal::Literal;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
 use crate::ast::stmt::Stmt;
-use crate::token::{ Token, TokenType };
+use crate::token::Token;
 
 #[derive(Debug, Clone)]
 pub struct QalamFunction {
@@ -20,7 +20,7 @@ impl QalamFunction {
 }
 
 impl QalamCallable for QalamFunction {
-  fn call(&mut self, interpreter: &mut Interpreter, arguments: Vec<Option<Literal>>) -> Result<Option<Literal>, RuntimeError> {
+  fn call(&mut self, interpreter: &mut Interpreter, arguments: Vec<Option<Literal>>, paren: &Token) -> Result<Option<Literal>, RuntimeError> {
       let mut env = Environment::init(Some(Box::new(interpreter.environment.clone())));
       match &mut self.declaration {
         Stmt::Function { name: _, params, body } => {
@@ -38,7 +38,7 @@ impl QalamCallable for QalamFunction {
           return Ok(None);
         },
         _ => {
-          return Err(RuntimeError::init(&Token::init(TokenType::Eof, &String::from("idk"), None, -1), String::from("Something went horribly wrong in a function call.")))
+          return Err(RuntimeError::init(paren, String::from("Can only call functions!")))
         }
       }
   }

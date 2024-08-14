@@ -1,0 +1,38 @@
+
+// prints the time since the epoch in seconds
+qul clock();
+
+// Prints 3^2 = 9
+qul pow(3, 2);
+
+niyya a = 2;
+niyya b = 3;
+
+// Prints 3
+qul max(a, b);
+
+// Prints 2
+qul min(a, b);
+
+niyya my_name = "Ammar";
+// Prints 5
+qul len(my_name);
+
+niyya num_str = "-1";
+// Prints 0 (-1 + 1) 
+// str2num("hello") would throw an error
+qul str2num(num_str) + 1;
+
+// Prints haqq batil ghaib 12.34
+qul(str(haqq) + " " + str(batil) + " " + str(ghaib) + " " + str(12.34));
+
+// Prints string
+qul typeof("hello world");
+// Prints number
+qul typeof(123);
+// Prints bool
+qul typeof(batil);
+// Prints amal
+qul typeof(typeof);
+// Prints ghaib
+qul typeof(ghaib);
