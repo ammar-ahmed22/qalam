@@ -6,7 +6,7 @@ use crate::token::{ Token, TokenType };
 use crate::literal::Literal;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
-use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn, TypeofFn };
+use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn, TypeofFn, SubstrFn, IndexOfFn, ReplaceFn, RandomFn, RandomIntFn };
 use crate::callable::function::QalamFunction;
 
 
@@ -27,6 +27,11 @@ impl Interpreter {
     globals.define("str2num".to_string(), Some(Literal::Callable(Box::new(NumFn::init()))));
     globals.define("str".to_owned(), Some(Literal::Callable(Box::new(StrFn::init()))));
     globals.define("typeof".to_string(), Some(Literal::Callable(Box::new(TypeofFn::init()))));
+    globals.define("substr".to_string(), Some(Literal::Callable(Box::new(SubstrFn::init()))));
+    globals.define("index_of".to_string(), Some(Literal::Callable(Box::new(IndexOfFn::init()))));
+    globals.define("replace".to_string(), Some(Literal::Callable(Box::new(ReplaceFn::init()))));
+    globals.define("random".to_string(), Some(Literal::Callable(Box::new(RandomFn::init()))));
+    globals.define("random_int".to_string(), Some(Literal::Callable(Box::new(RandomIntFn::init()))));
     return Self {
       globals: globals.clone(),
       environment: globals
@@ -425,20 +430,6 @@ impl StmtVisitor for Interpreter {
   }
 
   fn visit_while(&mut self, condition: &Expr, body: &mut Box<Stmt>) -> Self::R {
-      // let eval = self.evaluate(condition)?;
-      // match self.is_truthy(eval, false) {
-      //   Some(val) => {
-      //     match val {
-      //       Literal::Bool(val) => {
-      //         while val {
-      //           self.execute(body)?;
-      //         }
-      //       },
-      //       _ => {}
-      //     }
-      //   },
-      //   None => {}
-      // }
       let mut iterate = match Self::is_truthy(self.evaluate(condition)?, false) {
         Some(val) => {
           match val {

@@ -151,13 +151,18 @@ cat.purr()
 
 ## Native Functions
 I've implemented a few native functions to the program:
-| Function Name | Parameters                  | Return Type | Description                                                      | 
-| ------------- | --------------------------- | ----------- | ---------------------------------------------------------------- |
-| `clock`       |                             | `number`    | Returns the time elapsed since the epoch in seconds              |
-| `typeof`      | `arg: any`                  | `string`    | Returns type of argument as a string                             |
-| `str`         | `arg: any`                  | `string`    | Converts the argument to a string                                |
-| `str2num`     | `arg: string`               | `number`    | Converts the argument to a number. Throws error if not possible. |
-| `len`         | `arg: string`               | `number`    | Returns the length of a string.                                  |
-| `max`         | `a: number, b: number`      | `number`    | Returns the maximum of the inputs                                |
-| `min`         | `a: number, b: number`      | `number`    | Returns the minimum of the inputs                                |
-| `pow`         | `base: number, exp: number` | `number`    | Raises the base to the power of the exponent                     |
+| Function Name | Parameters                                                                 | Return Type | Description                                                                             | 
+| ------------- | -------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------- |
+| `clock`       |                                                                            | `number`    | Returns the time elapsed since the epoch in seconds                                     |
+| `typeof`      | `arg: any`                                                                 | `string`    | Returns type of argument as a string                                                    |
+| `str`         | `arg: any`                                                                 | `string`    | Converts the argument to a string                                                       |
+| `str2num`     | `arg: string`                                                              | `number`    | Converts the argument to a number. Throws error if not possible.                        |
+| `substr`      | `arg: string, start: number (positive int), length: number (positive int)` | `string`    | Returns a substring of the argument starting at `start` with length of `length`         |
+| `index_of`    | `arg: string, substring: string`                                           | `number`    | Returns the index of the start of a substring in the argument. Returns -1 if not found. |
+| `replace`     | `arg: string, old_substr: string, new_substr: string`                      | `string`    | Replaces all occurrences of `old_substr` in the argument with `new_substr`.             |
+| `len`         | `arg: string`                                                              | `number`    | Returns the length of a string.                                                         |
+| `max`         | `a: number, b: number`                                                     | `number`    | Returns the maximum of the inputs                                                       |
+| `min`         | `a: number, b: number`                                                     | `number`    | Returns the minimum of the inputs                                                       |
+| `pow`         | `base: number, exp: number`                                                | `number`    | Raises the base to the power of the exponent                                            |
+| `random`      | `min: number, max: number`                                                 | `number`    | Returns a random number in the range of `min` to `max`                                  |
+| `random_int`  | `min: number (int), max: number (int)`                                     | `number`    | Returns a random integer in the range of `min` to `max`                                 |
