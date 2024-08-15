@@ -2,15 +2,17 @@ use std::collections::HashMap;
 use crate::literal::Literal;
 use crate::error::RuntimeError;
 use crate::Token;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 #[derive(Debug, Clone)]
 pub struct Environment {
-  pub enclosing: Option<Box<Environment>>,
+  pub enclosing: Option<Rc<RefCell<Environment>>>,
   values: HashMap<String, Option<Literal>>
 }
 
 impl Environment {
-  pub fn init(enclosing: Option<Box<Environment>>) -> Self {
+  pub fn init(enclosing: Option<Rc<RefCell<Environment>>>) -> Self {
     Self {
       enclosing,
       values: HashMap::new()
@@ -29,7 +31,7 @@ impl Environment {
 
     match &mut self.enclosing {
       Some(enclosed) => {
-        return enclosed.assign(name, value);
+        return enclosed.borrow_mut().assign(name, value);
       },
       None => {}
     }
@@ -45,7 +47,7 @@ impl Environment {
       None => {
         match &self.enclosing {
           Some(enclosed) => {
-            return enclosed.get(name)
+            return enclosed.borrow_mut().get(name)
           },
           None => {}
         }

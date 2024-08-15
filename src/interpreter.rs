@@ -8,33 +8,35 @@ use crate::environment::Environment;
 use crate::error::RuntimeError;
 use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn, TypeofFn, SubstrFn, IndexOfFn, ReplaceFn, RandomFn, RandomIntFn };
 use crate::callable::function::QalamFunction;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 
 
 pub struct Interpreter {
-  pub globals: Environment,
-  pub environment: Environment
+  pub globals: Rc<RefCell<Environment>>,
+  pub environment: Rc<RefCell<Environment>>
 }
 
 impl Interpreter {
   pub fn init() -> Self {
-    let mut globals = Environment::init(None);
-    globals.define("clock".to_string(), Some(Literal::Callable(Box::new(ClockFn::init()))));
-    globals.define("pow".to_string(), Some(Literal::Callable(Box::new(PowFn::init()))));
-    globals.define("max".to_string(), Some(Literal::Callable(Box::new(MaxFn::init()))));
-    globals.define("min".to_string(), Some(Literal::Callable(Box::new(MinFn::init()))));
-    globals.define("len".to_string(), Some(Literal::Callable(Box::new(LenFn::init()))));
-    globals.define("str2num".to_string(), Some(Literal::Callable(Box::new(NumFn::init()))));
-    globals.define("str".to_owned(), Some(Literal::Callable(Box::new(StrFn::init()))));
-    globals.define("typeof".to_string(), Some(Literal::Callable(Box::new(TypeofFn::init()))));
-    globals.define("substr".to_string(), Some(Literal::Callable(Box::new(SubstrFn::init()))));
-    globals.define("index_of".to_string(), Some(Literal::Callable(Box::new(IndexOfFn::init()))));
-    globals.define("replace".to_string(), Some(Literal::Callable(Box::new(ReplaceFn::init()))));
-    globals.define("random".to_string(), Some(Literal::Callable(Box::new(RandomFn::init()))));
-    globals.define("random_int".to_string(), Some(Literal::Callable(Box::new(RandomIntFn::init()))));
+    let globals = Rc::new(RefCell::new(Environment::init(None)));
+    globals.borrow_mut().define("clock".to_string(), Some(Literal::Callable(Box::new(ClockFn::init()))));
+    globals.borrow_mut().define("pow".to_string(), Some(Literal::Callable(Box::new(PowFn::init()))));
+    globals.borrow_mut().define("max".to_string(), Some(Literal::Callable(Box::new(MaxFn::init()))));
+    globals.borrow_mut().define("min".to_string(), Some(Literal::Callable(Box::new(MinFn::init()))));
+    globals.borrow_mut().define("len".to_string(), Some(Literal::Callable(Box::new(LenFn::init()))));
+    globals.borrow_mut().define("str2num".to_string(), Some(Literal::Callable(Box::new(NumFn::init()))));
+    globals.borrow_mut().define("str".to_owned(), Some(Literal::Callable(Box::new(StrFn::init()))));
+    globals.borrow_mut().define("typeof".to_string(), Some(Literal::Callable(Box::new(TypeofFn::init()))));
+    globals.borrow_mut().define("substr".to_string(), Some(Literal::Callable(Box::new(SubstrFn::init()))));
+    globals.borrow_mut().define("index_of".to_string(), Some(Literal::Callable(Box::new(IndexOfFn::init()))));
+    globals.borrow_mut().define("replace".to_string(), Some(Literal::Callable(Box::new(ReplaceFn::init()))));
+    globals.borrow_mut().define("random".to_string(), Some(Literal::Callable(Box::new(RandomFn::init()))));
+    globals.borrow_mut().define("random_int".to_string(), Some(Literal::Callable(Box::new(RandomIntFn::init()))));
     return Self {
       globals: globals.clone(),
-      environment: globals
+      environment: globals.clone()
     }
   }
 
@@ -101,24 +103,20 @@ impl Interpreter {
     }
   }
 
-  pub fn execute_block(&mut self, statements: &mut Vec<Stmt>, environment: Environment) -> Result<(), RuntimeError> {
+  pub fn execute_block(&mut self, statements: &mut Vec<Stmt>, environment: Rc<RefCell<Environment>>) -> Result<(), RuntimeError> {
     let previous = self.environment.clone();
-    // println!("execute_block, previous env: {:?}", previous);
     self.environment = environment;
     for stmt in statements.iter_mut() {
       match self.execute(stmt) {
         Ok(_) => {},
         Err(e) => {
-          self.environment = previous.clone();
+          self.environment = previous;
           return Err(e)
         }
       }
     }
 
-    self.environment = match &self.environment.enclosing {
-      Some(env) => *env.clone(),
-      None => previous.clone()
-    };
+    self.environment = previous.clone();
     return Ok(());
   }
 
@@ -262,12 +260,12 @@ impl ExprVisitor for Interpreter {
   }
   
   fn visit_variable(&mut self, name: &Token) -> Self::R {
-      return Ok(self.environment.get(name)?);
+      return Ok(self.environment.borrow_mut().get(name)?);
   }
 
   fn visit_assign(&mut self, name: &Token, value: &Box<Expr>) -> Self::R {
       let value = self.evaluate(value)?;
-      self.environment.assign(name, value.clone())?;
+      self.environment.borrow_mut().assign(name, value.clone())?;
       return Ok(value)
   }
 
@@ -386,12 +384,12 @@ impl StmtVisitor for Interpreter {
         },
         None => None
       };
-      self.environment.define(name.lexeme.to_owned(), value);
+      self.environment.borrow_mut().define(name.lexeme.to_owned(), value);
       Ok(())
   }
 
   fn visit_block(&mut self, statements: &mut Vec<Stmt>) -> Self::R {
-      self.execute_block(statements, Environment::init(Some(Box::new(self.environment.clone()))))?;
+      self.execute_block(statements, Rc::new(RefCell::new(Environment::init(Some(self.environment.clone())))))?;
       return Ok(())
   }
 
@@ -455,8 +453,8 @@ impl StmtVisitor for Interpreter {
   }
 
   fn visit_function(&mut self, name: &Token, params: &Vec<Token>, body: &mut Vec<Stmt>) -> Self::R {
-      let function = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() });
-      self.environment.define(name.lexeme.to_string(), Some(Literal::Callable(Box::new(function))));
+      let function = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() },  self.environment.clone());
+      self.environment.borrow_mut().define(name.lexeme.to_string(), Some(Literal::Callable(Box::new(function))));
       return Ok(());
   }
 

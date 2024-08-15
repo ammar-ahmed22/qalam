@@ -1,0 +1,15 @@
+amal make_counter() {
+  niyya i = 0;
+  amal count() {
+    i = i + 1;
+    qul i;
+  }
+
+  radd count;
+}
+
+niyya counter = make_counter();
+// Prints 1
+counter();
+// Prints 2
+counter();

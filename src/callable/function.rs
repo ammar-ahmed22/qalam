@@ -5,29 +5,34 @@ use crate::environment::Environment;
 use crate::error::RuntimeError;
 use crate::ast::stmt::Stmt;
 use crate::token::Token;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 #[derive(Debug, Clone)]
 pub struct QalamFunction {
-  pub declaration: Stmt
+  pub declaration: Stmt,
+  pub closure: Rc<RefCell<Environment>>
 }
 
 impl QalamFunction {
-  pub fn init(declaration: Stmt) -> Self {
+  pub fn init(declaration: Stmt, closure: Rc<RefCell<Environment>>) -> Self {
     Self {
-      declaration
+      declaration,
+      closure
     }
   }
 }
 
 impl QalamCallable for QalamFunction {
   fn call(&mut self, interpreter: &mut Interpreter, arguments: Vec<Option<Literal>>, paren: &Token) -> Result<Option<Literal>, RuntimeError> {
-      let mut env = Environment::init(Some(Box::new(interpreter.environment.clone())));
+      let env = Rc::new(RefCell::new(Environment::init(Some(self.closure.clone()))));
+      // println!("at line {}, env: {:?}", paren.line, env);
       match &mut self.declaration {
         Stmt::Function { name: _, params, body } => {
           for i in 0..params.len() {
             let param_name = &params[i].lexeme;
             let arg = &arguments[i];
-            env.define(param_name.to_owned(), arg.clone());
+            env.borrow_mut().define(param_name.to_owned(), arg.clone());
           }
           match interpreter.execute_block(body, env) {
             Ok(_) => {},
