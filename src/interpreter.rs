@@ -2,6 +2,7 @@ use crate::ast::expr::Expr;
 use crate::ast::stmt::Stmt;
 use crate::ast::visitor::expr::ExprVisitor;
 use crate::ast::visitor::stmt::StmtVisitor;
+use crate::callable::QalamCallable;
 use crate::token::{ Token, TokenType };
 use crate::literal::Literal;
 use crate::environment::Environment;
@@ -21,23 +22,29 @@ pub struct Interpreter {
 impl Interpreter {
   pub fn init() -> Self {
     let globals = Rc::new(RefCell::new(Environment::init(None)));
-    globals.borrow_mut().define("clock".to_string(), Some(Literal::Callable(Box::new(ClockFn::init()))));
-    globals.borrow_mut().define("pow".to_string(), Some(Literal::Callable(Box::new(PowFn::init()))));
-    globals.borrow_mut().define("max".to_string(), Some(Literal::Callable(Box::new(MaxFn::init()))));
-    globals.borrow_mut().define("min".to_string(), Some(Literal::Callable(Box::new(MinFn::init()))));
-    globals.borrow_mut().define("len".to_string(), Some(Literal::Callable(Box::new(LenFn::init()))));
-    globals.borrow_mut().define("str2num".to_string(), Some(Literal::Callable(Box::new(NumFn::init()))));
-    globals.borrow_mut().define("str".to_owned(), Some(Literal::Callable(Box::new(StrFn::init()))));
-    globals.borrow_mut().define("typeof".to_string(), Some(Literal::Callable(Box::new(TypeofFn::init()))));
-    globals.borrow_mut().define("substr".to_string(), Some(Literal::Callable(Box::new(SubstrFn::init()))));
-    globals.borrow_mut().define("index_of".to_string(), Some(Literal::Callable(Box::new(IndexOfFn::init()))));
-    globals.borrow_mut().define("replace".to_string(), Some(Literal::Callable(Box::new(ReplaceFn::init()))));
-    globals.borrow_mut().define("random".to_string(), Some(Literal::Callable(Box::new(RandomFn::init()))));
-    globals.borrow_mut().define("random_int".to_string(), Some(Literal::Callable(Box::new(RandomIntFn::init()))));
+    Self::add_global(globals.clone(), "clock", ClockFn::init());
+    Self::add_global(globals.clone(), "pow", PowFn::init());
+    Self::add_global(globals.clone(), "max", MaxFn::init());
+    Self::add_global(globals.clone(), "min", MinFn::init());
+    Self::add_global(globals.clone(), "len", LenFn::init());
+    Self::add_global(globals.clone(), "str2num", NumFn::init());
+    Self::add_global(globals.clone(), "str", StrFn::init());
+    Self::add_global(globals.clone(), "typeof", TypeofFn::init());
+    Self::add_global(globals.clone(), "substr", SubstrFn::init());
+    Self::add_global(globals.clone(), "index_of", IndexOfFn::init());
+    Self::add_global(globals.clone(), "replace", ReplaceFn::init());
+    Self::add_global(globals.clone(), "random", RandomFn::init());
+    Self::add_global(globals.clone(), "random_int", RandomIntFn::init());
     return Self {
       globals: globals.clone(),
       environment: globals.clone()
     }
+  }
+
+  fn add_global<F>(globals: Rc<RefCell<Environment>>, name: &str, func: F)
+  where F: QalamCallable + 'static
+   {
+    globals.borrow_mut().define(name.to_string(), Some(Literal::Callable(Box::new(func))))
   }
 
   fn evaluate(&mut self, expr: &Expr) -> Result<Option<Literal>, RuntimeError> {

@@ -1,0 +1,10 @@
+niyya a = "global";
+{
+  amal showA() {
+    qul a;
+  }
+
+  showA();
+  niyya a = "block";
+  showA();
+}
