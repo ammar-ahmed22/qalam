@@ -7,6 +7,8 @@ pub mod environment;
 pub mod literal;
 pub mod error;
 pub mod callable;
+pub mod resolver;
+pub mod stack;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use std::cell::RefCell;
@@ -15,7 +17,9 @@ use token::Token;
 use parser::Parser;
 use interpreter::Interpreter;
 use error::{ ErrorReporter, ErrorType };
-
+use resolver::Resolver;
+use std::rc::Rc;
+// use std::cell::RefCell;
 
 pub struct Qalam {
   error_reporter: RefCell<ErrorReporter>
@@ -34,15 +38,15 @@ impl Qalam {
     let tokens = scanner.scan_tokens();
     let mut parser = Parser::init(tokens);
     match parser.parse() {
-      Ok(statements) => {
-        let mut interpreter = Interpreter::init();
-        match interpreter.interpret(statements) {
-          Ok(_) => {
-            // do nothing
-          },
-          Err(e) => {
-            reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime)
-          }
+      Ok(mut statements) => {
+        let interpreter = Rc::new(RefCell::new(Interpreter::init()));
+        let mut resolver = Resolver::init(interpreter.clone());
+        if let Err(e) = resolver.resolve_stmts(&mut statements) {
+          reporter.runtime_error(&e.token, &e.message, ErrorType::Resolution);
+          return;
+        }
+        if let Err(e) = interpreter.clone().borrow_mut().interpret(statements) {
+          reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime);
         }
       },
       Err(e) => {

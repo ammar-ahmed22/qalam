@@ -11,12 +11,14 @@ use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn
 use crate::callable::function::QalamFunction;
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::collections::HashMap;
 
 
 
 pub struct Interpreter {
   pub globals: Rc<RefCell<Environment>>,
-  pub environment: Rc<RefCell<Environment>>
+  pub environment: Rc<RefCell<Environment>>,
+  pub locals: HashMap<Expr, usize>
 }
 
 impl Interpreter {
@@ -37,8 +39,14 @@ impl Interpreter {
     Self::add_global(globals.clone(), "random_int", RandomIntFn::init());
     return Self {
       globals: globals.clone(),
-      environment: globals.clone()
+      environment: globals.clone(),
+      locals: HashMap::new()
     }
+  }
+
+  pub fn resolve(&mut self, expr: &Expr, depth: usize) -> Result<(), RuntimeError> {
+    self.locals.insert(expr.clone(), depth);
+    return Ok(())
   }
 
   fn add_global<F>(globals: Rc<RefCell<Environment>>, name: &str, func: F)
@@ -112,12 +120,13 @@ impl Interpreter {
 
   pub fn execute_block(&mut self, statements: &mut Vec<Stmt>, environment: Rc<RefCell<Environment>>) -> Result<(), RuntimeError> {
     let previous = self.environment.clone();
-    self.environment = environment;
+    self.environment = environment.clone();
+    // println!("execute block, env: {:?}", self.environment);
     for stmt in statements.iter_mut() {
       match self.execute(stmt) {
         Ok(_) => {},
         Err(e) => {
-          self.environment = previous;
+          self.environment = previous.clone();
           return Err(e)
         }
       }
@@ -267,13 +276,23 @@ impl ExprVisitor for Interpreter {
   }
   
   fn visit_variable(&mut self, name: &Token) -> Self::R {
-      return Ok(self.environment.borrow_mut().get(name)?);
+      let distance = self.locals.get(&Expr::Variable { name: name.clone() });
+      if let Some(distance) = distance {
+        return Ok(Environment::get_at(self.environment.clone(), *distance, name.lexeme.to_string())?);
+      } else {
+        return Ok(self.globals.borrow().get(name)?)
+      }
   }
 
   fn visit_assign(&mut self, name: &Token, value: &Box<Expr>) -> Self::R {
-      let value = self.evaluate(value)?;
-      self.environment.borrow_mut().assign(name, value.clone())?;
-      return Ok(value)
+      let res_value = self.evaluate(value)?;
+      let distance = self.locals.get(&Expr::Assign { name: name.clone(), value: value.clone() });
+      if let Some(distance) = distance {
+        Environment::assign_at(self.environment.clone(), *distance, name, res_value.clone())?;
+      } else {
+        self.globals.borrow_mut().assign(name, res_value.clone())?;
+      }
+      return Ok(res_value)
   }
 
   fn visit_logical(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R {

@@ -1,6 +1,6 @@
 use crate::literal::Literal;
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Copy, Clone, Hash, Eq)]
 pub enum TokenType {
   LeftParen, RightParen, LeftBrace, RightBrace,
   Comma, Dot, Minus, Plus, Semicolon, Slash, Star,
@@ -46,12 +46,13 @@ impl TokenType {
   }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Hash, Eq, PartialEq)]
 pub struct Token {
   pub token_type: TokenType,
   pub lexeme: String,
   pub literal: Option<Literal>,
-  pub line: i64
+  pub line: i64,
+  pub position: i64,
 }
 
 impl Clone for Token {
@@ -60,18 +61,20 @@ impl Clone for Token {
         token_type: self.token_type,
         lexeme: self.lexeme.to_string(),
         literal: self.literal.clone(),
-        line: self.line
+        line: self.line,
+        position: self.position
       }
   }
 }
 
 impl Token {
-  pub fn init(token_type: TokenType, lexeme: &String, literal: Option<Literal>, line: i64) -> Self {
+  pub fn init(token_type: TokenType, lexeme: &String, literal: Option<Literal>, line: i64, position: i64) -> Self {
     return Self {
       token_type,
       lexeme: lexeme.to_string(),
       literal,
-      line
+      line,
+      position
     }
   }
 
@@ -80,7 +83,8 @@ impl Token {
       token_type: TokenType::Eof,
       lexeme: String::from("dummy"),
       literal: None,
-      line: -1
+      line: -1,
+      position: 0
     }
   }
 
@@ -89,7 +93,8 @@ impl Token {
       token_type: token.token_type,
       lexeme: token.lexeme.to_string(),
       literal: token.literal.clone(),
-      line: token.line
+      line: token.line,
+      position: token.position
     }
   }
 

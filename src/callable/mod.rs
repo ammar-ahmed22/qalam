@@ -1,5 +1,7 @@
 pub mod function;
 pub mod global;
+use std::hash::Hash;
+
 use crate::interpreter::Interpreter;
 use crate::literal::Literal;
 use crate::error::RuntimeError;
@@ -16,4 +18,24 @@ impl Clone for Box<dyn QalamCallable> {
   fn clone(&self) -> Self {
     return self.clone_box();
   }
+}
+
+impl Hash for Box<dyn QalamCallable> {
+  fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+      self.to_string().hash(state)
+  }
+}
+
+impl PartialEq for Box<dyn QalamCallable> {
+  fn eq(&self, other: &Self) -> bool {
+      self.clone().to_string() == other.clone().to_string()
+  }
+
+  fn ne(&self, other: &Self) -> bool {
+      return !self.eq(other)
+  }
+}
+
+impl Eq for Box<dyn QalamCallable> {
+  
 }

@@ -4,6 +4,7 @@ use crate::literal::Literal;
 use crate::error::RuntimeError;
 use crate::token::Token;
 use rand::Rng;
+use ordered_float::OrderedFloat;
 
 
 fn is_neg(num: f64) -> bool {
@@ -40,7 +41,7 @@ impl QalamCallable for ClockFn {
       let start = std::time::SystemTime::now();
       let since_epoch = start.duration_since(std::time::UNIX_EPOCH).expect("Time went backwards.");
       let millis = since_epoch.as_millis() as f64;
-      return Ok(Some(Literal::Number(millis / 1000.0)));
+      return Ok(Some(Literal::Number(OrderedFloat(millis / 1000.0))));
   }
 
   fn arity(&self) -> usize {
@@ -71,7 +72,7 @@ impl QalamCallable for PowFn {
       let exp = &arguments[1];
       if let (Some(base), Some(exp)) = (base, exp) {
         if let (Literal::Number(base), Literal::Number(exp)) = (base, exp) {
-          return Ok(Some(Literal::Number(base.clone().powf(*exp))))
+          return Ok(Some(Literal::Number(OrderedFloat(base.clone().powf(**exp)))))
         } else {
           return Err(RuntimeError::init(paren, format!("{} must be called with number types!", self.to_string())))
         }
@@ -194,7 +195,7 @@ impl QalamCallable for LenFn {
     let arg = &arguments[0];
     if let Some(arg) = arg {
       if let Literal::String(arg) = arg {
-        return Ok(Some(Literal::Number(arg.len() as f64)));
+        return Ok(Some(Literal::Number(OrderedFloat(arg.len() as f64))));
       } else {
         return Err(RuntimeError::init(paren, format!("{} must be called with string type!", self.to_string())));
       }
@@ -233,7 +234,7 @@ impl QalamCallable for NumFn {
         if let Literal::String(arg) = arg {
           match arg.parse::<f64>() {
             Ok(num) => {
-              return Ok(Some(Literal::Number(num)))
+              return Ok(Some(Literal::Number(OrderedFloat(num))))
             },
             Err(_e) => {
               return Err(RuntimeError::init(paren, format!("Cannot convert \"{}\" to number.", arg)))
@@ -349,16 +350,16 @@ impl QalamCallable for SubstrFn {
       if let (Some(arg), Some(start), Some(length)) = (arg, start, length) {
         if let Literal::String(arg) = arg {
           if let (Literal::Number(start), Literal::Number(length)) = (start, length) {
-            if !is_usize(*start) {
+            if !is_usize(**start) {
               return Err(RuntimeError::init(paren, format!("'start' must be a positive integer!")));
             }
 
-            if !is_usize(*length) {
+            if !is_usize(**length) {
               return Err(RuntimeError::init(paren, format!("'length' must be a positive integer!")));
             }
 
-            let start = *start as usize;
-            let length = *length as usize;
+            let start = **start as usize;
+            let length = **length as usize;
 
             let s = &arg[start..(start + length)];
             return Ok(Some(Literal::String(String::from(s))));
@@ -403,9 +404,9 @@ impl QalamCallable for IndexOfFn {
       if let (Some(arg), Some(substring)) = (arg, substring) {
         if let (Literal::String(arg), Literal::String(substring)) = (arg, substring) {
           if let Some(index) = arg.find(substring) {
-            return Ok(Some(Literal::Number(index as f64)))
+            return Ok(Some(Literal::Number(OrderedFloat(index as f64))))
           } else {
-            return Ok(Some(Literal::Number(-1.0)))
+            return Ok(Some(Literal::Number(OrderedFloat(-1.0))))
           }
         } else {
           return Err(RuntimeError::init(paren, format!("'arg' and 'substring' must be strings!")));
@@ -487,8 +488,8 @@ impl QalamCallable for RandomFn {
             return Err(RuntimeError::init(paren, format!("'max' must be greater than or equal to 'min'")));
           }
           let mut rng = rand::thread_rng();
-          let res: f64 = rng.gen_range(*min..*max);
-          return Ok(Some(Literal::Number(res)));
+          let res: f64 = rng.gen_range(**min..**max);
+          return Ok(Some(Literal::Number(OrderedFloat(res))));
         } else {
           return Err(RuntimeError::init(paren, format!("All arguments must be numbers!")));
         }
@@ -525,21 +526,21 @@ impl QalamCallable for RandomIntFn {
     let max = &arguments[1];
     if let (Some(min), Some(max)) = (min, max) {
       if let (Literal::Number(min), Literal::Number(max)) = (min, max) {
-        if !is_int(*min) {
+        if !is_int(**min) {
           return Err(RuntimeError::init(paren, format!("'min' must be an integer!")));
         }
 
-        if !is_int(*max) {
+        if !is_int(**max) {
           return Err(RuntimeError::init(paren, format!("'max' must be an integer!")));
         }
-        let min = *min as i32;
-        let max = *max as i32;
+        let min = **min as i32;
+        let max = **max as i32;
         if min > max {
           return Err(RuntimeError::init(paren, format!("'max' must be greater than or equal to 'min'")));
         }
         let mut rng = rand::thread_rng();
         let res: i32 = rng.gen_range(min..max);
-        return Ok(Some(Literal::Number(res as f64)));
+        return Ok(Some(Literal::Number(OrderedFloat(res as f64))));
       } else {
         return Err(RuntimeError::init(paren, format!("All arguments must be numbers!")));
       }

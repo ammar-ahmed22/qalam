@@ -6,6 +6,7 @@ pub enum ErrorType {
   Error,
   Syntax,
   Runtime,
+  Resolution
 }
 
 impl ErrorType {
@@ -13,7 +14,8 @@ impl ErrorType {
     match self {
       Self::Error => "Error",
       Self::Syntax => "SyntaxError",
-      Self::Runtime => "RuntimeError"
+      Self::Runtime => "RuntimeError",
+      Self::Resolution => "ResolutionError"
     }
   }
 }

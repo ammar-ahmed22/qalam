@@ -5,6 +5,7 @@ use crate::Token;
 use std::rc::Rc;
 use std::cell::RefCell;
 
+
 #[derive(Debug, Clone)]
 pub struct Environment {
   pub enclosing: Option<Rc<RefCell<Environment>>>,
@@ -35,7 +36,7 @@ impl Environment {
       },
       None => {}
     }
-
+    // println!("about to throw ASSIGN error, env: {:?}", self);
     return Err(RuntimeError::init(name, format!("Undefined variable '{}'.", name.lexeme)))
   }
 
@@ -51,8 +52,27 @@ impl Environment {
           },
           None => {}
         }
+        // println!("about to throw GET error, env: {:?}", self);
         return Err(RuntimeError::init(name, format!("Undefined variable '{}'.", name.lexeme)))
       }
     }
+  }
+
+  fn ancestor(root: Rc<RefCell<Environment>>, distance: usize) -> Rc<RefCell<Environment>> {
+    let mut env = root.clone();
+    for _ in 0..distance {
+      let next = env.borrow().enclosing.as_ref().unwrap().clone();
+      env = next;
+    }
+    return env;
+  }
+
+  pub fn get_at(root: Rc<RefCell<Environment>>, distance: usize, name: String) -> Result<Option<Literal>, RuntimeError> {
+    return Ok(Environment::ancestor(root, distance).as_ref().borrow().values.get(&name).expect(&format!("Variable '{}' should be defined. Something went wrong with environment!", name)).clone());
+  }
+
+  pub fn assign_at(root: Rc<RefCell<Environment>>, distance: usize, name: &Token, value: Option<Literal>) -> Result<(), RuntimeError> {
+    Environment::ancestor(root, distance).as_ref().borrow_mut().values.insert(name.lexeme.to_string(), value);
+    return Ok(());
   }
 }

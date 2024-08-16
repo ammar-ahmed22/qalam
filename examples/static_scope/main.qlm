@@ -1,0 +1,12 @@
+niyya a = "global";
+
+{
+  amal showA() {
+    qul a;
+  }
+
+  // Prints global both times because scope is static (only the values defined before showA are accessible, even if they are set to something else afterwards)
+  showA();
+  niyya a = "block";
+  showA();
+}

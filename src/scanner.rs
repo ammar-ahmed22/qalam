@@ -1,6 +1,7 @@
 use crate::token::{Token, TokenType};
 use crate::{ ErrorReporter, ErrorType };
 use crate::literal::Literal;
+use ordered_float::OrderedFloat;
 
 pub struct Scanner<'a> {
   source: String,
@@ -8,6 +9,7 @@ pub struct Scanner<'a> {
   start: usize,
   current: usize,
   line: i64,
+  position: i64,
   error_reporter: &'a mut ErrorReporter,
 }
 
@@ -19,6 +21,7 @@ impl <'a> Scanner<'a> {
       start: 0,
       current: 0,
       line: 1,
+      position: 0,
       error_reporter
     }
   }
@@ -112,7 +115,8 @@ impl <'a> Scanner<'a> {
     let text = self.source.get(self.start..self.current);
     match text {
       Some(t) => {
-        self.tokens.push(Token::init(token_type, &t.to_string(), literal, self.line))
+        self.tokens.push(Token::init(token_type, &t.to_string(), literal, self.line, self.position));
+        self.position += 1;
       },
       None => {
         eprintln!("Cannot get lexeme!");
@@ -132,6 +136,7 @@ impl <'a> Scanner<'a> {
       }
       if self.peek() == '\n' { // Supports multiline strings
         self.line += 1;
+        self.position = 0;
       }
       self.advance();
     }
@@ -212,7 +217,7 @@ impl <'a> Scanner<'a> {
             std::process::exit(1);
           }
         };
-        self.add_token(TokenType::Number, Some(Literal::Number(as_float)));
+        self.add_token(TokenType::Number, Some(Literal::Number(OrderedFloat(as_float))));
       },
       None => {
         eprintln!("Cannot get number string!");
@@ -311,6 +316,7 @@ impl <'a> Scanner<'a> {
       ' ' | '\r' | '\t' => {},
       '\n' => {
         self.line += 1;
+        self.position = 0;
       },
       '"' => {
         self.string();
@@ -333,7 +339,7 @@ impl <'a> Scanner<'a> {
       self.scan_token();
     }
 
-    self.tokens.push(Token::init(TokenType::Eof, &String::from(""), None, self.line));
+    self.tokens.push(Token::init(TokenType::Eof, &String::from(""), None, self.line, self.position + 1));
     return &self.tokens;
   }
 }

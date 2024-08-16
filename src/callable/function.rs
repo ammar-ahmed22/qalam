@@ -25,6 +25,7 @@ impl QalamFunction {
 
 impl QalamCallable for QalamFunction {
   fn call(&mut self, interpreter: &mut Interpreter, arguments: Vec<Option<Literal>>, paren: &Token) -> Result<Option<Literal>, RuntimeError> {
+      // let env = EnvironmentContainer::init(Some(self.closure.clone()));
       let env = Rc::new(RefCell::new(Environment::init(Some(self.closure.clone()))));
       // println!("at line {}, env: {:?}", paren.line, env);
       match &mut self.declaration {

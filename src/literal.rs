@@ -1,11 +1,26 @@
 use crate::callable::QalamCallable;
+use ordered_float::OrderedFloat;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, Hash)]
 pub enum Literal {
-  Number(f64),
+  Number(OrderedFloat<f64>),
   String(String),
   Bool(bool),
   Callable(Box<dyn QalamCallable>)
+}
+
+impl PartialEq for Literal {
+  fn eq(&self, other: &Self) -> bool {
+      match (self, other) {
+        (Literal::Number(a), Literal::Number(b)) => a == b,
+        (Literal::String(a), Literal::String(b)) => a == b,
+        (Literal::Bool(a), Literal::Bool(b)) => a == b,
+        (Literal::Callable(a), Literal::Callable(b)) => {
+          std::ptr::eq(&**a, &**b)
+        },
+        _ => false
+      }
+  }
 }
 
 impl Literal {

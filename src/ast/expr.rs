@@ -2,7 +2,7 @@ use crate::token::Token;
 use crate::ast::visitor::expr::ExprVisitor;
 use crate::literal::Literal;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
 pub enum Expr {
   Assign {
     name: Token,
