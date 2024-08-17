@@ -118,17 +118,18 @@ baynama(a) {
 | :----: | :------------------ | :---- |
 | `kitab` | Chapter (literal: Book) (Arabic). In Islamic books, chapters are called kitab. Classes are similar to chapters as they group related data together. | Class definition |
 | `khalaq` | To create (Arabic). The constructor creates the class object. | Class constructor function |
+| `nafs` | Self/Soul. Islamically, nafs is used to describe desires of the self. Represents the state of the instance (self). | Instance accessor (`this` in JavaScript, `self` in Python/Rust) | 
 
 
 ```text
 kitab Animal {
   khalaq(name, sound) {
-    this.name = name;
-    this.sound = sound;
+    nafs.name = name;
+    nafs.sound = sound;
   }
 
   speak() {
-    qul this.sound;
+    qul nafs.sound;
   }
 }
 

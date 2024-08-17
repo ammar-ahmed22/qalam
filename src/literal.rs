@@ -1,12 +1,15 @@
 use crate::callable::QalamCallable;
+use crate::callable::instance::QalamInstance;
 use ordered_float::OrderedFloat;
+use crate::hashable::HashableRcRefCell;
 
 #[derive(Debug, Clone, Eq, Hash)]
 pub enum Literal {
   Number(OrderedFloat<f64>),
   String(String),
   Bool(bool),
-  Callable(Box<dyn QalamCallable>)
+  Callable(Box<dyn QalamCallable>),
+  Instance(HashableRcRefCell<QalamInstance>)
 }
 
 impl PartialEq for Literal {
@@ -29,7 +32,8 @@ impl Literal {
       Self::Bool(val) => format!("{}", if *val { "haqq" } else { "batil" }),
       Self::Number(val) => format!("{}", val),
       Self::String(val) => val.to_owned(),
-      Self::Callable(val) => val.to_string()
+      Self::Callable(val) => val.to_string(),
+      Self::Instance(val) => val.0.borrow().to_string()
     }
   }
 

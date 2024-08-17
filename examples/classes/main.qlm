@@ -1,0 +1,37 @@
+kitab Prayer {
+  khalaq(name, time, rakats) {
+    nafs.name = name;
+    nafs.time = time;
+    nafs.rakats = rakats;
+    nafs.completed = batil;
+  }
+
+  perform() {
+    shart(la nafs.completed) {
+      qul "Performing " + nafs.name + " prayer, which has " + str(nafs.rakats) + " rakats.";
+      nafs.completed = haqq;
+    } illa {
+      qul nafs.name + " prayer has already been completed.";
+    }
+  }
+
+  status() {
+    shart(nafs.completed) {
+      qul nafs.name + " prayer is completed.";
+    } illa {
+      qul nafs.name + " prayer is pending.";
+    }
+  }
+}
+
+niyya fajr = Prayer("Fajr", "Dawn", 2);
+// Fajr is pending
+fajr.status();
+// Performing fajr 
+fajr.perform();
+// Fajr is completed
+fajr.status();
+
+niyya dhuhr = Prayer("Dhuhr", "Noon", 4);
+// Dhuhr is pending
+dhuhr.status();

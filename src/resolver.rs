@@ -12,13 +12,20 @@ use std::cell::RefCell;
 
 #[derive(Clone)]
 pub enum FunctionType {
-  Function
+  Function,
+  Method
+}
+
+#[derive(Clone)]
+pub enum ClassType {
+  Class
 }
 
 pub struct Resolver {
   interpreter: Rc<RefCell<Interpreter>>,
   scopes: Stack<HashMap<String, bool>>,
   current_function: Option<FunctionType>,
+  current_class: Option<ClassType>
 }
 
 impl Resolver {
@@ -26,7 +33,8 @@ impl Resolver {
     return Self {
       interpreter,
       scopes: Stack::new(),
-      current_function: None
+      current_function: None,
+      current_class: None
     }
   }
 
@@ -166,6 +174,26 @@ impl StmtVisitor for Resolver {
       self.resolve_stmt(body)?;
       return Ok(());
   }
+
+  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>) -> Self::R {
+      let enclosing_class = self.current_class.clone();
+      self.current_class = Some(ClassType::Class);
+      self.declare(name.clone())?;
+      self.define(name.clone())?;
+      self.begin_scope();
+      self.scopes.peek_mut().unwrap().insert(String::from("nafs"), true);
+      for method in methods.iter_mut() {
+        let declaration = FunctionType::Method;
+        if let Stmt::Function { name, params, body } = method {
+          self.resolve_function(name, params, body, Some(declaration))?;
+        } else {
+          return Err(RuntimeError::init(name, format!("class method is not a function!")))
+        }
+      }
+      self.end_scope();
+      self.current_class = enclosing_class;
+      return Ok(());
+  }
 }
 
 impl ExprVisitor for Resolver {
@@ -218,5 +246,24 @@ impl ExprVisitor for Resolver {
 
       self.resolve_local_expr(&Expr::Variable { name: name.clone() }, name)?;
       return Ok(());
+  }
+
+  fn visit_get(&mut self, object: &Box<Expr>, _name: &Token) -> Self::R {
+      self.resolve_expr(object)?;
+      return Ok(());
+  }
+
+  fn visit_set(&mut self, object: &Box<Expr>, _name: &Token, value: &Box<Expr>) -> Self::R {
+      self.resolve_expr(value)?;
+      self.resolve_expr(object)?;
+      return Ok(());
+  }
+
+  fn visit_this(&mut self, keyword: &Token) -> Self::R {
+      if let None = self.current_class {
+        return Err(RuntimeError::init(keyword, format!("Can't use 'nafs' outside of a kitab.")));
+      }
+      self.resolve_local_expr(&Expr::This { keyword: keyword.clone() }, keyword)?;
+      return Ok(())
   }
 }

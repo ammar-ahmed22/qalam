@@ -1,4 +1,5 @@
 use crate::callable::QalamCallable;
+use crate::hashable::HashableRcRefCell;
 use crate::interpreter::Interpreter;
 use crate::literal::Literal;
 use crate::environment::Environment;
@@ -7,6 +8,7 @@ use crate::ast::stmt::Stmt;
 use crate::token::Token;
 use std::rc::Rc;
 use std::cell::RefCell;
+use crate::callable::instance::QalamInstance;
 
 #[derive(Debug, Clone)]
 pub struct QalamFunction {
@@ -20,6 +22,12 @@ impl QalamFunction {
       declaration,
       closure
     }
+  }
+
+  pub fn bind(&self, instance: HashableRcRefCell<QalamInstance>) -> Self {
+    let mut env = Environment::init(Some(self.closure.clone()));
+    env.define("nafs".to_string(), Some(Literal::Instance(instance)));
+    return Self::init(self.declaration.clone(), Rc::new(RefCell::new(env)));
   }
 }
 
@@ -73,5 +81,9 @@ impl QalamCallable for QalamFunction {
         _ => {return format!("ghaib");}
       }
       
+  }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
   }
 }

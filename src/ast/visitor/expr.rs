@@ -12,4 +12,7 @@ pub trait ExprVisitor {
   fn visit_variable(&mut self, name: &Token) -> Self::R;
   fn visit_logical(&mut self, left: &Box<Expr>, operator: &Token, right: &Box<Expr>) -> Self::R;
   fn visit_call(&mut self, callee: &Box<Expr>, paren: &Token, arguments: &Vec<Expr>) -> Self::R;
+  fn visit_get(&mut self, object: &Box<Expr>, name: &Token) -> Self::R;
+  fn visit_set(&mut self, object: &Box<Expr>, name: &Token, value: &Box<Expr>) -> Self::R;
+  fn visit_this(&mut self, keyword: &Token) -> Self::R;
 }

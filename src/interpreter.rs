@@ -2,16 +2,19 @@ use crate::ast::expr::Expr;
 use crate::ast::stmt::Stmt;
 use crate::ast::visitor::expr::ExprVisitor;
 use crate::ast::visitor::stmt::StmtVisitor;
+use crate::callable::instance::QalamInstance;
 use crate::callable::QalamCallable;
+use crate::callable::function::QalamFunction;
+use crate::callable::class::QalamClass;
 use crate::token::{ Token, TokenType };
 use crate::literal::Literal;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
 use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn, TypeofFn, SubstrFn, IndexOfFn, ReplaceFn, RandomFn, RandomIntFn };
-use crate::callable::function::QalamFunction;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
+use crate::hashable::HashableMap;
 
 
 
@@ -146,6 +149,15 @@ impl Interpreter {
   fn execute(&mut self, stmt: &mut Stmt) -> Result<(), RuntimeError> {
     stmt.accept(self)
   }
+
+  fn lookup_variable(&mut self, name: &Token, expr: &Expr) -> Result<Option<Literal>, RuntimeError> {
+    let distance = self.locals.get(&expr);
+    if let Some(distance) = distance {
+      return Ok(Environment::get_at(self.environment.clone(), *distance, name.lexeme.to_string())?)
+    } else {
+      return Ok(self.globals.borrow().get(name)?)
+    }
+  }
 }
 
 impl ExprVisitor for Interpreter {
@@ -274,14 +286,11 @@ impl ExprVisitor for Interpreter {
     
       return Ok(None); // idk about this??
   }
+
   
+
   fn visit_variable(&mut self, name: &Token) -> Self::R {
-      let distance = self.locals.get(&Expr::Variable { name: name.clone() });
-      if let Some(distance) = distance {
-        return Ok(Environment::get_at(self.environment.clone(), *distance, name.lexeme.to_string())?);
-      } else {
-        return Ok(self.globals.borrow().get(name)?)
-      }
+      return self.lookup_variable(name, &Expr::Variable { name: name.clone() });
   }
 
   fn visit_assign(&mut self, name: &Token, value: &Box<Expr>) -> Self::R {
@@ -372,6 +381,35 @@ impl ExprVisitor for Interpreter {
           // throw runtime error, cannot call null
         }
       }
+  }
+
+  fn visit_get(&mut self, object: &Box<Expr>, name: &Token) -> Self::R {
+      let object = self.evaluate(object)?;
+      if let Some(object) = object {
+        if let Literal::Instance(object) = object {
+          return Ok(QalamInstance::get(object.clone(), name)?)
+          //return Ok(object.0.borrow().get(name)?);
+        }
+      }
+
+      return Err(RuntimeError::init(name, format!("Only instances have properties.")))
+  }
+
+  fn visit_set(&mut self, object: &Box<Expr>, name: &Token, value: &Box<Expr>) -> Self::R {
+      let object = self.evaluate(object)?;
+      if let Some(object) = object {
+        if let Literal::Instance(object) = object {
+          let value = self.evaluate(value)?;
+          object.0.borrow_mut().set(name, value.clone());
+          return Ok(value);
+        }
+      }
+
+      return Err(RuntimeError::init(name, format!("Only instances have fields.")))
+  }
+
+  fn visit_this(&mut self, keyword: &Token) -> Self::R {
+      return self.lookup_variable(keyword, &Expr::This { keyword: keyword.clone() });
   }
 }
 
@@ -494,5 +532,21 @@ impl StmtVisitor for Interpreter {
       };
 
       return Err(RuntimeError::init_return(val));
+  }
+
+  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>) -> Self::R {
+      self.environment.borrow_mut().define(name.lexeme.to_owned(), None);
+      let mut hash_methods: HashableMap<String, Box<dyn QalamCallable>> = HashableMap::new();
+      for method in methods.iter() {
+        if let Stmt::Function { name, params, body } = method {
+          let func = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() }, self.environment.clone());
+          hash_methods.insert(name.lexeme.to_owned(), Box::new(func));
+        } else {
+          return Err(RuntimeError::init(name, format!("method is not a function!")))
+        }
+      }
+      let class = QalamClass::init(name.lexeme.to_owned(), hash_methods);
+      self.environment.borrow_mut().assign(name, Some(Literal::Callable(Box::new(class))))?;
+      return Ok(());
   }
 }

@@ -55,6 +55,10 @@ impl QalamCallable for ClockFn {
   fn clone_box(&self) -> Box<dyn QalamCallable> {
       return Box::new(self.clone())
   }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -91,6 +95,10 @@ impl QalamCallable for PowFn {
 
   fn clone_box(&self) -> Box<dyn QalamCallable> {
       return Box::new(self.clone())
+  }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
   }
 }
 
@@ -135,6 +143,10 @@ impl QalamCallable for MaxFn {
   fn clone_box(&self) -> Box<dyn QalamCallable> {
       return Box::new(self.clone())
   }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -178,6 +190,10 @@ impl QalamCallable for MinFn {
   fn clone_box(&self) -> Box<dyn QalamCallable> {
       return Box::new(self.clone())
   }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
+  }
 }
 
 
@@ -214,6 +230,10 @@ impl QalamCallable for LenFn {
 
   fn to_string(&self) -> String {
       return String::from("<native amal len(arg)>");
+  }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
   }
 }
 
@@ -259,6 +279,10 @@ impl QalamCallable for NumFn {
   fn to_string(&self) -> String {
       return String::from("<native amal str2num(arg)>")
   }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -288,6 +312,10 @@ impl QalamCallable for StrFn {
   fn to_string(&self) -> String {
       return String::from("<native amal str(arg)>")
   }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -309,7 +337,8 @@ impl QalamCallable for TypeofFn {
             Literal::Bool(_) => Ok(Some(Literal::String(String::from("bool")))),
             Literal::Number(_) => Ok(Some(Literal::String(String::from("number")))),
             Literal::String(_) => Ok(Some(Literal::String(String::from("string")))),
-            Literal::Callable(_) => Ok(Some(Literal::String(String::from("amal")))) 
+            Literal::Callable(_) => Ok(Some(Literal::String(String::from("amal")))),
+            Literal::Instance(instance) => Ok(Some(Literal::String(instance.0.borrow().to_string()))) 
           }
         },
         None => {
@@ -328,6 +357,10 @@ impl QalamCallable for TypeofFn {
 
   fn to_string(&self) -> String {
       return String::from("<native amal typeof(arg)>")
+  }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
   }
 }
 
@@ -385,6 +418,10 @@ impl QalamCallable for SubstrFn {
   fn to_string(&self) -> String {
       return String::from("<native amal substr(arg, start, length)>")
   }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -427,6 +464,10 @@ impl QalamCallable for IndexOfFn {
   fn clone_box(&self) -> Box<dyn QalamCallable> {
       return Box::new(self.clone())
   }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -466,6 +507,10 @@ impl QalamCallable for ReplaceFn {
 
   fn to_string(&self) -> String {
       return String::from("<native amal replace(arg, old_substr, new_substr)>")
+  }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
   }
 }
 
@@ -508,6 +553,10 @@ impl QalamCallable for RandomFn {
 
   fn to_string(&self) -> String {
       return String::from("<native amal random(min, max)>")
+  }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
   }
 }
 
@@ -559,5 +608,9 @@ impl QalamCallable for RandomIntFn {
 
   fn to_string(&self) -> String {
       return String::from("<native amal random_int(min, max)>")
+  }
+
+  fn as_any(&self) -> &dyn std::any::Any {
+    self
   }
 }

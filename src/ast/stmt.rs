@@ -34,6 +34,10 @@ pub enum Stmt {
   Return {
     keyword: Token,
     value: Option<Expr>
+  },
+  Class {
+    name: Token,
+    methods: Vec<Stmt>
   }
 }
 
@@ -49,7 +53,8 @@ impl Stmt {
       Self::If { condition, then, else_branch } => visitor.visit_if(condition, then, else_branch),
       Self::While { condition, body } => visitor.visit_while(condition, body),
       Self::Function { name, params, body } => visitor.visit_function(name, params, body),
-      Self::Return { keyword, value } => visitor.visit_return(keyword, value)
+      Self::Return { keyword, value } => visitor.visit_return(keyword, value),
+      Self::Class { name, methods } => visitor.visit_class(name, methods)
     }
   }
 }

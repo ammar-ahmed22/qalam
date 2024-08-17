@@ -9,6 +9,7 @@ pub mod error;
 pub mod callable;
 pub mod resolver;
 pub mod stack;
+pub mod hashable;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use std::cell::RefCell;

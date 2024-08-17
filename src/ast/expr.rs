@@ -35,6 +35,18 @@ pub enum Expr {
     callee: Box<Expr>,
     paren: Token,
     arguments: Vec<Expr>
+  },
+  Get {
+    object: Box<Expr>,
+    name: Token
+  },
+  Set {
+    object: Box<Expr>,
+    name: Token,
+    value: Box<Expr>
+  },
+  This {
+    keyword: Token
   }
 }
 
@@ -50,7 +62,10 @@ impl Expr {
       Self::Unary { operator, right } => visitor.visit_unary(operator, right),
       Self::Variable { name } => visitor.visit_variable(name),
       Self::Logical { left, operator, right } => visitor.visit_logical(left, operator, right),
-      Self::Call { callee, paren, arguments } => visitor.visit_call(callee, paren, arguments)
+      Self::Call { callee, paren, arguments } => visitor.visit_call(callee, paren, arguments),
+      Self::Get { object, name } => visitor.visit_get(object, name),
+      Self::Set { object, name, value } => visitor.visit_set(object, name, value),
+      Self::This { keyword } => visitor.visit_this(keyword)
      }
   }
 }

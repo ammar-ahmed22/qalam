@@ -34,13 +34,14 @@ impl TokenType {
       "aw" => Some(Self::Or),
       "qul" => Some(Self::Print),
       "radd" => Some(Self::Return),
-      "super" => Some(Self::Super),
-      "this" => Some(Self::This),
+      "ulya" => Some(Self::Super),
+      "nafs" => Some(Self::This),
       "haqq" => Some(Self::True),
       "niyya" => Some(Self::Var),
       "baynama" => Some(Self::While),
       "iftar" => Some(Self::Break),
       "safar" => Some(Self::Continue),
+      "la" => Some(Self::Bang),
       _ => None
     }
   }

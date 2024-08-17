@@ -1,17 +1,21 @@
 pub mod function;
 pub mod global;
+pub mod class;
+pub mod instance;
 use std::hash::Hash;
 
 use crate::interpreter::Interpreter;
 use crate::literal::Literal;
 use crate::error::RuntimeError;
 use crate::token::Token;
+use std::any::Any;
 
-pub trait QalamCallable: std::fmt::Debug {
+pub trait QalamCallable: std::fmt::Debug + Any {
   fn call(&mut self, interpreter: &mut Interpreter, arguments: Vec<Option<Literal>>, paren: &Token) -> Result<Option<Literal>, RuntimeError>;
   fn clone_box(&self) -> Box<dyn QalamCallable>;
   fn to_string(&self) -> String;
   fn arity(&self) -> usize;
+  fn as_any(&self) -> &dyn Any;
 }
 
 impl Clone for Box<dyn QalamCallable> {
