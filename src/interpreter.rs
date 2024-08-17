@@ -517,7 +517,7 @@ impl StmtVisitor for Interpreter {
   }
 
   fn visit_function(&mut self, name: &Token, params: &Vec<Token>, body: &mut Vec<Stmt>) -> Self::R {
-      let function = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() },  self.environment.clone());
+      let function = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() },  self.environment.clone(), false);
       self.environment.borrow_mut().define(name.lexeme.to_string(), Some(Literal::Callable(Box::new(function))));
       return Ok(());
   }
@@ -539,7 +539,7 @@ impl StmtVisitor for Interpreter {
       let mut hash_methods: HashableMap<String, Box<dyn QalamCallable>> = HashableMap::new();
       for method in methods.iter() {
         if let Stmt::Function { name, params, body } = method {
-          let func = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() }, self.environment.clone());
+          let func = QalamFunction::init(Stmt::Function { name: name.clone(), params: params.clone(), body: body.clone() }, self.environment.clone(), name.lexeme.eq(&String::from("khalaq")));
           hash_methods.insert(name.lexeme.to_owned(), Box::new(func));
         } else {
           return Err(RuntimeError::init(name, format!("method is not a function!")))

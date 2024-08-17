@@ -13,21 +13,23 @@ use crate::callable::instance::QalamInstance;
 #[derive(Debug, Clone)]
 pub struct QalamFunction {
   pub declaration: Stmt,
-  pub closure: Rc<RefCell<Environment>>
+  pub closure: Rc<RefCell<Environment>>,
+  pub is_initializer: bool,
 }
 
 impl QalamFunction {
-  pub fn init(declaration: Stmt, closure: Rc<RefCell<Environment>>) -> Self {
+  pub fn init(declaration: Stmt, closure: Rc<RefCell<Environment>>, is_initializer: bool) -> Self {
     Self {
       declaration,
-      closure
+      closure,
+      is_initializer
     }
   }
 
   pub fn bind(&self, instance: HashableRcRefCell<QalamInstance>) -> Self {
     let mut env = Environment::init(Some(self.closure.clone()));
     env.define("nafs".to_string(), Some(Literal::Instance(instance)));
-    return Self::init(self.declaration.clone(), Rc::new(RefCell::new(env)));
+    return Self::init(self.declaration.clone(), Rc::new(RefCell::new(env)), self.is_initializer);
   }
 }
 
@@ -46,8 +48,14 @@ impl QalamCallable for QalamFunction {
           match interpreter.execute_block(body, env) {
             Ok(_) => {},
             Err(e) => {
+              if self.is_initializer {
+                return Ok(Environment::get_at(self.closure.clone(), 0, "nafs".to_string())?)
+              }
               return Ok(e.return_value);
             }
+          }
+          if self.is_initializer {
+            return Ok(Environment::get_at(self.closure.clone(), 0, "nafs".to_string())?)
           }
           return Ok(None);
         },

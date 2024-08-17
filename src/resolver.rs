@@ -13,7 +13,8 @@ use std::cell::RefCell;
 #[derive(Clone)]
 pub enum FunctionType {
   Function,
-  Method
+  Method,
+  Initializer
 }
 
 #[derive(Clone)]
@@ -154,6 +155,9 @@ impl StmtVisitor for Resolver {
       }
 
       if let Some(value) = value {
+        if let Some(FunctionType::Initializer) = self.current_function {
+          return Err(RuntimeError::init(keyword, format!("Can't return from an initializer.")))
+        }
         self.resolve_expr(value)?;
       }
 
@@ -183,8 +187,11 @@ impl StmtVisitor for Resolver {
       self.begin_scope();
       self.scopes.peek_mut().unwrap().insert(String::from("nafs"), true);
       for method in methods.iter_mut() {
-        let declaration = FunctionType::Method;
+        let mut declaration = FunctionType::Method;
         if let Stmt::Function { name, params, body } = method {
+          if name.lexeme.eq(&String::from("khalaq")) {
+            declaration = FunctionType::Initializer;
+          }
           self.resolve_function(name, params, body, Some(declaration))?;
         } else {
           return Err(RuntimeError::init(name, format!("class method is not a function!")))
