@@ -12,14 +12,16 @@ use super::function::QalamFunction;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct QalamClass {
   pub name: String,
-  pub methods: HashableMap<String, Box<dyn QalamCallable>>
+  pub methods: HashableMap<String, Box<dyn QalamCallable>>,
+  pub superclass: Option<Box<QalamClass>>,
 }
 
 impl QalamClass {
-  pub fn init(name: String, methods: HashableMap<String, Box<dyn QalamCallable>>) -> Self {
+  pub fn init(name: String, methods: HashableMap<String, Box<dyn QalamCallable>>, superclass: Option<Box<QalamClass>>) -> Self {
     return Self {
       name,
-      methods
+      methods,
+      superclass,
     }
   }
 
@@ -27,6 +29,11 @@ impl QalamClass {
    if self.methods.contains_key(name) {
       return Some(self.methods.get(name).unwrap().clone());
    }
+
+   if let Some(superclass) = &self.superclass {
+      return superclass.find_method(name);
+   }
+   
    return None;
   }
 }

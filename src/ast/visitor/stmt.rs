@@ -12,5 +12,5 @@ pub trait StmtVisitor {
   fn visit_while(&mut self, condition: &Expr, body: &mut Box<Stmt>) -> Self::R;
   fn visit_function(&mut self, name: &Token, params: &Vec<Token>, body: &mut Vec<Stmt>) -> Self::R;
   fn visit_return(&mut self, keyword: &Token, value: &Option<Expr>) -> Self::R;
-  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>) -> Self::R;
+  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>, superclass: &Option<Expr>) -> Self::R;
 }

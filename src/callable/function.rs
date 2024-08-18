@@ -48,10 +48,14 @@ impl QalamCallable for QalamFunction {
           match interpreter.execute_block(body, env) {
             Ok(_) => {},
             Err(e) => {
-              if self.is_initializer {
-                return Ok(Environment::get_at(self.closure.clone(), 0, "nafs".to_string())?)
+              if e.message == String::from("dummy") {
+                if self.is_initializer {
+                  return Ok(Environment::get_at(self.closure.clone(), 0, "nafs".to_string())?)
+                }
+                return Ok(e.return_value);
+              } else {
+                return Err(e);
               }
-              return Ok(e.return_value);
             }
           }
           if self.is_initializer {

@@ -47,6 +47,10 @@ pub enum Expr {
   },
   This {
     keyword: Token
+  },
+  Super {
+    keyword: Token,
+    method: Token
   }
 }
 
@@ -65,7 +69,8 @@ impl Expr {
       Self::Call { callee, paren, arguments } => visitor.visit_call(callee, paren, arguments),
       Self::Get { object, name } => visitor.visit_get(object, name),
       Self::Set { object, name, value } => visitor.visit_set(object, name, value),
-      Self::This { keyword } => visitor.visit_this(keyword)
+      Self::This { keyword } => visitor.visit_this(keyword),
+      Self::Super { keyword, method } => visitor.visit_super(keyword, method)
      }
   }
 }

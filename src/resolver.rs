@@ -19,7 +19,8 @@ pub enum FunctionType {
 
 #[derive(Clone)]
 pub enum ClassType {
-  Class
+  Class,
+  Subclass
 }
 
 pub struct Resolver {
@@ -179,11 +180,26 @@ impl StmtVisitor for Resolver {
       return Ok(());
   }
 
-  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>) -> Self::R {
+  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>, superclass: &Option<Expr>) -> Self::R {
       let enclosing_class = self.current_class.clone();
       self.current_class = Some(ClassType::Class);
       self.declare(name.clone())?;
       self.define(name.clone())?;
+
+      if let Some(superclass) = superclass {
+        if let Expr::Variable { name: superclass_name } = superclass {
+          if name.lexeme.eq(&superclass_name.lexeme) {
+            return Err(RuntimeError::init(superclass_name, "A class can't inherit from itself.".to_string()));
+          }
+        } else {
+          return Err(RuntimeError::init(name, "class must inherit from class.".to_string()))
+        }
+        self.current_class = Some(ClassType::Subclass);
+        self.resolve_expr(superclass)?;
+        self.begin_scope();
+        self.scopes.peek_mut().unwrap().insert(String::from("ulya"), true);
+      }
+
       self.begin_scope();
       self.scopes.peek_mut().unwrap().insert(String::from("nafs"), true);
       for method in methods.iter_mut() {
@@ -198,6 +214,9 @@ impl StmtVisitor for Resolver {
         }
       }
       self.end_scope();
+      if let Some(_) = superclass {
+        self.end_scope();
+      }
       self.current_class = enclosing_class;
       return Ok(());
   }
@@ -271,6 +290,20 @@ impl ExprVisitor for Resolver {
         return Err(RuntimeError::init(keyword, format!("Can't use 'nafs' outside of a kitab.")));
       }
       self.resolve_local_expr(&Expr::This { keyword: keyword.clone() }, keyword)?;
+      return Ok(())
+  }
+
+  fn visit_super(&mut self, keyword: &Token, method: &Token) -> Self::R {
+      if let None = self.current_class {
+        return Err(RuntimeError::init(keyword, format!("Can't use 'ulya' outside of a kitab")))
+      }
+
+      if let Some(ClassType::Subclass) = self.current_class {
+        // do nothing
+      } else {
+        return Err(RuntimeError::init(keyword, format!("Can't use 'ulya' in kitab with no superclass")))
+      }
+      self.resolve_local_expr(&Expr::Super { keyword: keyword.clone(), method: method.clone() }, keyword)?;
       return Ok(())
   }
 }

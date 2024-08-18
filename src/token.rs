@@ -14,7 +14,7 @@ pub enum TokenType {
 
   And, Class, Else, ElseIf, False, Fun, If, Nil, Or,
   Print, Return, Super, This, True, Var, While, For,
-  Break, Continue,
+  Break, Continue, Inherits,
 
   Eof
 }
@@ -42,6 +42,7 @@ impl TokenType {
       "iftar" => Some(Self::Break),
       "safar" => Some(Self::Continue),
       "la" => Some(Self::Bang),
+      "ibn" => Some(Self::Inherits),
       _ => None
     }
   }

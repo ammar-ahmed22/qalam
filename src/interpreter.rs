@@ -411,6 +411,38 @@ impl ExprVisitor for Interpreter {
   fn visit_this(&mut self, keyword: &Token) -> Self::R {
       return self.lookup_variable(keyword, &Expr::This { keyword: keyword.clone() });
   }
+
+  fn visit_super(&mut self, keyword: &Token, method: &Token) -> Self::R {
+      let distance = self.locals.get(&Expr::Super { keyword: keyword.clone(), method: method.clone() }).unwrap();
+      let superclass;
+      if let Some(Literal::Callable(class)) = Environment::get_at(self.environment.clone(), *distance, String::from("ulya"))? {
+        if let Some(class) = class.as_any().downcast_ref::<QalamClass>() {
+          superclass = class.clone();
+        } else {
+          return Err(RuntimeError::init(keyword, format!("superclass does not exist!")));
+        }
+      } else {
+        return Err(RuntimeError::init(keyword, format!("superclass does not exist!")));
+      }
+      let object;
+      if let Some(Literal::Instance(instance)) = Environment::get_at(self.environment.clone(), distance - 1, String::from("nafs"))? {
+        object = instance;
+      } else {
+        return Err(RuntimeError::init(keyword, format!("Cannot find instance!")));
+      }
+
+      let actual_method = superclass.find_method(&method.lexeme);
+      if let Some(actual_method) = actual_method {
+        if let Some(actual_method) = actual_method.as_any().downcast_ref::<QalamFunction>() {
+          let bind = actual_method.bind(object);
+          return Ok(Some(Literal::Callable(Box::new(bind))));
+        } else {
+          return Err(RuntimeError::init(method, format!("method is not a function!")))
+        }
+      } else {
+        return Err(RuntimeError::init(method, format!("Undefined method '{}'.", method.lexeme)));
+      }
+  }
 }
 
 impl StmtVisitor for Interpreter {
@@ -534,8 +566,26 @@ impl StmtVisitor for Interpreter {
       return Err(RuntimeError::init_return(val));
   }
 
-  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>) -> Self::R {
+  fn visit_class(&mut self, name: &Token, methods: &mut Vec<Stmt>, superclass: &Option<Expr>) -> Self::R {
+      let mut option_superclass = None;
+      if let Some(superclass) = superclass {
+        if let Some(Literal::Callable(eval_superclass)) = self.evaluate(superclass)? {
+          if let Some(eval_superclass) = eval_superclass.as_any().downcast_ref::<QalamClass>() {
+            option_superclass = Some(Box::new(eval_superclass.clone()));
+          } else {
+            // evaluated superclass is not a class
+            return Err(RuntimeError::init(name, "Superclass must be a class".to_string()))
+          }
+        } else {
+          return Err(RuntimeError::init(name, "Superclass must be a class.".to_string()))
+        }
+      }
+
       self.environment.borrow_mut().define(name.lexeme.to_owned(), None);
+      if let Some(_) = option_superclass.clone() {
+        self.environment = Rc::new(RefCell::new(Environment::init(Some(self.environment.clone()))));
+        self.environment.borrow_mut().define(String::from("ulya"), Some(Literal::Callable(option_superclass.clone().unwrap())))
+      }
       let mut hash_methods: HashableMap<String, Box<dyn QalamCallable>> = HashableMap::new();
       for method in methods.iter() {
         if let Stmt::Function { name, params, body } = method {
@@ -545,8 +595,13 @@ impl StmtVisitor for Interpreter {
           return Err(RuntimeError::init(name, format!("method is not a function!")))
         }
       }
-      let class = QalamClass::init(name.lexeme.to_owned(), hash_methods);
+      let class = QalamClass::init(name.lexeme.to_owned(), hash_methods, option_superclass.clone());
+      if option_superclass.is_some() {
+        let enclosing = self.environment.borrow().enclosing.as_ref().unwrap().clone();
+        self.environment = enclosing;
+      }
       self.environment.borrow_mut().assign(name, Some(Literal::Callable(Box::new(class))))?;
+      
       return Ok(());
   }
 }

@@ -1,0 +1,66 @@
+kitab Prayer {
+  khalaq(name, time, rakats) {
+    nafs.name = name;
+    nafs.time = time;
+    nafs.rakats = rakats;
+    nafs.completed = batil;
+  }
+
+  perform() {
+    shart(la nafs.completed) {
+      qul "Performing " + nafs.name + " prayer, which has " + str(nafs.rakats) + " rakats.";
+      nafs.completed = haqq;
+    } illa {
+      qul nafs.name + " prayer has already been completed.";
+    }
+  }
+
+  status() {
+    shart(nafs.completed) {
+      qul nafs.name + " prayer is completed.";
+    } illa {
+      qul nafs.name + " prayer is pending.";
+    }
+  }
+}
+
+kitab Nafl ibn Prayer {
+  khalaq(name, time, rakats) {
+    ulya.khalaq(name, time, rakats);
+  }
+
+  status() {
+    ulya.status();
+    shart(la nafs.completed) {
+      qul "You SHOULD complete " + nafs.name + " prayer.";
+    }
+  }
+}
+
+kitab Fardh ibn Prayer {
+  khalaq(name, time, rakats) {
+    ulya.khalaq(name, time, rakats);
+  }
+
+  status() {
+    ulya.status();
+    shart(la nafs.completed) {
+      qul "You MUST complete " + nafs.name + " prayer now!";
+    }
+  }
+}
+
+niyya magrib = Fardh("Magrib", "Sunset", 3);
+niyya witr = Nafl("Witr", "After Isha", 3);
+
+magrib.status();
+qul "";
+witr.status();
+qul "";
+
+magrib.perform();
+witr.perform();
+
+qul "";
+magrib.status();
+witr.status();

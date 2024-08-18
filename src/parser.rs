@@ -281,6 +281,13 @@ impl <'a> Parser<'a> {
       return Ok(Expr::Literal { value: prev.literal.clone() })
     }
 
+    if self.match_types(&[TokenType::Super]) {
+      let keyword = Self::previous_free(&self.tokens, self.current);
+      self.consume(&TokenType::Dot, "Expect '.' after 'ulya'.")?;
+      let method = self.consume(&TokenType::Identifier, "Expect superclass method name.")?;
+      return Ok(Expr::Super { keyword: keyword.clone(), method: method.clone() })
+    }
+
     if self.match_types(&[TokenType::This]) {
       let prev = self.previous();
       return Ok(Expr::This { keyword: prev.clone() })
@@ -514,6 +521,13 @@ impl <'a> Parser<'a> {
 
   fn class_declaration(&mut self) -> Result<Stmt, ParseError> {
     let name = self.consume(&TokenType::Identifier, "Expect kitab name.")?.clone();
+
+    let mut superclass = None;
+    if self.match_types(&[TokenType::Inherits]) {
+      self.consume(&TokenType::Identifier, "Expect superclass name.")?;
+      superclass = Some(Expr::Variable { name: self.previous().clone() });
+    }
+
     self.consume(&TokenType::LeftBrace, "Expect '{' before kitab body.")?;
     let mut methods = Vec::new();
     while !self.check(&TokenType::RightBrace) && !self.end() {
@@ -521,7 +535,7 @@ impl <'a> Parser<'a> {
     }
 
     self.consume(&TokenType::RightBrace, "Expect '}' after kitab body.")?;
-    return Ok(Stmt::Class { name, methods });
+    return Ok(Stmt::Class { name, methods, superclass });
   }
 
   fn declaration(&mut self) -> Result<Stmt, ParseError> {

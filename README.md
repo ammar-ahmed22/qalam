@@ -119,7 +119,8 @@ baynama(a) {
 | `kitab` | Chapter (literal: Book) (Arabic). In Islamic books, chapters are called kitab. Classes are similar to chapters as they group related data together. | Class definition |
 | `khalaq` | To create (Arabic). The constructor creates the class object. | Class constructor function |
 | `nafs` | Self/Soul. Islamically, nafs is used to describe desires of the self. Represents the state of the instance (self). | Instance accessor (`this` in JavaScript, `self` in Python/Rust) | 
-
+| `ulya` | Most elevated, superior (Arabic). The superclass is superior to the subclass. | Superclass accessor (`super` in JavaScript) |
+| `ibn` | Son of/Child of (Arabic). Subclasses inherit from the superclass as children inherit from parents | Class inheritance operator |  
 
 ```text
 kitab Animal {
@@ -133,9 +134,9 @@ kitab Animal {
   }
 }
 
-kitab Feline > Animal {
+kitab Feline ibn Animal {
   khalaq(name, sound) {
-    super.khalaq(name, sound);
+    ulya.khalaq(name, sound);
   }
 
   purr() {

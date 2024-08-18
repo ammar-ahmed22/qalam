@@ -37,7 +37,8 @@ pub enum Stmt {
   },
   Class {
     name: Token,
-    methods: Vec<Stmt>
+    methods: Vec<Stmt>,
+    superclass: Option<Expr>
   }
 }
 
@@ -54,7 +55,7 @@ impl Stmt {
       Self::While { condition, body } => visitor.visit_while(condition, body),
       Self::Function { name, params, body } => visitor.visit_function(name, params, body),
       Self::Return { keyword, value } => visitor.visit_return(keyword, value),
-      Self::Class { name, methods } => visitor.visit_class(name, methods)
+      Self::Class { name, methods, superclass } => visitor.visit_class(name, methods, superclass)
     }
   }
 }
