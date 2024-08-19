@@ -120,6 +120,40 @@ impl <'a> Parser<'a> {
       };
     }
 
+    if self.match_types(&[TokenType::PlusEqual, TokenType::StarEqual, TokenType::SlashEqual, TokenType::MinusEqual]) {
+      let equals = Self::previous_free(&self.tokens, self.current);
+      let operator_type = match equals.token_type {
+        TokenType::PlusEqual => {
+          TokenType::Plus
+        },
+        TokenType::StarEqual => {
+          TokenType::Star
+        },
+        TokenType::SlashEqual => {
+          TokenType::Slash
+        },
+        TokenType::MinusEqual => {
+          TokenType::Minus
+        },
+        _ => {
+          // This will never happen
+          return Err(self.error(equals, "Invalid assignment target."))
+        }
+      };
+      let value = self.assignment()?;
+      match expr {
+        Expr::Variable { name } => {
+          return Ok(Expr::Assign { name: name.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::Variable { name }), operator: Token::init(operator_type, &equals.lexeme, None, equals.line, equals.position), right: Box::new(value) }) })
+        },
+        Expr::Get { object, name } => {
+          return Ok(Expr::Set { object: object.clone(), name: name.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::Get { object, name }), operator: Token::init(operator_type, &equals.lexeme, None, equals.line, equals.position), right: Box::new(value) }) })
+        },
+        _ => {
+          return Err(self.error(equals, "Invalid assignment target."))
+        }
+      }
+    }
+
     return Ok(expr)
   }
 

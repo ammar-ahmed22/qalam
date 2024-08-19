@@ -16,6 +16,8 @@ pub enum TokenType {
   Print, Return, Super, This, True, Var, While, For,
   Break, Continue, Inherits,
 
+  PlusEqual, MinusEqual, StarEqual, SlashEqual, 
+
   Eof
 }
 

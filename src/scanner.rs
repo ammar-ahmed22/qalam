@@ -261,10 +261,28 @@ impl <'a> Scanner<'a> {
       '}' => self.add_token(TokenType::RightBrace, None),
       ',' => self.add_token(TokenType::Comma, None),
       '.' => self.add_token(TokenType::Dot, None),
-      '-' => self.add_token(TokenType::Minus, None),
-      '+' => self.add_token(TokenType::Plus, None),
+      '-' => {
+        if self.match_next('=') {
+          self.add_token(TokenType::MinusEqual, None)
+        } else {
+          self.add_token(TokenType::Minus, None)
+        }
+      },
+      '+' => {
+        if self.match_next('=') {
+          self.add_token(TokenType::PlusEqual, None)
+        } else {
+          self.add_token(TokenType::Plus, None)
+        }
+      },
       ';' => self.add_token(TokenType::Semicolon, None),
-      '*' => self.add_token(TokenType::Star, None),
+      '*' => {
+        if self.match_next('=') {
+          self.add_token(TokenType::StarEqual, None)
+        } else {
+          self.add_token(TokenType::Star, None)
+        }
+      },
       '!' => {
         if self.match_next('=') {
           self.add_token(TokenType::BangEqual, None)
@@ -299,6 +317,8 @@ impl <'a> Scanner<'a> {
           while self.peek() != '\n' && !self.end() {
             self.advance();
           }
+        } else if self.match_next('=') {
+          self.add_token(TokenType::SlashEqual, None);
         } else {
           self.add_token(TokenType::Slash, None);
         }
