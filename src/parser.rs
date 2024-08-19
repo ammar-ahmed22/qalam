@@ -1,3 +1,5 @@
+use ordered_float::OrderedFloat;
+
 use crate::error::ParseError;
 use crate::token::{Token, TokenType};
 use crate::ast::expr::Expr;
@@ -136,7 +138,7 @@ impl <'a> Parser<'a> {
           TokenType::Minus
         },
         _ => {
-          // This will never happen
+          // This will never happen, we already checked above
           return Err(self.error(equals, "Invalid assignment target."))
         }
       };
@@ -150,6 +152,33 @@ impl <'a> Parser<'a> {
         },
         _ => {
           return Err(self.error(equals, "Invalid assignment target."))
+        }
+      }
+    }
+
+    if self.match_types(&[TokenType::Increment, TokenType::Decrement]) {
+      let equals = Self::previous_free(&self.tokens, self.current);
+      let operator = match equals.token_type {
+        TokenType::Increment => {
+          Token::init(TokenType::Plus, &equals.lexeme, None, equals.line, equals.position)
+        },
+        TokenType::Decrement => {
+          Token::init(TokenType::Minus, &equals.lexeme, None, equals.line, equals.position)
+        },
+        _ => {
+          // This will never happen, we already checked above
+          return Err(self.error(equals, "Invalid assignment target"))
+        }
+      };
+      match expr {
+        Expr::Variable { name } => {
+          return Ok(Expr::Assign { name: name.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::Variable { name }), operator, right: Box::new(Expr::Literal { value: Some(Literal::Number(OrderedFloat(1.0))) }) }) })
+        },
+        Expr::Get { object, name } => {
+          return Ok(Expr::Set { object: object.clone(), name: name.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::Get { object, name }), operator, right: Box::new(Expr::Literal { value: Some(Literal::Number(OrderedFloat(1.0))) }) }) })
+        },
+        _ => {
+          return Err(self.error(equals, "Invalid assignment target"))
         }
       }
     }

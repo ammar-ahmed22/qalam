@@ -51,3 +51,11 @@ qul counter.count;
 
 counter.div(5);
 qul counter.count;
+
+// Increment and decrement operators
+niyya a = 0;
+a++;
+a++;
+qul a;
+a--;
+qul a;

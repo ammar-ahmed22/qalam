@@ -18,6 +18,8 @@ pub enum TokenType {
 
   PlusEqual, MinusEqual, StarEqual, SlashEqual, 
 
+  Increment, Decrement,
+
   Eof
 }
 

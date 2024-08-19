@@ -264,6 +264,8 @@ impl <'a> Scanner<'a> {
       '-' => {
         if self.match_next('=') {
           self.add_token(TokenType::MinusEqual, None)
+        } else if self.match_next('-') {
+          self.add_token(TokenType::Decrement, None)
         } else {
           self.add_token(TokenType::Minus, None)
         }
@@ -271,6 +273,8 @@ impl <'a> Scanner<'a> {
       '+' => {
         if self.match_next('=') {
           self.add_token(TokenType::PlusEqual, None)
+        } else if self.match_next('+') {
+          self.add_token(TokenType::Increment, None)
         } else {
           self.add_token(TokenType::Plus, None)
         }
