@@ -1,0 +1,68 @@
+// Variable declarations and types
+niyya age = 25;
+niyya name = "Ahmed";
+niyya is_married = batil;
+niyya children = ghaib;
+
+// Increment and decrement operators
+age++;
+age--;
+
+// Compound assignment operators
+age += 5;
+age -= 3;
+age *= 2;
+age /= 2;
+
+// Control flow: if, else, and, not
+shart(age > 30 wa la is_married) {
+  qul("You are over 30 and not married");
+} illa {
+  shart(age > 25 wa is_married) {
+    qul("You are married and in your late twenties");
+  } illa {
+    qul("You are young and single.");
+  }
+}
+
+// Loop: while, for, break, continue
+niyya i = 0;
+baynama(i < 10) {
+  i++;
+  qul("Current value of i: " + str(i));
+}
+
+tawaf(niyya i = 0; i < 5; i++) {
+  qul("Looping, iteration: " + str(i));
+}
+
+// Classes: constructor, inheritance
+kitab Person{
+  khalaq(name, age) {
+    nafs.name = name;
+    nafs.age = age;
+  }
+
+  introduce() {
+    qul("My name is " + nafs.name + " and I am " + str(nafs.age) + " years old.");
+  }
+}
+
+kitab Student ibn Person {
+  khalaq(name, age, grade) {
+    ulya.khalaq(name, age);
+    nafs.grade = grade;
+  }
+
+  introduce() {
+    ulya.introduce();
+    qul("I am a student in grade " + str(nafs.grade) + ".");
+  }
+}
+
+niyya person = Person("Khalid", 28);
+person.introduce();
+
+niyya student = Student("Layla", 17, 12);
+student.introduce();
+
