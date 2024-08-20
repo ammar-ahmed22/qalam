@@ -1,5 +1,4 @@
 pub mod function;
-pub mod global;
 pub mod class;
 pub mod instance;
 use std::hash::Hash;

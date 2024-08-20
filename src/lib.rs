@@ -10,6 +10,7 @@ pub mod callable;
 pub mod resolver;
 pub mod stack;
 pub mod hashable;
+pub mod native;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use std::cell::RefCell;

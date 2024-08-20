@@ -10,8 +10,22 @@ use crate::token::{ Token, TokenType };
 use crate::literal::{Literal, QalamArray};
 use crate::environment::Environment;
 use crate::error::RuntimeError;
-use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn, TypeofFn, SubstrFn, IndexOfFn, ReplaceFn, RandomFn, RandomIntFn };
-use crate::callable::global::is_usize;
+use crate::native::is_usize;
+use crate::native::clock::ClockFn;
+use crate::native::pow::PowFn;
+use crate::native::max::MaxFn;
+use crate::native::min::MinFn;
+use crate::native::len::LenFn;
+use crate::native::str::StrFn;
+use crate::native::num::NumFn;
+use crate::native::typeof_func::TypeofFn;
+use crate::native::substr::SubstrFn;
+use crate::native::indexof::IndexOfFn;
+use crate::native::replace::ReplaceFn;
+use crate::native::random::RandomFn;
+use crate::native::random_int::RandomIntFn;
+use crate::native::pop::PopFn;
+use crate::native::push::PushFn;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -41,6 +55,8 @@ impl Interpreter {
     Self::add_global(globals.clone(), "replace", ReplaceFn::init());
     Self::add_global(globals.clone(), "random", RandomFn::init());
     Self::add_global(globals.clone(), "random_int", RandomIntFn::init());
+    Self::add_global(globals.clone(), "push", PushFn::init());
+    Self::add_global(globals.clone(), "pop", PopFn::init());
     return Self {
       globals: globals.clone(),
       environment: globals.clone(),

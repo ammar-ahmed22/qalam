@@ -15,3 +15,14 @@ arr[0]++; // arr[0] = 3
 qul arr;
 arr[0] -= 1; // arr[0] = 2
 qul arr;
+
+// Using helper functions
+niyya a = [1, 2, 3];
+
+push(a, 4);
+push(a, 5);
+qul a; // [1, 2, 3, 4, 5]
+
+// 5
+qul pop(a);
+qul a; // [1, 2, 3, 4]
