@@ -11,6 +11,7 @@
   * [Conditionals](#conditionals)
   * [Loops](#loops)
   * [Objects (Classes)](#objects--classes-)
+- [Types](#types)
 - [Native Functions](#native-functions)
 
 ## Introduction
