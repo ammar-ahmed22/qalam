@@ -15,6 +15,12 @@ impl QalamArray {
     }
   }
 
+  pub fn construct(size: usize, val: Option<Literal>) -> Self {
+    return Self {
+      elements: vec![val;size]
+    }
+  }
+
   pub fn to_string(&self) -> String {
     let values = self.elements.iter()
       .map(|opt| Literal::option_string(opt.clone()))

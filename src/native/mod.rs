@@ -20,6 +20,7 @@ pub mod substr;
 pub mod typeof_func;
 pub mod len;
 pub mod indexof;
+pub mod array_constructor;
 
 
 pub fn is_neg(num: f64) -> bool {

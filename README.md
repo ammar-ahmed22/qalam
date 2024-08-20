@@ -179,3 +179,4 @@ I've implemented a few native functions to the program:
 | `random_int`  | `min: number (int), max: number (int)`                                     | `number`    | Returns a random integer in the range of `min` to `max`                                      |
 | `push`        | `arr: array, val: any`                                                     | `ghaib`     | Pushes a value to the end of an array                                                        |
 | `pop`         | `arr: array`                                                               | `any`       | Pops a value from the end of the array and returns it. If it does not exist, returns `ghaib` |
+| `Array`       | `size: number (positive int), value: any`                                  | `array`     | Creates an array of `size` values all initialized to `value`.                                |

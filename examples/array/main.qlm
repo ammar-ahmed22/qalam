@@ -26,3 +26,7 @@ qul a; // [1, 2, 3, 4, 5]
 // 5
 qul pop(a);
 qul a; // [1, 2, 3, 4]
+
+// Creating an array of size with initial values
+niyya bool_array = Array(20, haqq);
+qul bool_array;
