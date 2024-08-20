@@ -151,6 +151,15 @@ cat.purr()
 // prints "purr"
 ```
 
+## Types
+Below are the built-in types supported by `qalam`:
+| Type     | Description                                                                                                                      | Initialization Example          |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `number` | Numerical value. All numbers are stored as floating point values. Numbers without a fractional part are considered as integers.  | `niyya num = 1.0;`              |
+| `string` | Collection of characters. Characters can be indexed with integers. Initialize with double quotes.                                | `niyya name = "Ammar";`         |
+| `bool`   | Boolean true or false. `haqq` = true, `batil` = false.                                                                           | `niyya is_foo = haqq;`          |
+| `array`  | Collection of any values. Values can be indexed and set with integers. Initialize with square braces.                            | `niyya arr = [1, "one", haqq];` |
+
 ## Native Functions
 I've implemented a few native functions to the program:
 | Function Name | Parameters                                                                 | Return Type | Description                                                                             | 
@@ -162,7 +171,7 @@ I've implemented a few native functions to the program:
 | `substr`      | `arg: string, start: number (positive int), length: number (positive int)` | `string`    | Returns a substring of the argument starting at `start` with length of `length`         |
 | `index_of`    | `arg: string, substring: string`                                           | `number`    | Returns the index of the start of a substring in the argument. Returns -1 if not found. |
 | `replace`     | `arg: string, old_substr: string, new_substr: string`                      | `string`    | Replaces all occurrences of `old_substr` in the argument with `new_substr`.             |
-| `len`         | `arg: string`                                                              | `number`    | Returns the length of a string.                                                         |
+| `len`         | `arg: string \| array`                                                     | `number`    | Returns the length of a string or array.                                                |
 | `max`         | `a: number, b: number`                                                     | `number`    | Returns the maximum of the inputs                                                       |
 | `min`         | `a: number, b: number`                                                     | `number`    | Returns the minimum of the inputs                                                       |
 | `pow`         | `base: number, exp: number`                                                | `number`    | Raises the base to the power of the exponent                                            |
