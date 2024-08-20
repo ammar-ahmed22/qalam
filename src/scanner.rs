@@ -259,6 +259,8 @@ impl <'a> Scanner<'a> {
       ')' => self.add_token(TokenType::RightParen, None),
       '{' => self.add_token(TokenType::LeftBrace, None),
       '}' => self.add_token(TokenType::RightBrace, None),
+      '[' => self.add_token(TokenType::LeftSquare, None),
+      ']' => self.add_token(TokenType::RightSquare, None),
       ',' => self.add_token(TokenType::Comma, None),
       '.' => self.add_token(TokenType::Dot, None),
       '-' => {

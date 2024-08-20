@@ -116,6 +116,9 @@ impl <'a> Parser<'a> {
         Expr::Get { object, name } => {
           return Ok(Expr::Set{ object, name, value: Box::new(value) });
         },
+        Expr::GetIndexed { object, index, bracket } => {
+          return Ok(Expr::SetIndexed { object, index, value: Box::new(value), bracket })
+        },
         _ => {
           return Err(self.error(equals, "Invalid assignment target."));
         }
@@ -150,6 +153,9 @@ impl <'a> Parser<'a> {
         Expr::Get { object, name } => {
           return Ok(Expr::Set { object: object.clone(), name: name.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::Get { object, name }), operator: Token::init(operator_type, &equals.lexeme, None, equals.line, equals.position), right: Box::new(value) }) })
         },
+        Expr::GetIndexed { object, index, bracket } => {
+          return Ok(Expr::SetIndexed { object: object.clone(), index: index.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::GetIndexed { object, index, bracket: bracket.clone() }), operator: Token::init(operator_type, &equals.lexeme, None, equals.line, equals.position), right: Box::new(value) }), bracket })
+        }
         _ => {
           return Err(self.error(equals, "Invalid assignment target."))
         }
@@ -176,6 +182,9 @@ impl <'a> Parser<'a> {
         },
         Expr::Get { object, name } => {
           return Ok(Expr::Set { object: object.clone(), name: name.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::Get { object, name }), operator, right: Box::new(Expr::Literal { value: Some(Literal::Number(OrderedFloat(1.0))) }) }) })
+        },
+        Expr::GetIndexed { object, index, bracket } => {
+          return Ok(Expr::SetIndexed { object: object.clone(), index: index.clone(), value: Box::new(Expr::Binary { left: Box::new(Expr::GetIndexed { object, index, bracket: bracket.clone() }), operator, right: Box::new(Expr::Literal { value: Some(Literal::Number(OrderedFloat(1.0))) }) }), bracket })
         },
         _ => {
           return Err(self.error(equals, "Invalid assignment target"))
@@ -291,17 +300,22 @@ impl <'a> Parser<'a> {
 
   fn call(&mut self) -> Result<Expr, ParseError> {
     let mut expr = self.primary()?;
+    // let initial = expr.clone();
     loop {
       if self.match_types(&[TokenType::LeftParen]) {
         expr = self.finish_call(expr)?;
       } else if self.match_types(&[TokenType::Dot]) {
         let name = self.consume(&TokenType::Identifier, "Expect property name after '.'.")?.clone();
         expr = Expr::Get { object: Box::new(expr), name };
+      } else if self.match_types(&[TokenType::LeftSquare]) {
+        let index = self.primary()?;
+        let bracket = self.peek();
+        expr = Expr::GetIndexed { object: Box::new(expr), index: Box::new(index), bracket: bracket.clone() };
+        self.consume(&TokenType::RightSquare, "Expect ']' after index.")?;
       } else {
         break;
       }
     }
-
     return Ok(expr);
   }
 
@@ -324,6 +338,19 @@ impl <'a> Parser<'a> {
     return Ok(Expr::Call { callee: Box::new(callee), paren: Token::copy(paren), arguments });
   }
 
+  fn array_expr(&mut self) -> Result<Expr, ParseError> {
+    let mut values: Vec<Expr> = Vec::new();
+    if !self.check(&TokenType::RightSquare) {
+      loop {
+        values.push(self.expression()?);
+        if !self.match_types(&[TokenType::Comma]) {
+          break;
+        }
+      }
+    }
+    self.consume(&TokenType::RightSquare, "Expect ']' after array values.")?;
+    return Ok(Expr::Array { values })
+  }
   
   /// Parses a primary value 
   fn primary(&mut self) -> Result<Expr, ParseError> {
@@ -359,6 +386,10 @@ impl <'a> Parser<'a> {
     if self.match_types(&[TokenType::Identifier]) {
       let prev = self.previous();
       return Ok(Expr::Variable { name: Token::copy(prev) })
+    }
+
+    if self.match_types(&[TokenType::LeftSquare]) {
+      return self.array_expr();
     }
 
     if self.match_types(&[TokenType::LeftParen]) {

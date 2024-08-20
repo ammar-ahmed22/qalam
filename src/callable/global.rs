@@ -7,15 +7,15 @@ use rand::Rng;
 use ordered_float::OrderedFloat;
 
 
-fn is_neg(num: f64) -> bool {
+pub fn is_neg(num: f64) -> bool {
   return num < 0.0;
 }
 
-fn is_int(num: f64) -> bool {
+pub fn is_int(num: f64) -> bool {
   return num.fract() == 0.0;
 }
 
-fn is_usize(num: f64) -> bool {
+pub fn is_usize(num: f64) -> bool {
   if is_neg(num) {
     return false;
   }
@@ -212,11 +212,13 @@ impl QalamCallable for LenFn {
     if let Some(arg) = arg {
       if let Literal::String(arg) = arg {
         return Ok(Some(Literal::Number(OrderedFloat(arg.len() as f64))));
+      } else if let Literal::Array(arr) = arg {
+        return Ok(Some(Literal::Number(OrderedFloat(arr.0.borrow().elements.len() as f64))))
       } else {
-        return Err(RuntimeError::init(paren, format!("{} must be called with string type!", self.to_string())));
+        return Err(RuntimeError::init(paren, format!("{} must be called with string or array type!", self.to_string())));
       }
     } else {
-      return Err(RuntimeError::init(paren, format!("{} must be called with string type!", self.to_string())))
+      return Err(RuntimeError::init(paren, format!("{} must be called with string or array type!", self.to_string())))
     }  
   }
 
@@ -338,7 +340,8 @@ impl QalamCallable for TypeofFn {
             Literal::Number(_) => Ok(Some(Literal::String(String::from("number")))),
             Literal::String(_) => Ok(Some(Literal::String(String::from("string")))),
             Literal::Callable(_) => Ok(Some(Literal::String(String::from("amal")))),
-            Literal::Instance(instance) => Ok(Some(Literal::String(instance.0.borrow().to_string()))) 
+            Literal::Instance(instance) => Ok(Some(Literal::String(instance.0.borrow().to_string()))),
+            Literal::Array(_) => Ok(Some(Literal::String(String::from("array"))))
           }
         },
         None => {

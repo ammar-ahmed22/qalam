@@ -7,14 +7,15 @@ use crate::callable::QalamCallable;
 use crate::callable::function::QalamFunction;
 use crate::callable::class::QalamClass;
 use crate::token::{ Token, TokenType };
-use crate::literal::Literal;
+use crate::literal::{Literal, QalamArray};
 use crate::environment::Environment;
 use crate::error::RuntimeError;
 use crate::callable::global::{ ClockFn, PowFn, MaxFn, MinFn, LenFn, NumFn, StrFn, TypeofFn, SubstrFn, IndexOfFn, ReplaceFn, RandomFn, RandomIntFn };
+use crate::callable::global::is_usize;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
-use crate::hashable::HashableMap;
+use crate::hashable::{HashableMap, HashableRcRefCell};
 
 
 
@@ -155,8 +156,28 @@ impl Interpreter {
     if let Some(distance) = distance {
       return Ok(Environment::get_at(self.environment.clone(), *distance, name.lexeme.to_string())?)
     } else {
-      return Ok(self.globals.borrow().get(name)?)
+      return Ok(self.globals.as_ref().borrow().get(name)?)
     }
+  }
+
+  fn evaluate_index(&mut self, index: &Box<Expr>, bracket: &Token) -> Result<usize, RuntimeError> {
+    let index = self.evaluate(index)?;
+      if let Some(index) = index.clone() {
+        match index {
+          Literal::Number(val) => {
+            if !is_usize(*val) {
+              return Err(RuntimeError::init(bracket, format!("index must be a positive integer!")))
+            } else {
+              return Ok(*val as usize);
+            }
+          },
+          _ => {
+            return Err(RuntimeError::init(bracket, format!("index must be a number!")))
+          }
+        };
+      } else {
+        return Err(RuntimeError::init(bracket, format!("index cannot not be ghaib!")))
+      }
   }
 }
 
@@ -164,6 +185,14 @@ impl ExprVisitor for Interpreter {
   type R = Result<Option<Literal>, RuntimeError>;
   fn visit_literal(&mut self, expr: &Option<Literal>) -> Self::R {
       return Ok(expr.clone())
+  }
+
+  fn visit_array(&mut self, values: &Vec<Expr>) -> Self::R {
+    let mut qalam_array = QalamArray::init();
+    for value in values.iter() {
+      qalam_array.elements.push(self.evaluate(value)?);
+    }
+    return Ok(Some(Literal::Array(HashableRcRefCell::init(qalam_array))))
   }
 
   fn visit_grouping(&mut self, expression: &Box<Expr>) -> Self::R {
@@ -443,6 +472,54 @@ impl ExprVisitor for Interpreter {
         return Err(RuntimeError::init(method, format!("Undefined method '{}'.", method.lexeme)));
       }
   }
+
+  
+
+  fn visit_get_indexed(&mut self, object: &Box<Expr>, index: &Box<Expr>, bracket: &Token) -> Self::R {
+      let object = self.evaluate(object)?;
+      if let Some(object) = object {
+        match object {
+          Literal::Array(arr) => {
+            // do something
+            let idx = self.evaluate_index(index, bracket)?;
+            if idx > arr.0.as_ref().borrow().elements.len() - 1 {
+              return Err(RuntimeError::init(bracket, format!("index is out of range!")));
+            }
+            let val = &arr.0.as_ref().borrow().elements[idx];
+            return Ok(val.clone());
+          },
+          Literal::String(str) => {
+            // do something
+            let idx = self.evaluate_index(index, bracket)?;
+            if idx > str.len() - 1 {
+              return Err(RuntimeError::init(bracket, format!("index is out of range!")))
+            }
+            let val = str.chars().nth(idx).unwrap();
+            return Ok(Some(Literal::String(val.to_string())))
+          },
+          _ => {
+            return Err(RuntimeError::init(bracket, format!("Can only index string and array!")))
+          } 
+        }
+      } else {
+        return Err(RuntimeError::init(bracket, format!("Cannot index ghaib!")))
+      }
+  }
+
+  fn visit_set_indexed(&mut self, object: &Box<Expr>, index: &Box<Expr>, value: &Box<Expr>, bracket: &Token) -> Self::R {
+      let object = self.evaluate(object)?;
+      let value = self.evaluate(value)?;
+      if let Some(Literal::Array(arr)) = object {
+        let idx = self.evaluate_index(index, bracket)?;
+        if idx > arr.0.as_ref().borrow().elements.len() - 1 {
+          return Err(RuntimeError::init(bracket, format!("index is out of range!")))
+        }
+        arr.0.as_ref().borrow_mut().elements[idx] = value.clone();
+        return Ok(value);
+      } else {
+        return Err(RuntimeError::init(bracket, format!("cannot access non-array-like by index!")))
+      }
+  }
 }
 
 impl StmtVisitor for Interpreter {
@@ -597,7 +674,7 @@ impl StmtVisitor for Interpreter {
       }
       let class = QalamClass::init(name.lexeme.to_owned(), hash_methods, option_superclass.clone());
       if option_superclass.is_some() {
-        let enclosing = self.environment.borrow().enclosing.as_ref().unwrap().clone();
+        let enclosing = self.environment.as_ref().borrow().enclosing.as_ref().unwrap().clone();
         self.environment = enclosing;
       }
       self.environment.borrow_mut().assign(name, Some(Literal::Callable(Box::new(class))))?;

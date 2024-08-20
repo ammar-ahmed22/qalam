@@ -4,6 +4,7 @@ use crate::literal::Literal;
 pub enum TokenType {
   LeftParen, RightParen, LeftBrace, RightBrace,
   Comma, Dot, Minus, Plus, Semicolon, Slash, Star,
+  LeftSquare, RightSquare,
 
   Bang, BangEqual,
   Equal, EqualEqual,

@@ -1,0 +1,17 @@
+niyya arr = [1, "one", haqq, 2, 3, 4];
+
+// Printing the array
+qul arr;
+
+// Iterating over the array
+tawaf(niyya i = 0; i < len(arr); i++) {
+  qul arr[i];
+}
+
+// Assigning at index
+arr[0] = 2;
+qul arr;
+arr[0]++; // arr[0] = 3
+qul arr;
+arr[0] -= 1; // arr[0] = 2
+qul arr;

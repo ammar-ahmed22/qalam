@@ -254,6 +254,10 @@ impl ExprVisitor for Resolver {
       return Ok(());
   }
 
+  fn visit_array(&mut self, _values: &Vec<Expr>) -> Self::R {
+      return Ok(());
+  }
+
   fn visit_logical(&mut self, left: &Box<Expr>, _operator: &Token, right: &Box<Expr>) -> Self::R {
       self.resolve_expr(left)?;
       self.resolve_expr(right)?;
@@ -305,5 +309,18 @@ impl ExprVisitor for Resolver {
       }
       self.resolve_local_expr(&Expr::Super { keyword: keyword.clone(), method: method.clone() }, keyword)?;
       return Ok(())
+  }
+
+  fn visit_get_indexed(&mut self, object: &Box<Expr>, index: &Box<Expr>, _bracket: &Token) -> Self::R {
+    self.resolve_expr(object)?;
+    self.resolve_expr(index)?;
+    return Ok(());
+  }
+
+  fn visit_set_indexed(&mut self, object: &Box<Expr>, index: &Box<Expr>, value: &Box<Expr>, _bracket: &Token) -> Self::R {
+      self.resolve_expr(object)?;
+      self.resolve_expr(index)?;
+      self.resolve_expr(value)?;
+      return Ok(());
   }
 }

@@ -3,13 +3,35 @@ use crate::callable::instance::QalamInstance;
 use ordered_float::OrderedFloat;
 use crate::hashable::HashableRcRefCell;
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct QalamArray {
+  pub elements: Vec<Option<Literal>>
+}
+
+impl QalamArray {
+  pub fn init() -> Self {
+    return Self {
+      elements: Vec::new()
+    }
+  }
+
+  pub fn to_string(&self) -> String {
+    let values = self.elements.iter()
+      .map(|opt| Literal::option_string(opt.clone()))
+      .collect::<Vec<String>>()
+      .join(", ");
+    return format!("[{}]", values)
+  }
+}
+
 #[derive(Debug, Clone, Eq, Hash)]
 pub enum Literal {
   Number(OrderedFloat<f64>),
   String(String),
   Bool(bool),
   Callable(Box<dyn QalamCallable>),
-  Instance(HashableRcRefCell<QalamInstance>)
+  Instance(HashableRcRefCell<QalamInstance>),
+  Array(HashableRcRefCell<QalamArray>)
 }
 
 impl PartialEq for Literal {
@@ -21,6 +43,8 @@ impl PartialEq for Literal {
         (Literal::Callable(a), Literal::Callable(b)) => {
           std::ptr::eq(&**a, &**b)
         },
+        (Literal::Array(a), Literal::Array(b)) => a == b,
+        (Literal::Instance(a), Literal::Instance(b)) => a == b,
         _ => false
       }
   }
@@ -33,7 +57,8 @@ impl Literal {
       Self::Number(val) => format!("{}", val),
       Self::String(val) => val.to_owned(),
       Self::Callable(val) => val.to_string(),
-      Self::Instance(val) => val.0.borrow().to_string()
+      Self::Instance(val) => val.0.borrow().to_string(),
+      Self::Array(val) => val.0.borrow().to_string()
     }
   }
 

@@ -16,4 +16,7 @@ pub trait ExprVisitor {
   fn visit_set(&mut self, object: &Box<Expr>, name: &Token, value: &Box<Expr>) -> Self::R;
   fn visit_this(&mut self, keyword: &Token) -> Self::R;
   fn visit_super(&mut self, keyword: &Token, method: &Token) -> Self::R;
+  fn visit_array(&mut self, values: &Vec<Expr>) -> Self::R;
+  fn visit_get_indexed(&mut self, object: &Box<Expr>, index: &Box<Expr>, bracket: &Token) -> Self::R;
+  fn visit_set_indexed(&mut self, object: &Box<Expr>, index: &Box<Expr>, value: &Box<Expr>, bracket: &Token) -> Self::R;
 }

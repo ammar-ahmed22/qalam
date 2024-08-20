@@ -51,6 +51,20 @@ pub enum Expr {
   Super {
     keyword: Token,
     method: Token
+  },
+  Array {
+    values: Vec<Expr>
+  },
+  GetIndexed {
+    object: Box<Expr>,
+    index: Box<Expr>,
+    bracket: Token
+  },
+  SetIndexed {
+    object: Box<Expr>,
+    index: Box<Expr>,
+    value: Box<Expr>,
+    bracket: Token
   }
 }
 
@@ -70,7 +84,10 @@ impl Expr {
       Self::Get { object, name } => visitor.visit_get(object, name),
       Self::Set { object, name, value } => visitor.visit_set(object, name, value),
       Self::This { keyword } => visitor.visit_this(keyword),
-      Self::Super { keyword, method } => visitor.visit_super(keyword, method)
+      Self::Super { keyword, method } => visitor.visit_super(keyword, method),
+      Self::Array { values } => visitor.visit_array(values),
+      Self::GetIndexed { object, index, bracket } => visitor.visit_get_indexed(object, index, bracket),
+      Self::SetIndexed { object, index, value, bracket } => visitor.visit_set_indexed(object, index, value, bracket)
      }
   }
 }
