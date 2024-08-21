@@ -27,6 +27,7 @@ use crate::native::random_int::RandomIntFn;
 use crate::native::pop::PopFn;
 use crate::native::push::PushFn;
 use crate::native::array_constructor::ArrayConstructorFn;
+use crate::native::code::CodeFn;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -59,6 +60,7 @@ impl Interpreter {
     Self::add_global(globals.clone(), "push", PushFn::init());
     Self::add_global(globals.clone(), "pop", PopFn::init());
     Self::add_global(globals.clone(), "Array", ArrayConstructorFn::init());
+    Self::add_global(globals.clone(), "code", CodeFn::init());
     return Self {
       globals: globals.clone(),
       environment: globals.clone(),

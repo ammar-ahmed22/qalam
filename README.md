@@ -181,3 +181,4 @@ I've implemented a few native functions to the program:
 | `push`        | `arr: array, val: any`                                                     | `ghaib`     | Pushes a value to the end of an array                                                        |
 | `pop`         | `arr: array`                                                               | `any`       | Pops a value from the end of the array and returns it. If it does not exist, returns `ghaib` |
 | `Array`       | `size: number (positive int), value: any`                                  | `array`     | Creates an array of `size` values all initialized to `value`.                                |
+| `code`        | `char: string`                                                             | `number`    | Returns the character code for a single character string.                                    |
