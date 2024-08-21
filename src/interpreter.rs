@@ -28,6 +28,9 @@ use crate::native::pop::PopFn;
 use crate::native::push::PushFn;
 use crate::native::array_constructor::ArrayConstructorFn;
 use crate::native::code::CodeFn;
+use crate::native::ceil::CeilFn;
+use crate::native::floor::FloorFn;
+use crate::native::round::RoundFn;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -61,6 +64,9 @@ impl Interpreter {
     Self::add_global(globals.clone(), "pop", PopFn::init());
     Self::add_global(globals.clone(), "Array", ArrayConstructorFn::init());
     Self::add_global(globals.clone(), "code", CodeFn::init());
+    Self::add_global(globals.clone(), "floor", FloorFn::init());
+    Self::add_global(globals.clone(), "ceil", CeilFn::init());
+    Self::add_global(globals.clone(), "round", RoundFn::init());
     return Self {
       globals: globals.clone(),
       environment: globals.clone(),

@@ -183,6 +183,9 @@ I've implemented a few native functions to the program:
 | `pop`         | `arr: array`                                                               | `any`       | Pops a value from the end of the array and returns it. If it does not exist, returns `ghaib` |
 | `Array`       | `size: number (positive int), value: any`                                  | `array`     | Creates an array of `size` values all initialized to `value`.                                |
 | `code`        | `char: string`                                                             | `number`    | Returns the character code for a single character string.                                    |
+| `floor`       | `num: number`                                                              | `number`    | Returns the closest integer less than or equal to `num`                                      |
+| `ceil`        | `num: number`                                                              | `number`    | Returns the closest integer greater than or equal to `num`                                   |
+| `round`       | `num: number`                                                              | `number`    | Returns the closest to `num`. If `num` is halfway between 2 integers, returns away from 0.   |
 
 ## Speed
 `qalam` is an interpreted language with dynamic types. However, since there are essentially zero optimizations done, it is extremely slow. I am also an extreme amateur when it comes to Rust programming, therefore, it is probably even slower than Robert's implementation in Java as I definitely did a million things wrong when using Rust. 

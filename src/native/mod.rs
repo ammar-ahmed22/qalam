@@ -22,6 +22,9 @@ pub mod len;
 pub mod indexof;
 pub mod array_constructor;
 pub mod code;
+pub mod floor;
+pub mod ceil;
+pub mod round;
 
 
 pub fn is_neg(num: f64) -> bool {
