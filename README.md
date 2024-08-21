@@ -305,6 +305,6 @@ Each test was run 10 times and the average runtime is tabulated below:
 | -------- | --------------- | 
 | JavaScript | 0.0185 |
 | Python | 0.2238 |
-| Qalam | 78.2590 |
+| Qalam | 36.2470 |
 
-JavaScript and Python take less than second each. Qalam takes more than a minute. It is extremely slow, however, I am still proud that it works lol.
+JavaScript and Python take less than second each. Qalam takes half a minute. It is extremely slow, however, I am still proud that it works lol.
