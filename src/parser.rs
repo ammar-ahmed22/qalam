@@ -255,7 +255,7 @@ impl <'a> Parser<'a> {
   /// Parses a term (addition/subtraction)
   fn term(&mut self) -> Result<Expr, ParseError> {
     let mut expr = self.factor()?;
-    while self.match_types(&[TokenType::Minus, TokenType::Plus]) {
+    while self.match_types(&[TokenType::Minus, TokenType::Plus, TokenType::Modulo]) {
       let operator = Self::previous_free(&self.tokens, self.current);
       let right = self.factor()?;
       expr = Expr::Binary {

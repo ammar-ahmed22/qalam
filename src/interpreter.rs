@@ -259,6 +259,9 @@ impl ExprVisitor for Interpreter {
           },
           TokenType::Slash => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {
+              if right_val == 0.0 {
+                return Err(RuntimeError::init(operator, String::from("Cannot divide by zero!")));
+              }
               return Ok(Some(Literal::Number(left_val / right_val)));
             } else {
               return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")))
@@ -281,6 +284,16 @@ impl ExprVisitor for Interpreter {
             }
 
             return Err(RuntimeError::init(operator, String::from("Operands must be two numbers or two strings.")))
+          },
+          TokenType::Modulo => {
+            if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val.clone(), right_val.clone()) {
+              if right_val == 0.0 {
+                return Err(RuntimeError::init(operator, String::from("Cannot divide by zero!")));
+              }
+              return Ok(Some(Literal::Number(left_val % right_val)));
+            } else {
+              return Err(RuntimeError::init(operator, String::from("Operands must be numbers.")));
+            }
           },
           TokenType::Greater => {
             if let (Literal::Number(left_val), Literal::Number(right_val)) = (left_val, right_val) {

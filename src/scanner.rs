@@ -281,6 +281,9 @@ impl <'a> Scanner<'a> {
           self.add_token(TokenType::Plus, None)
         }
       },
+      '%' => {
+        self.add_token(TokenType::Modulo, None)
+      },
       ';' => self.add_token(TokenType::Semicolon, None),
       '*' => {
         if self.match_next('=') {
