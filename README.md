@@ -1,6 +1,6 @@
 <div align="center">
 <h1>qalam</h1>
-<p>Islamic/Arabic terminology inspired, dead-simple, programming language</p>
+<p>Islamic/Arabic terminology inspired, dead-simple, interpreted, programming language</p>
 </div>
 
 ## Table of Contents
@@ -13,6 +13,7 @@
   * [Objects (Classes)](#objects--classes-)
 - [Types](#types)
 - [Native Functions](#native-functions)
+- [Speed](#speed)
 
 ## Introduction
 As a learning exercise, to really hone my skills, I wanted to write a programming language myself. In order to accomplish this, I'm following the amazing tutorial called [Crafting Interpreters by Robert Nystrom](https://craftinginterpreters.com/).
@@ -182,3 +183,66 @@ I've implemented a few native functions to the program:
 | `pop`         | `arr: array`                                                               | `any`       | Pops a value from the end of the array and returns it. If it does not exist, returns `ghaib` |
 | `Array`       | `size: number (positive int), value: any`                                  | `array`     | Creates an array of `size` values all initialized to `value`.                                |
 | `code`        | `char: string`                                                             | `number`    | Returns the character code for a single character string.                                    |
+
+## Speed
+`qalam` is an interpreted language with dynamic types. However, since there are essentially zero optimizations done, it is extremely slow. I am also an extreme amateur when it comes to Rust programming, therefore, it is probably even slower than Robert's implementation in Java as I definitely did a million things wrong when using Rust. 
+
+In order to showcase how slow it actually is, I'll compare it's speed to JavaScript and Python (interpreted, dynamically typed languages). For the comparison, I'll use the calculation of the 30th fibonacci number using a recursive algorithm. 
+
+Below are the scripts for each language
+### Python
+```python
+import time
+
+def fib(n):
+  if n <= 1:
+    return n
+  else:
+    return fib(n - 1) + fib(n - 2)
+
+start = time.time()
+result = fib(30)
+end = time.time()
+print(f"{end - start}")
+```
+
+### JavaScript
+```javascript
+function fib(n) {
+  if (n <= 1) {
+    return n;
+  } else {
+    return fib(n - 1) + fib(n - 2);
+  }
+}
+
+let start = Date.now() / 1000;
+let result = fib(30);
+let end = Date.now() / 1000;
+console.log(`${end - start}`);
+```
+
+### Qalam
+```
+amal fib(n) {
+  shart(n <= 1) {
+    radd n;
+  } illa {
+    radd fib(n - 1) + fib(n - 2);
+  }
+}
+
+niyya start = clock();
+niyya result = fib(30);
+niyya end = clock();
+qul(str(end - start));
+```
+
+Each test was run 10 times and the average runtime is tabulated below:
+| Language | Average Runtime (s) | 
+| -------- | --------------- | 
+| JavaScript | 0.0185 |
+| Python | 0.2238 |
+| Qalam | 78.2590 |
+
+JavaScript and Python take less than second each. Qalam takes more than a minute. It is extremely slow, however, I am still proud that it works lol.
