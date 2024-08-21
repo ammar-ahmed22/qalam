@@ -1,0 +1,41 @@
+kitab ListNode {
+  khalaq(value, next) {
+    nafs.value = value;
+    nafs.next = next;
+  }
+}
+
+amal list_to_string(head) {
+  niyya string = "";
+  niyya curr = head;
+  baynama(curr != ghaib) {
+    string += str(curr.value);
+    shart(curr.next) {
+      string += " -> ";
+    }
+    curr = curr.next; 
+  }
+
+  radd string;
+}
+
+niyya list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
+
+amal reverse_list(head) {
+  niyya prev = ghaib;
+  niyya curr = head;
+  niyya next = ghaib;
+  baynama(curr != ghaib) {
+    next = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = next;
+  }
+
+  radd prev;
+}
+
+qul "Original list:";
+qul list_to_string(list);
+qul "Reversed list:";
+qul list_to_string(reverse_list(list));

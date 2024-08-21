@@ -13,6 +13,7 @@
   * [Objects (Classes)](#objects--classes-)
 - [Types](#types)
 - [Native Functions](#native-functions)
+- [Complete Example](#complete-example)
 - [Speed](#speed)
 
 ## Introduction
@@ -186,6 +187,64 @@ I've implemented a few native functions to the program:
 | `floor`       | `num: number`                                                              | `number`    | Returns the closest integer less than or equal to `num`                                      |
 | `ceil`        | `num: number`                                                              | `number`    | Returns the closest integer greater than or equal to `num`                                   |
 | `round`       | `num: number`                                                              | `number`    | Returns the closest to `num`. If `num` is halfway between 2 integers, returns away from 0.   |
+
+## Complete Example
+To showcase the functionalty of `qalam`, I've provided an example below of reversing a linked list:
+
+```
+kitab ListNode {
+  khalaq(value, next) {
+    nafs.value = value;
+    nafs.next = next;
+  }
+}
+
+amal list_to_string(head) {
+  niyya string = "";
+  niyya curr = head;
+  baynama(curr != ghaib) {
+    string += str(curr.value);
+    shart(curr.next) {
+      string += " -> ";
+    }
+    curr = curr.next; 
+  }
+
+  radd string;
+}
+
+niyya list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
+
+amal reverse_list(head) {
+  niyya prev = ghaib;
+  niyya curr = head;
+  niyya next = ghaib;
+  baynama(curr != ghaib) {
+    next = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = next;
+  }
+
+  radd prev;
+}
+
+qul "Original list:";
+qul list_to_string(list);
+qul "Reversed list:";
+qul list_to_string(reverse_list(list));
+```
+
+### Output
+```
+Original list:
+1 -> 2 -> 3 -> 4 -> 5
+Reversed list:
+5 -> 4 -> 3 -> 2 -> 1
+```
+
+### More Examples
+I've provided many more examples, in the [examples directory](./examples). You can run them with `cargo run --example <name>` or by running the `main.qlm` file inside the examples subdirectory with `qalam <file_path>`. 
 
 ## Speed
 `qalam` is an interpreted language with dynamic types. However, since there are essentially zero optimizations done, it is extremely slow. I am also an extreme amateur when it comes to Rust programming, therefore, it is probably even slower than Robert's implementation in Java as I definitely did a million things wrong when using Rust. 
