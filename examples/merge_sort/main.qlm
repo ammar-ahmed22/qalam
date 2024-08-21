@@ -1,0 +1,47 @@
+amal merge(left, right) {
+  niyya result = Array(len(left) + len(right), ghaib);
+  niyya l = 0;
+  niyya r = 0;
+  niyya k = 0;
+
+  baynama(l < len(left) wa r < len(right)) {
+    shart(left[l] < right[r]) {
+      result[k] = left[l];
+      l++;
+    } illa {
+      result[k] = right[r];
+      r++;
+    }
+    k++;
+  }
+
+  baynama(l < len(left)) {
+    result[k] = left[l];
+    l++;
+    k++;
+  }
+
+  baynama(r < len(right)) {
+    result[k] = right[r];
+    r++;
+    k++;
+  }
+
+  radd result;
+}
+
+amal merge_sort(arr) {
+  shart(len(arr) <= 1) {
+    radd arr;
+  }
+
+  niyya middle = floor(len(arr) / 2);
+  niyya left = slice(arr, 0, middle);
+  niyya right = slice(arr, middle, len(arr));
+  radd merge(merge_sort(left), merge_sort(right));
+}
+
+niyya array = [38, 27, 43, 3, 9, 82, 10];
+niyya sorted = merge_sort(array);
+qul sorted;
+
