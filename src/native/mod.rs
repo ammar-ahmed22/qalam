@@ -25,6 +25,7 @@ pub mod code;
 pub mod floor;
 pub mod ceil;
 pub mod round;
+pub mod slice;
 
 
 pub fn is_neg(num: f64) -> bool {

@@ -31,6 +31,7 @@ use crate::native::code::CodeFn;
 use crate::native::ceil::CeilFn;
 use crate::native::floor::FloorFn;
 use crate::native::round::RoundFn;
+use crate::native::slice::SliceFn;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -67,6 +68,7 @@ impl Interpreter {
     Self::add_global(globals.clone(), "floor", FloorFn::init());
     Self::add_global(globals.clone(), "ceil", CeilFn::init());
     Self::add_global(globals.clone(), "round", RoundFn::init());
+    Self::add_global(globals.clone(), "slice", SliceFn::init());
     return Self {
       globals: globals.clone(),
       environment: globals.clone(),
