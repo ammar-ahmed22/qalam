@@ -34,14 +34,13 @@ impl Qalam {
     }
   }
 
-  fn run_source(&mut self, source: &String) {
+  fn run_source(&mut self, source: &String, interpreter: Rc<RefCell<Interpreter>>) {
     let mut reporter = self.error_reporter.borrow_mut();
     let mut scanner = Scanner::init(source, &mut reporter);
     let tokens = scanner.scan_tokens();
     let mut parser = Parser::init(tokens);
     match parser.parse() {
       Ok(mut statements) => {
-        let interpreter = Rc::new(RefCell::new(Interpreter::init()));
         let mut resolver = Resolver::init(interpreter.clone());
         if let Err(e) = resolver.resolve_stmts(&mut statements) {
           reporter.runtime_error(&e.token, &e.message, ErrorType::Resolution);
@@ -58,6 +57,7 @@ impl Qalam {
   }
   
   fn run_prompt(&mut self) {
+    let interpreter = Rc::new(RefCell::new(Interpreter::init()));
     loop {
       print!("> ");
       io::stdout().flush().unwrap();
@@ -68,7 +68,7 @@ impl Qalam {
               if input == "exit()" {
                   break;
               }
-              self.run_source(&input);
+              self.run_source(&input, interpreter.clone());
               self.error_reporter.borrow_mut().had_error = false;
           },
           Err(err) => {
@@ -81,7 +81,7 @@ impl Qalam {
   fn run_file(&mut self, path: &String) -> Result<()> {
     let file_content = std::fs::read_to_string(path)
         .with_context(|| format!("Cannot read file"))?;
-    self.run_source(&file_content);
+    self.run_source(&file_content, Rc::new(RefCell::new(Interpreter::init())));
     if self.error_reporter.borrow().had_error {
       std::process::exit(65);
     }
