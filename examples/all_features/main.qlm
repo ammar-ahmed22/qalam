@@ -1,8 +1,8 @@
 // Variable declarations and types
-niyya age = 25;
-niyya name = "Ahmed";
-niyya is_married = batil;
-niyya children = ghaib;
+shai age = 25;
+shai name = "Ahmed";
+shai is_married = batil;
+shai children = ghaib;
 
 // Increment and decrement operators
 age++;
@@ -15,10 +15,10 @@ age *= 2;
 age /= 2;
 
 // Control flow: if, else, and, not
-shart(age > 30 wa la is_married) {
+itha(age > 30 wa la is_married) {
   qul("You are over 30 and not married");
 } illa {
-  shart(age > 25 wa is_married) {
+  itha(age > 25 wa is_married) {
     qul("You are married and in your late twenties");
   } illa {
     qul("You are young and single.");
@@ -26,13 +26,13 @@ shart(age > 30 wa la is_married) {
 }
 
 // Loop: while, for, break, continue
-niyya i = 0;
+shai i = 0;
 baynama(i < 10) {
   i++;
   qul("Current value of i: " + str(i));
 }
 
-tawaf(niyya i = 0; i < 5; i++) {
+tawaf(shai i = 0; i < 5; i++) {
   qul("Looping, iteration: " + str(i));
 }
 
@@ -60,9 +60,9 @@ kitab Student ibn Person {
   }
 }
 
-niyya person = Person("Khalid", 28);
+shai person = Person("Khalid", 28);
 person.introduce();
 
-niyya student = Student("Layla", 17, 12);
+shai student = Student("Layla", 17, 12);
 student.introduce();
 

@@ -24,7 +24,7 @@ kitab Prayer {
   }
 }
 
-niyya fajr = Prayer("Fajr", "Dawn", 2);
+shai fajr = Prayer("Fajr", "Dawn", 2);
 // Fajr is pending
 fajr.status();
 // Performing fajr 
@@ -32,6 +32,6 @@ fajr.perform();
 // Fajr is completed
 fajr.status();
 
-niyya dhuhr = Prayer("Dhuhr", "Noon", 4);
+shai dhuhr = Prayer("Dhuhr", "Noon", 4);
 // Dhuhr is pending
 dhuhr.status();

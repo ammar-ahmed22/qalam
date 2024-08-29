@@ -1,4 +1,4 @@
-niyya a = 1;
-niyya b = 2;
+shai a = 1;
+shai b = 2;
 // prints 3
 qul a + b;

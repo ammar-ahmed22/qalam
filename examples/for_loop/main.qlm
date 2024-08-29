@@ -1,8 +1,8 @@
 // Prints the first 21 elements of the fibonacci sequence
-niyya a = 0;
-niyya temp;
+shai a = 0;
+shai temp;
 
-tawaf(niyya b = 1; a < 10000; b = temp + b) {
+tawaf(shai b = 1; a < 10000; b = temp + b) {
   qul a;
   temp = a;
   a = b;

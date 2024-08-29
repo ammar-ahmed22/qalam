@@ -1,5 +1,5 @@
 amal make_counter() {
-  niyya i = 0;
+  shai i = 0;
   amal count() {
     i = i + 1;
     qul i;
@@ -8,7 +8,7 @@ amal make_counter() {
   radd count;
 }
 
-niyya counter = make_counter();
+shai counter = make_counter();
 // Prints 1
 counter();
 // Prints 2

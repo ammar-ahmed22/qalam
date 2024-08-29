@@ -1,4 +1,4 @@
-niyya a = 10;
+shai a = 10;
 
 a += 10;
 // 20
@@ -39,7 +39,7 @@ kitab Counter {
   }
 }
 
-niyya counter = Counter(10);
+shai counter = Counter(10);
 counter.increment(10);
 qul counter.count;
 
@@ -53,7 +53,7 @@ counter.div(5);
 qul counter.count;
 
 // Increment and decrement operators
-niyya a = 0;
+shai a = 0;
 a++;
 a++;
 qul a;

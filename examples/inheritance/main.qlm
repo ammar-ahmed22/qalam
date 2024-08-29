@@ -7,7 +7,7 @@ kitab Prayer {
   }
 
   perform() {
-    shart(la nafs.completed) {
+    itha(la nafs.completed) {
       qul "Performing " + nafs.name + " prayer, which has " + str(nafs.rakats) + " rakats.";
       nafs.completed = haqq;
     } illa {
@@ -16,7 +16,7 @@ kitab Prayer {
   }
 
   status() {
-    shart(nafs.completed) {
+    itha(nafs.completed) {
       qul nafs.name + " prayer is completed.";
     } illa {
       qul nafs.name + " prayer is pending.";
@@ -31,7 +31,7 @@ kitab Nafl ibn Prayer {
 
   status() {
     ulya.status();
-    shart(la nafs.completed) {
+    itha(la nafs.completed) {
       qul "You SHOULD complete " + nafs.name + " prayer.";
     }
   }
@@ -44,14 +44,14 @@ kitab Fardh ibn Prayer {
 
   status() {
     ulya.status();
-    shart(la nafs.completed) {
+    itha(la nafs.completed) {
       qul "You MUST complete " + nafs.name + " prayer now!";
     }
   }
 }
 
-niyya magrib = Fardh("Magrib", "Sunset", 3);
-niyya witr = Nafl("Witr", "After Isha", 3);
+shai magrib = Fardh("Magrib", "Sunset", 3);
+shai witr = Nafl("Witr", "After Isha", 3);
 
 magrib.status();
 qul "";

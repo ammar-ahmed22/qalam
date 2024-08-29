@@ -6,8 +6,8 @@ kitab ListNode {
 }
 
 amal list_to_string(head) {
-  niyya string = "";
-  niyya curr = head;
+  shai string = "";
+  shai curr = head;
   baynama(curr != ghaib) {
     string += str(curr.value);
     shart(curr.next) {
@@ -19,12 +19,12 @@ amal list_to_string(head) {
   radd string;
 }
 
-niyya list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
+shai list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
 
 amal reverse_list(head) {
-  niyya prev = ghaib;
-  niyya curr = head;
-  niyya next = ghaib;
+  shai prev = ghaib;
+  shai curr = head;
+  shai next = ghaib;
   baynama(curr != ghaib) {
     next = curr.next;
     curr.next = prev;

@@ -9,8 +9,8 @@ qul "pow(3, 2)";
 qul pow(3, 2);
 qul "";
 
-niyya a = 2;
-niyya b = 3;
+shai a = 2;
+shai b = 3;
 
 qul "max(2, 3)";
 // Prints 3
@@ -23,12 +23,12 @@ qul min(a, b);
 qul "";
 
 qul "len(my_name)";
-niyya my_name = "Ammar";
+shai my_name = "Ammar";
 // Prints 5
 qul len(my_name);
 qul "";
 
-niyya num_str = "-1";
+shai num_str = "-1";
 // Prints 0 (-1 + 1) 
 // str2num("hello") would throw an error
 qul "str2num(-1) + 1";
@@ -53,9 +53,9 @@ qul typeof(typeof);
 qul typeof(ghaib);
 qul "";
 
-niyya name = "Ammar Ahmed";
-niyya first = substr(name, 0, 5);
-niyya last = substr(name, 6, 5);
+shai name = "Ammar Ahmed";
+shai first = substr(name, 0, 5);
+shai last = substr(name, 6, 5);
 qul "substring of Ammar Ahmed";
 // Prints "Ammar"
 qul first;
@@ -65,7 +65,7 @@ qul "";
 
 qul "iterating over string";
 // We can also use the substr and len methods to iterate over a string
-tawaf(niyya i = 0; i < len(name); i = i + 1) {
+tawaf(shai i = 0; i < len(name); i = i + 1) {
   // Prints each character of name
   qul str(i) + ": " + substr(name, i, 1);
 }

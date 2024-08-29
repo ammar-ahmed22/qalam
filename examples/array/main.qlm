@@ -1,10 +1,10 @@
-niyya arr = [1, "one", haqq, 2, 3, 4];
+shai arr = [1, "one", haqq, 2, 3, 4];
 
 // Printing the array
 qul arr;
 
 // Iterating over the array
-tawaf(niyya i = 0; i < len(arr); i++) {
+tawaf(shai i = 0; i < len(arr); i++) {
   qul arr[i];
 }
 
@@ -17,7 +17,7 @@ arr[0] -= 1; // arr[0] = 2
 qul arr;
 
 // Using helper functions
-niyya a = [1, 2, 3];
+shai a = [1, 2, 3];
 
 push(a, 4);
 push(a, 5);
@@ -28,5 +28,5 @@ qul pop(a);
 qul a; // [1, 2, 3, 4]
 
 // Creating an array of size with initial values
-niyya bool_array = Array(20, haqq);
+shai bool_array = Array(20, haqq);
 qul bool_array;

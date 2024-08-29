@@ -1,18 +1,18 @@
-niyya has_wudu = batil;
-niyya magrib_time_started = haqq;
-niyya age = 16;
+shai has_wudu = batil;
+shai magrib_time_started = haqq;
+shai age = 16;
 
 
-shart(age >= 15 wa magrib_time_started wa has_wudu) {
+itha(age >= 15 wa magrib_time_started wa has_wudu) {
   qul("You MUST pray magrib now!");
 } illa {
-  shart(age < 15) {
+  itha(age < 15) {
     qul("You are not baligh, you do NOT NEED to pray but you should!");
   } illa {
-    shart(!has_wudu && magrib_time_started) {
+    itha(!has_wudu && magrib_time_started) {
       qul("Go make wudu and pray magrib now!");
     } illa {
-      shart(!magrib_time_started) {
+      itha(!magrib_time_started) {
         qul("It is not time for magrib yet!");
       }
     }

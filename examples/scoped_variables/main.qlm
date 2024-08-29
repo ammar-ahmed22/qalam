@@ -1,12 +1,12 @@
-niyya a = "global a";
-niyya b = "global b";
-niyya c = "global c";
+shai a = "global a";
+shai b = "global b";
+shai c = "global c";
 
 {
-  niyya a = "outer a";
-  niyya b = "outer b";
+  shai a = "outer a";
+  shai b = "outer b";
   {
-    niyya a = "inner a";
+    shai a = "inner a";
     qul a;
     qul b;
     qul c;

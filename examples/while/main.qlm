@@ -1,4 +1,4 @@
-niyya i = 0;
+shai i = 0;
 baynama(i < 10) {
   qul i;
   i++;
