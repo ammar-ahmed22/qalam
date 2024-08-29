@@ -44,7 +44,7 @@ qalam main.qlm
 ### Keywords
 | Syntax | Meaning/Inspiration | Usage |
 | :----: | :------------------ | :---- |
-| `niyya` | Intention. Signifies the intention to store a value. | Variable declarations |
+| `shai` | Thing/Object (Arabic). Variables can store any thing/object. | Variable declarations |
 | `amal` | Good Deeds/Actions. Functions do things (actions/deeds) | Function declarations |
 | `radd` | To return (Arabic) | Return statement |
 | `qul` | To say (Arabic) | Print statement |
@@ -65,8 +65,8 @@ qul add(a, b);
 ### Conditionals
 | Syntax | Meaning/Inspiration | Usage |
 | :----: | :------------------ | :---- |
-| `shart` | Condition. If a condition is satisifed, do something. | If statement |
-| `illa` | Else. Self-explanatory | Else statement |
+| `itha` | If (Arabic). Self-explanatory | If statement |
+| `illa` | Else (Arabic). Self-explanatory | Else statement |
 | `ilshart` | Combination of `shart` and `illa` | Else-if statement |
 | `haqq` | Truth. A boolean `true` is the epitome of truth. | Boolean `true` value |
 | `batil` | Falsehood. A boolean `false` is the epitome of falsehood. | Boolean `false` value |
