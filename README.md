@@ -51,8 +51,8 @@ qalam main.qlm
 | `ghaib` | Unseen, hidden. Signifies a value is not present | Null value |
 
 ```text
-niyya a = 1;
-niyya b = 2;
+shai a = 1;
+shai b = 2;
 
 amal add(a, b) {
   radd a + b;
@@ -67,7 +67,6 @@ qul add(a, b);
 | :----: | :------------------ | :---- |
 | `itha` | If (Arabic). Self-explanatory | If statement |
 | `illa` | Else (Arabic). Self-explanatory | Else statement |
-| `ilshart` | Combination of `shart` and `illa` | Else-if statement |
 | `haqq` | Truth. A boolean `true` is the epitome of truth. | Boolean `true` value |
 | `batil` | Falsehood. A boolean `false` is the epitome of falsehood. | Boolean `false` value |
 | `wa` | and (Arabic). Self-explanatory. | And operator. Can also use `&&` |
@@ -75,12 +74,10 @@ qul add(a, b);
 | `la` | not (Arabic). Self-explanatory. | Not operator. Can also use `!` |
 
 ```text
-niyya a = haqq;
-niyya b = batil;
+shai a = haqq;
+shai b = batil;
 
-shart(a wa b) {
-  // do something
-} ilshart(la a) {
+itha(a wa b) {
   // do something
 } illa {
   // do something
@@ -102,10 +99,10 @@ tawaf(niyya i = 0; i < 10; i = i + 1) {
   // prints 0 to 9
 }
 
-niyya a = haqq;
-niyya i = 0;
+shai a = haqq;
+shai i = 0;
 baynama(a) {
-  shart (i < 10) {
+  itha (i < 10) {
     qul i;
     // prints 0 
     i = i + 1;
@@ -147,7 +144,7 @@ kitab Feline ibn Animal {
   }
 }
 
-niyya cat = Feline("Hurayra", "Meow");
+shai cat = Feline("Hurayra", "Meow");
 cat.speak();
 // prints "meow"
 cat.purr()
@@ -200,11 +197,11 @@ kitab ListNode {
 }
 
 amal list_to_string(head) {
-  niyya string = "";
-  niyya curr = head;
+  shai string = "";
+  shai curr = head;
   baynama(curr != ghaib) {
     string += str(curr.value);
-    shart(curr.next) {
+    itha(curr.next) {
       string += " -> ";
     }
     curr = curr.next; 
@@ -213,12 +210,12 @@ amal list_to_string(head) {
   radd string;
 }
 
-niyya list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
+shai list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
 
 amal reverse_list(head) {
-  niyya prev = ghaib;
-  niyya curr = head;
-  niyya next = ghaib;
+  shai prev = ghaib;
+  shai curr = head;
+  shai next = ghaib;
   baynama(curr != ghaib) {
     next = curr.next;
     curr.next = prev;
@@ -287,16 +284,16 @@ console.log(`${end - start}`);
 ### Qalam
 ```
 amal fib(n) {
-  shart(n <= 1) {
+  itha(n <= 1) {
     radd n;
   } illa {
     radd fib(n - 1) + fib(n - 2);
   }
 }
 
-niyya start = clock();
-niyya result = fib(30);
-niyya end = clock();
+shai start = clock();
+shai result = fib(30);
+shai end = clock();
 qul(str(end - start));
 ```
 
