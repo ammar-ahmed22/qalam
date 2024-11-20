@@ -5,10 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.0] - 2024-11-19
 ### Added
 - Changelog file
 
 ### Changed
+- Only `.qlm` files can be run
+- CLI improvements with clap
+- CLI can run raw strings of code
 - README examples updated with new syntax
 - README speed updated with test using build version of Qalam
 - Syntax for variable declarations is now `shai` instead of `niyya` (e.g. `shai a = 1;`)

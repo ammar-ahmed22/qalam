@@ -1,6 +1,6 @@
 [package]
 name = "qalam"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Ammar Ahmed <ammar.ahmed2203@gmail.com>"]
 license = "MIT"
@@ -12,6 +12,7 @@ categories = ["compilers"]
 
 [dependencies]
 anyhow = "1.0.86"
+clap = { version = "4.5.21", features = ["derive"] }
 ordered-float = "4.2.2"
 rand = "0.8.5"
 

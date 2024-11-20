@@ -1,9 +1,10 @@
-use std::env;
 use anyhow::Result;
+use clap::Parser;
+use qalam::args::Args;
 use qalam::Qalam;
 
 fn main() -> Result<()> {
-    let args: Vec<String> = env::args().collect();
+    let args = Args::parse();
     let mut qalam = Qalam::init();
     return qalam.run(args);
 }
