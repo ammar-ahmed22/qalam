@@ -1,6 +1,6 @@
 [package]
 name = "qalam"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 authors = ["Ammar Ahmed <ammar.ahmed2203@gmail.com>"]
 license = "MIT"
