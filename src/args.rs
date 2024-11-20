@@ -8,10 +8,10 @@ use clap::Parser;
 )]
 pub struct Args {
     /// File path to interpret and execute
-    #[arg(value_name="FILE_PATH")]
+    #[arg(value_name = "FILE_PATH")]
     pub file_path: Option<String>,
 
     /// Raw string input to interpret and execute
-    #[arg(long="raw", value_name="SOURCE")]
-    pub raw: Option<String>
+    #[arg(long = "raw", value_name = "SOURCE")]
+    pub raw: Option<String>,
 }

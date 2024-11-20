@@ -1,7 +1,7 @@
 use anyhow::Result;
-use qalam::Qalam;
 use clap::Parser;
 use qalam::args::Args;
+use qalam::Qalam;
 
 fn main() -> Result<()> {
     let args = Args::parse();
