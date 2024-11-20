@@ -1,6 +1,10 @@
 <div align="center">
 <h1>qalam</h1>
 <p>Islamic/Arabic terminology inspired, dead-simple, interpreted, programming language</p>
+<div>
+  <a href="https://crates.io/crates/qalam"><img alt="Crates.io Version" src="https://img.shields.io/crates/v/qalam"></a>
+  <a href="https://crates.io/crates/qalam"><img alt="Crates.io Total Downloads" src="https://img.shields.io/crates/d/qalam"></a>
+</div>
 </div>
 
 ## Table of Contents
