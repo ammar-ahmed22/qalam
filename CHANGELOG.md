@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog file
 
 ### Changed
+- Only `.qlm` files can be run
 - CLI improvements with clap
 - CLI can run raw strings of code
 - README examples updated with new syntax

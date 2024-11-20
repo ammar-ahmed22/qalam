@@ -113,6 +113,12 @@ impl Qalam {
     }
 
     if let Some(file_path) = args.file_path {
+      // check the file type
+      let path = std::path::Path::new(&file_path);
+      let is_qlm = path.extension().map(|ext| ext == ".qlm").unwrap_or(false);
+      if !is_qlm {
+        return Err(anyhow::anyhow!("Only .qlm files are allowed!"));
+      }
       // run the file
       self.run_file(&file_path)?;
       return Ok(());
