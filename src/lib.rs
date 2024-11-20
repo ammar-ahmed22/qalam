@@ -11,6 +11,7 @@ pub mod resolver;
 pub mod stack;
 pub mod hashable;
 pub mod native;
+pub mod args;
 use anyhow::{Result, Context};
 use std::io::{ self, Write };
 use std::cell::RefCell;
@@ -18,6 +19,7 @@ use scanner::Scanner;
 use token::Token;
 use parser::Parser;
 use interpreter::Interpreter;
+use args::Args;
 use error::{ ErrorReporter, ErrorType };
 use resolver::Resolver;
 use std::rc::Rc;
@@ -95,15 +97,28 @@ impl Qalam {
 
   
 
-  pub fn run(&mut self, args: Vec<String>) -> Result<()> {
-    if args.len() > 2 {
-      println!("Usage: qalam [script]");
-      std::process::exit(1);
-    } else if args.len() == 2 {
-        self.run_file(&args[1])?
-    } else {
-        self.run_prompt();
+  pub fn run(&mut self, args: Args) -> Result<()> {
+    if let Some(raw) = args.raw { // raw takes priority
+      // run the raw string
+      self.run_source(&raw, Rc::new(RefCell::new(Interpreter::init())));
+      if self.error_reporter.borrow().had_error {
+        std::process::exit(1);
+      }
+
+      if self.error_reporter.borrow().had_runtime_error {
+        std::process::exit(1);
+      }
+      return Ok(());
+      // return;
     }
+
+    if let Some(file_path) = args.file_path {
+      // run the file
+      self.run_file(&file_path)?;
+      return Ok(());
+    }
+
+    self.run_prompt();
 
     return Ok(());
   }

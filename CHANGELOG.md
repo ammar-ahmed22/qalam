@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changelog file
 
 ### Changed
+- CLI improvements with clap
+- CLI can run raw strings of code
 - README examples updated with new syntax
 - README speed updated with test using build version of Qalam
 - Syntax for variable declarations is now `shai` instead of `niyya` (e.g. `shai a = 1;`)
