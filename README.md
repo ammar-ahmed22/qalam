@@ -1,4 +1,5 @@
 <div align="center">
+<img src="./images/QalamLogo.png" width="50" />
 <h1>qalam</h1>
 <p>Islamic/Arabic terminology inspired, dead-simple, interpreted, programming language</p>
 <div>
