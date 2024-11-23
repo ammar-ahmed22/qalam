@@ -13,6 +13,7 @@ categories = ["compilers"]
 [dependencies]
 anyhow = "1.0.86"
 clap = { version = "4.5.21", features = ["derive"] }
+colored = "2.1.0"
 ordered-float = "4.2.2"
 rand = "0.8.5"
 rustyline = "11.0.0"

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - REPL mode didn't allow for cursor movement with arrow keys
 
+### Added
+- Coloring of print values (yellow for numbers and bool), (blue for functions and instances)
+
 ## [0.2.3] - 2024-11-21
 ### Added
 - Logo to README

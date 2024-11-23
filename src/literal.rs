@@ -2,6 +2,7 @@ use crate::callable::instance::QalamInstance;
 use crate::callable::QalamCallable;
 use crate::hashable::HashableRcRefCell;
 use ordered_float::OrderedFloat;
+use colored::Colorize;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct QalamArray {
@@ -32,7 +33,7 @@ impl QalamArray {
             .map(|opt| Literal::option_string(opt.clone()))
             .collect::<Vec<String>>()
             .join(", ");
-        return format!("[{}]", values);
+        return format!("[ {} ]", values);
     }
 }
 
@@ -63,11 +64,11 @@ impl PartialEq for Literal {
 impl Literal {
     pub fn to_qalam_string(&self) -> String {
         match self {
-            Self::Bool(val) => format!("{}", if *val { "haqq" } else { "batil" }),
-            Self::Number(val) => format!("{}", val),
+            Self::Bool(val) => format!("{}", if *val { "haqq".yellow().to_string() } else { "batil".yellow().to_string() }),
+            Self::Number(val) => format!("{}", val).yellow().to_string(),
             Self::String(val) => val.to_owned(),
-            Self::Callable(val) => val.to_string(),
-            Self::Instance(val) => val.0.borrow().to_string(),
+            Self::Callable(val) => val.to_string().cyan().to_string(),
+            Self::Instance(val) => val.0.borrow().to_string().cyan().to_string(),
             Self::Array(val) => val.0.borrow().to_string(),
         }
     }
