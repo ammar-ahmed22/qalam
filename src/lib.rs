@@ -20,9 +20,10 @@ use parser::Parser;
 use resolver::Resolver;
 use scanner::Scanner;
 use std::cell::RefCell;
-use std::io::{self, Write};
 use std::rc::Rc;
 use token::Token;
+use rustyline::error::ReadlineError;
+use rustyline::Editor;
 // use std::cell::RefCell;
 
 pub struct Qalam {
@@ -58,21 +59,31 @@ impl Qalam {
 
     fn run_prompt(&mut self) {
         let interpreter = Rc::new(RefCell::new(Interpreter::init()));
+        let mut rl= Editor::<(), rustyline::history::FileHistory>::new().expect("Failed to initialize input reader.");
+
         loop {
-            print!("> ");
-            io::stdout().flush().unwrap();
-            let mut input = String::new();
-            match io::stdin().read_line(&mut input) {
-                Ok(_) => {
-                    input = input.trim().to_string();
+            let readline = rl.readline("> ");
+            match readline {
+                Ok(input) => {
+                    let input = input.trim();
                     if input == "exit()" {
                         break;
                     }
-                    self.run_source(&input, interpreter.clone());
+                    let _ = rl.add_history_entry(input);
+                    self.run_source(&input.to_string(), interpreter.clone());
                     self.error_reporter.borrow_mut().had_error = false;
-                }
+                },
+                Err(ReadlineError::Interrupted) => {
+                    println!("Exiting...");
+                    break;
+                },
+                Err(ReadlineError::Eof) => {
+                    println!("Exiting...");
+                    break;
+                },
                 Err(err) => {
                     eprintln!("Error reading input: {}", err);
+                    break;
                 }
             }
         }
