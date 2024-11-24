@@ -926,4 +926,8 @@ impl StmtVisitor for Interpreter {
 
         return Ok(());
     }
+
+    fn visit_import(&mut self, name: &Token, path: &Token) -> Self::R {
+        return Ok(());
+    }
 }

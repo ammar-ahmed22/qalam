@@ -276,6 +276,12 @@ impl StmtVisitor for Resolver {
         self.current_class = enclosing_class;
         return Ok(());
     }
+
+    fn visit_import(&mut self, name: &Token, _: &Token) -> Self::R {
+        self.declare(name.clone())?;
+        self.define(name.clone())?;
+        return Ok(());
+    }
 }
 
 impl ExprVisitor for Resolver {
