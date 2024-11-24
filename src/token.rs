@@ -59,6 +59,9 @@ pub enum TokenType {
     Increment,
     Decrement,
 
+    Import,
+    From, 
+
     Eof,
 }
 
@@ -86,6 +89,8 @@ impl TokenType {
             "safar" => Some(Self::Continue),
             "la" => Some(Self::Bang),
             "ibn" => Some(Self::Inherits),
+            "import" => Some(Self::Import),
+            "from" => Some(Self::From),
             _ => None,
         }
     }

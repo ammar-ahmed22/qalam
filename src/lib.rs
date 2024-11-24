@@ -87,6 +87,7 @@ impl Qalam {
                 }
             }
         }
+        println!("{:?}", interpreter);
     }
 
     fn run_file(&mut self, path: &String) -> Result<()> {
