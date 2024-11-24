@@ -28,4 +28,5 @@ pub trait StmtVisitor {
         methods: &mut Vec<Stmt>,
         superclass: &Option<Expr>,
     ) -> Self::R;
+    fn visit_import(&mut self, name: &Token, path: &Token) -> Self::R;
 }

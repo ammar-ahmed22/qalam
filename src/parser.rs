@@ -823,6 +823,13 @@ impl<'a> Parser<'a> {
         });
     }
 
+    fn import_declaration(&mut self) -> Result<Stmt, ParseError> {
+        let name = self.consume(&TokenType::Identifier, "Expect import identifier.")?.clone();
+        self.consume(&TokenType::From, "Expect 'from' after import identifier.")?;
+        let path = self.consume(&TokenType::String, "Expect string import path")?.clone();
+        return Ok(Stmt::Import { name, path });
+    }
+
     fn declaration(&mut self) -> Result<Stmt, ParseError> {
         let res;
         if self.match_types(&[TokenType::Class]) {
@@ -831,6 +838,8 @@ impl<'a> Parser<'a> {
             res = self.function("function");
         } else if self.match_types(&[TokenType::Var]) {
             res = self.var_declaration();
+        } else if self.match_types(&[TokenType::Import]) {
+            res = self.import_declaration();
         } else {
             res = self.statement();
         }
