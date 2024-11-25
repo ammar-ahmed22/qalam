@@ -1,8 +1,8 @@
 use crate::callable::instance::QalamInstance;
 use crate::callable::QalamCallable;
 use crate::hashable::HashableRcRefCell;
-use ordered_float::OrderedFloat;
 use colored::Colorize;
+use ordered_float::OrderedFloat;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct QalamArray {
@@ -64,7 +64,14 @@ impl PartialEq for Literal {
 impl Literal {
     pub fn to_qalam_string(&self) -> String {
         match self {
-            Self::Bool(val) => format!("{}", if *val { "haqq".yellow().to_string() } else { "batil".yellow().to_string() }),
+            Self::Bool(val) => format!(
+                "{}",
+                if *val {
+                    "haqq".yellow().to_string()
+                } else {
+                    "batil".yellow().to_string()
+                }
+            ),
             Self::Number(val) => format!("{}", val).yellow().to_string(),
             Self::String(val) => val.to_owned(),
             Self::Callable(val) => val.to_string().cyan().to_string(),

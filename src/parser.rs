@@ -824,9 +824,17 @@ impl<'a> Parser<'a> {
     }
 
     fn import_declaration(&mut self) -> Result<Stmt, ParseError> {
-        let name = self.consume(&TokenType::Identifier, "Expect import identifier.")?.clone();
+        let name = self
+            .consume(&TokenType::Identifier, "Expect import identifier.")?
+            .clone();
         self.consume(&TokenType::From, "Expect 'from' after import identifier.")?;
-        let path = self.consume(&TokenType::String, "Expect string import path")?.clone();
+        let path = self
+            .consume(&TokenType::String, "Expect string import path")?
+            .clone();
+        self.consume(
+            &TokenType::Semicolon,
+            "Expect ';' after import declaration.",
+        )?;
         return Ok(Stmt::Import { name, path });
     }
 

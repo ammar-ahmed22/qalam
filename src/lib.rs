@@ -18,12 +18,13 @@ use error::{ErrorReporter, ErrorType};
 use interpreter::Interpreter;
 use parser::Parser;
 use resolver::Resolver;
-use scanner::Scanner;
-use std::cell::RefCell;
-use std::rc::Rc;
-use token::Token;
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
+use scanner::Scanner;
+use std::cell::RefCell;
+use std::path::PathBuf;
+use std::rc::Rc;
+use token::Token;
 // use std::cell::RefCell;
 
 pub struct Qalam {
@@ -58,8 +59,9 @@ impl Qalam {
     }
 
     fn run_prompt(&mut self) {
-        let interpreter = Rc::new(RefCell::new(Interpreter::init()));
-        let mut rl= Editor::<(), rustyline::history::FileHistory>::new().expect("Failed to initialize input reader.");
+        let interpreter = Rc::new(RefCell::new(Interpreter::init(None)));
+        let mut rl = Editor::<(), rustyline::history::FileHistory>::new()
+            .expect("Failed to initialize input reader.");
 
         loop {
             let readline = rl.readline("> ");
@@ -72,15 +74,15 @@ impl Qalam {
                     let _ = rl.add_history_entry(input);
                     self.run_source(&input.to_string(), interpreter.clone());
                     self.error_reporter.borrow_mut().had_error = false;
-                },
+                }
                 Err(ReadlineError::Interrupted) => {
                     println!("Exiting...");
                     break;
-                },
+                }
                 Err(ReadlineError::Eof) => {
                     println!("Exiting...");
                     break;
-                },
+                }
                 Err(err) => {
                     eprintln!("Error reading input: {}", err);
                     break;
@@ -93,7 +95,10 @@ impl Qalam {
     fn run_file(&mut self, path: &String) -> Result<()> {
         let file_content =
             std::fs::read_to_string(path).with_context(|| format!("Cannot read file"))?;
-        self.run_source(&file_content, Rc::new(RefCell::new(Interpreter::init())));
+        self.run_source(
+            &file_content,
+            Rc::new(RefCell::new(Interpreter::init(Some(PathBuf::from(path))))),
+        );
         if self.error_reporter.borrow().had_error {
             std::process::exit(65);
         }
@@ -108,7 +113,7 @@ impl Qalam {
         if let Some(raw) = args.raw {
             // raw takes priority
             // run the raw string
-            self.run_source(&raw, Rc::new(RefCell::new(Interpreter::init())));
+            self.run_source(&raw, Rc::new(RefCell::new(Interpreter::init(None))));
             if self.error_reporter.borrow().had_error {
                 std::process::exit(1);
             }

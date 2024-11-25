@@ -60,7 +60,7 @@ pub enum TokenType {
     Decrement,
 
     Import,
-    From, 
+    From,
 
     Eof,
 }

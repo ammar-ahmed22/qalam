@@ -43,7 +43,7 @@ pub enum Stmt {
     Import {
         name: Token,
         path: Token,
-    }
+    },
 }
 
 impl Stmt {
@@ -69,7 +69,7 @@ impl Stmt {
                 methods,
                 superclass,
             } => visitor.visit_class(name, methods, superclass),
-            Self::Import { name, path } => visitor.visit_import(name, path)
+            Self::Import { name, path } => visitor.visit_import(name, path),
         }
     }
 }

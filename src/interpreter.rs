@@ -35,6 +35,7 @@ use crate::native::typeof_func::TypeofFn;
 use crate::token::{Token, TokenType};
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::path::PathBuf;
 use std::rc::Rc;
 
 #[derive(Debug)]
@@ -42,10 +43,11 @@ pub struct Interpreter {
     pub globals: Rc<RefCell<Environment>>,
     pub environment: Rc<RefCell<Environment>>,
     pub locals: HashMap<Expr, usize>,
+    pub path: Option<PathBuf>,
 }
 
 impl Interpreter {
-    pub fn init() -> Self {
+    pub fn init(path: Option<PathBuf>) -> Self {
         let globals = Rc::new(RefCell::new(Environment::init(None)));
         Self::add_global(globals.clone(), "clock", ClockFn::init());
         Self::add_global(globals.clone(), "pow", PowFn::init());
@@ -72,6 +74,7 @@ impl Interpreter {
             globals: globals.clone(),
             environment: globals.clone(),
             locals: HashMap::new(),
+            path,
         };
     }
 
@@ -928,6 +931,11 @@ impl StmtVisitor for Interpreter {
     }
 
     fn visit_import(&mut self, name: &Token, path: &Token) -> Self::R {
+        // 1. Find the file in the path (should be relative to the current file) and run it
+        // 1.a) Figure out the relativity of the paths (need the current file path for this)
+
+        // 2. Create a QalamClass with any functions/classes in the globals of the interpreter
+        // 3. Create an instance
         return Ok(());
     }
 }
