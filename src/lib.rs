@@ -22,6 +22,7 @@ use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use scanner::Scanner;
 use std::cell::RefCell;
+use std::env;
 use std::path::PathBuf;
 use std::rc::Rc;
 use token::Token;
@@ -93,11 +94,20 @@ impl Qalam {
     }
 
     fn run_file(&mut self, path: &String) -> Result<()> {
-        let file_content =
-            std::fs::read_to_string(path).with_context(|| format!("Cannot read file"))?;
+        let path = PathBuf::from(path);
+        let resolved_path = if path.is_absolute() {
+            path.clone()
+        } else {
+            env::current_dir().unwrap().join(path.clone())
+        };
+        println!("Curr file path = {}", resolved_path.display());
+        let file_content = std::fs::read_to_string(resolved_path.clone())
+            .with_context(|| format!("Cannot read file"))?;
         self.run_source(
             &file_content,
-            Rc::new(RefCell::new(Interpreter::init(Some(PathBuf::from(path))))),
+            Rc::new(RefCell::new(Interpreter::init(Some(PathBuf::from(
+                resolved_path,
+            ))))),
         );
         if self.error_reporter.borrow().had_error {
             std::process::exit(65);

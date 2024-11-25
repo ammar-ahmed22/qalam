@@ -9,7 +9,7 @@ use crate::callable::QalamCallable;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
 use crate::hashable::{HashableMap, HashableRcRefCell};
-use crate::literal::{Literal, QalamArray};
+use crate::literal::{self, Literal, QalamArray};
 use crate::native::array_constructor::ArrayConstructorFn;
 use crate::native::ceil::CeilFn;
 use crate::native::clock::ClockFn;
@@ -35,7 +35,7 @@ use crate::native::typeof_func::TypeofFn;
 use crate::token::{Token, TokenType};
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
 #[derive(Debug)]
@@ -931,11 +931,62 @@ impl StmtVisitor for Interpreter {
     }
 
     fn visit_import(&mut self, name: &Token, path: &Token) -> Self::R {
-        // 1. Find the file in the path (should be relative to the current file) and run it
-        // 1.a) Figure out the relativity of the paths (need the current file path for this)
+        // 1. Check if interpreter path exists (only in file running mode)
+        let curr_path = match &self.path {
+            Some(path) => path,
+            None => {
+                return Err(RuntimeError::init(
+                    name,
+                    format!("Cannot use import in REPL or raw mode!"),
+                ))
+            }
+        };
 
-        // 2. Create a QalamClass with any functions/classes in the globals of the interpreter
-        // 3. Create an instance
+        // 2. Resolve the parent directory
+        let curr_parent = match curr_path.parent() {
+            Some(parent) => match std::fs::canonicalize(parent) {
+                Ok(abs_path) => abs_path,
+                Err(e) => {
+                    return Err(RuntimeError::init(
+                        path,
+                        format!("Error resolving path: {}", e),
+                    ))
+                }
+            },
+            None => PathBuf::from(Path::new(std::path::MAIN_SEPARATOR_STR)),
+        };
+
+        // 3. Extract and validate import path string
+        let path_str = match &path.literal {
+            Some(Literal::String(string)) => string.clone(),
+            _ => {
+                return Err(RuntimeError::init(
+                    path,
+                    "Import path must be a string!".to_string(),
+                ))
+            }
+        };
+
+        let import_path = curr_parent.join(path_str);
+
+        // 4. Validate existence and extension of file
+        if !import_path.exists() {
+            return Err(RuntimeError::init(
+                path,
+                format!("No file exists at '{}'", import_path.display()),
+            ));
+        }
+        if import_path.extension().map_or(true, |ext| ext != "qlm") {
+            return Err(RuntimeError::init(
+                path,
+                "Invalid file extension".to_string(),
+            ));
+        }
+
+        // 5. Import the file
+        println!("importing: {}", import_path.display());
+
+        // 6. Do the work!
         return Ok(());
     }
 }
