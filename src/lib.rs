@@ -48,14 +48,14 @@ impl Qalam {
             Ok(mut statements) => {
                 let mut resolver = Resolver::init(interpreter.clone());
                 if let Err(e) = resolver.resolve_stmts(&mut statements) {
-                    reporter.runtime_error(&e.token, &e.message, ErrorType::Resolution);
+                    reporter.runtime_error(&e.token, &e.message, ErrorType::Resolution, interpreter.clone().borrow().path.as_ref());
                     return;
                 }
                 if let Err(e) = interpreter.clone().borrow_mut().interpret(statements) {
-                    reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime);
+                    reporter.runtime_error(&e.token, &e.message, ErrorType::Runtime, interpreter.clone().borrow().path.as_ref());
                 }
             }
-            Err(e) => reporter.error_token(&e.token, &e.message, ErrorType::Syntax),
+            Err(e) => reporter.error_token(&e.token, &e.message, ErrorType::Syntax, interpreter.clone().borrow().path.as_ref()),
         }
     }
 
@@ -93,21 +93,20 @@ impl Qalam {
         println!("{:?}", interpreter);
     }
 
-    fn run_file(&mut self, path: &String) -> Result<()> {
+    pub fn run_file(&mut self, path: &String) -> Result<Rc<RefCell<Interpreter>>> {
         let path = PathBuf::from(path);
         let resolved_path = if path.is_absolute() {
             path.clone()
         } else {
             env::current_dir().unwrap().join(path.clone())
         };
-        println!("Curr file path = {}", resolved_path.display());
+        // println!("Curr file path = {}", resolved_path.display());
         let file_content = std::fs::read_to_string(resolved_path.clone())
             .with_context(|| format!("Cannot read file"))?;
+        let interpreter = Rc::new(RefCell::new(Interpreter::init(Some(PathBuf::from(resolved_path)))));
         self.run_source(
             &file_content,
-            Rc::new(RefCell::new(Interpreter::init(Some(PathBuf::from(
-                resolved_path,
-            ))))),
+            interpreter.clone(),
         );
         if self.error_reporter.borrow().had_error {
             std::process::exit(65);
@@ -116,7 +115,7 @@ impl Qalam {
         if self.error_reporter.borrow().had_runtime_error {
             std::process::exit(75);
         }
-        return Ok(());
+        return Ok(interpreter);
     }
 
     pub fn run(&mut self, args: Args) -> Result<()> {

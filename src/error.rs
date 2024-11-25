@@ -33,37 +33,41 @@ impl ErrorReporter {
         };
     }
 
-    pub fn error_token(&mut self, token: &Token, message: &str, err_type: ErrorType) {
+    pub fn error_token(&mut self, token: &Token, message: &str, err_type: ErrorType, path: Option<&std::path::PathBuf>) {
         match token.token_type {
-            TokenType::Eof => self.report(token.line, message, Some("at end"), err_type),
+            TokenType::Eof => self.report(token.line, message, Some("at end"), err_type, path),
             _ => self.report(
                 token.line,
                 message,
                 Some(&format!("at '{}'", token.lexeme)),
                 err_type,
+                path
             ),
         }
     }
 
-    pub fn error(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType) {
-        self.report(line, message, loc, err_type);
+    pub fn error(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType, path: Option<&std::path::PathBuf>) {
+        self.report(line, message, loc, err_type, path);
     }
 
-    pub fn runtime_error(&mut self, token: &Token, message: &str, err_type: ErrorType) {
+    pub fn runtime_error(&mut self, token: &Token, message: &str, err_type: ErrorType, path: Option<&std::path::PathBuf>) {
         eprintln!("{}: {}", err_type.to_string(), message);
+        if let Some(path) = path {
+            eprintln!("\t at {}", path.display());
+        }
         eprintln!("\t at line {}", token.line);
         self.had_runtime_error = true;
     }
 
-    pub fn report(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType) {
+    pub fn report(&mut self, line: i64, message: &str, loc: Option<&str>, err_type: ErrorType, path: Option<&std::path::PathBuf>) {
         eprintln!("{}: {}", err_type.to_string(), message);
+        if let Some(path) = path {
+            eprintln!("\t at {}", path.display());
+        }
         eprintln!("\t at line {}", line);
-        match loc {
-            Some(val) => {
-                eprintln!("\t {}", val)
-            }
-            None => {}
-        };
+        if let Some(loc) = loc {
+            eprintln!("\t {}", loc);
+        }
         self.had_error = true;
     }
 }

@@ -150,7 +150,7 @@ impl<'a> Scanner<'a> {
         // If we reached the end the string is not terminated
         if self.end() {
             self.error_reporter
-                .error(self.line, "Unterminated string.", None, ErrorType::Syntax);
+                .error(self.line, "Unterminated string.", None, ErrorType::Syntax, None);
             return;
         }
 
@@ -366,6 +366,7 @@ impl<'a> Scanner<'a> {
                         "Unexpected character.",
                         None,
                         ErrorType::Syntax,
+                        None,
                     );
                 }
             }

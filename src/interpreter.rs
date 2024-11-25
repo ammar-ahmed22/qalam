@@ -9,7 +9,7 @@ use crate::callable::QalamCallable;
 use crate::environment::Environment;
 use crate::error::RuntimeError;
 use crate::hashable::{HashableMap, HashableRcRefCell};
-use crate::literal::{self, Literal, QalamArray};
+use crate::literal::{Literal, QalamArray};
 use crate::native::array_constructor::ArrayConstructorFn;
 use crate::native::ceil::CeilFn;
 use crate::native::clock::ClockFn;
@@ -37,6 +37,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use crate::Qalam;
 
 #[derive(Debug)]
 pub struct Interpreter {
@@ -984,8 +985,14 @@ impl StmtVisitor for Interpreter {
         }
 
         // 5. Import the file
-        println!("importing: {}", import_path.display());
+        // println!("importing: {}", import_path.display());
+        let mut qalam = Qalam::init();
+        let _ = match qalam.run_file(&import_path.to_str().unwrap().to_string()) {
+            Ok(int) => int,
+            Err(e) => return Err(RuntimeError::init(name, format!("Error in import: {e}")))
+        };
 
+        // println!("import run success!");
         // 6. Do the work!
         return Ok(());
     }
