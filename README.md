@@ -1,12 +1,21 @@
 <div align="center">
 <img src="./images/QalamLogo.png" width="50" />
 <h1>qalam</h1>
-<p>Islamic/Arabic terminology inspired, dead-simple, interpreted, programming language</p>
+<p><a href="https://en.wikipedia.org/wiki/Roman_Urdu">Roman urdu</a> inspired, interpreted programming language written in Rust.</p>
+<p></p>
 <div>
   <a href="https://crates.io/crates/qalam"><img alt="Crates.io Version" src="https://img.shields.io/crates/v/qalam"></a>
   <a href="https://crates.io/crates/qalam"><img alt="Crates.io Total Downloads" src="https://img.shields.io/crates/d/qalam"></a>
 </div>
 </div>
+
+> [!NOTE]
+> Some of you who have been here before remember that Qalam was very different before. It was "Islamic/Arabic terminology inspired". 
+> I decided to change the syntax because this project is more of learning exercise/joke than a real-world or useful product. For this
+> reason, I thought that it's not very appropriate to use Islamically inspired syntax for something that is a joke.
+> 
+> All of this worked out because Qalam actually means the same thing in both Urdu and Arabic, pen. 
+
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -36,7 +45,7 @@ cargo install qalam
 
 2. Create a `.qlm` file with your source code
 ```bash
-echo "qul \"hello world!\"" > main.qlm
+echo "bolo \"sab ko salam!\"" > main.qlm
 ```
 
 3. Run the `qalam` code
@@ -49,42 +58,42 @@ qalam main.qlm
 ### Keywords
 | Syntax | Meaning/Inspiration | Usage |
 | :----: | :------------------ | :---- |
-| `shai` | Thing/Object (Arabic). Variables can store any thing/object. | Variable declarations |
-| `amal` | Good Deeds/Actions. Functions do things (actions/deeds) | Function declarations |
-| `radd` | To return (Arabic) | Return statement |
-| `qul` | To say (Arabic) | Print statement |
-| `ghaib` | Unseen, hidden. Signifies a value is not present | Null value |
+| `rakho` | To put/place. Values are *placed* into the variable. | Variable declarations |
+| `kaam` | Work/Job/Action. Functions do things (actions/jobs) | Function declarations |
+| `wapis` | To return | Return statement |
+| `bolo` | To say | Print statement |
+| `khali` | Empty. Signifies a value is not present | Null value |
 
 ```text
-shai a = 1;
-shai b = 2;
+rakho a = 1;
+rakho b = 2;
 
-amal add(a, b) {
-  radd a + b;
+kaam add(a, b) {
+  wapis a + b;
 }
 
-qul add(a, b);
+bolo(add(a, b));
 // prints 3
 ```
 
 ### Conditionals
 | Syntax | Meaning/Inspiration | Usage |
 | :----: | :------------------ | :---- |
-| `itha` | If (Arabic). Self-explanatory | If statement |
-| `illa` | Else (Arabic). Self-explanatory | Else statement |
-| `haqq` | Truth. A boolean `true` is the epitome of truth. | Boolean `true` value |
-| `batil` | Falsehood. A boolean `false` is the epitome of falsehood. | Boolean `false` value |
-| `wa` | and (Arabic). Self-explanatory. | And operator. Can also use `&&` |
-| `aw` | or (Arabic). Self-explanatory. | Or operator. Can also use `\|\|` |
-| `la` | not (Arabic). Self-explanatory. | Not operator. Can also use `!` |
+| `agar` | If. Self-explanatory | If statement |
+| `warna` | Else. Self-explanatory | Else statement |
+| `sach` | Truth. A boolean `true` indicates truth. | Boolean `true` value |
+| `jhoot` | Lie. A boolean `false` indicates falsehood, lies, etc. | Boolean `false` value |
+| `aur` | And. Self-explanatory. | And operator. Can also use `&&` |
+| `ya` | Or. Self-explanatory. | Or operator. Can also use `\|\|` |
+| `nahi` | Not. Self-explanatory. | Not operator. Can also use `!` |
 
 ```text
-shai a = haqq;
-shai b = batil;
+rakho a = sach;
+rakho b = jhoot;
 
-itha(a wa b) {
+agar(a aur b) {
   // do something
-} illa {
+} warna {
   // do something
 }
 ```
@@ -93,67 +102,66 @@ itha(a wa b) {
 ### Loops
 | Syntax | Meaning/Inspiration | Usage |
 | :----: | :------------------ | :---- |
-| `tawaf` | Circumbulate. The name for circumbulating around the Ka'bah for Hajj. Signifies going around and around. | For loop |
-| `baynama` | While (Arabic). Self-explanatory | While loop |
-| `iftar` | Breaking fast. The time when Muslims break fast is called `iftar`. | Break statement |
-| `safar` | Journey or travel. Signifies the loop is going to continue on it's journey. | Continue statement |
+| `har` | Every. Does something for every value that passes the condition. | For loop |
+| `jabtak` | While/As long as. Self-explanatory | While loop |
+<!-- These are currently not even implemented so leave them out. -->
+<!-- | `iftar` | Breaking fast. The time when Muslims break fast is called `iftar`. | Break statement | -->
+<!-- | `safar` | Journey or travel. Signifies the loop is going to continue on it's journey. | Continue statement | -->
 
 ```text
-tawaf(niyya i = 0; i < 10; i = i + 1) {
-  qul i; 
-  // prints 0 to 9
+kliye(rakho i = 0; i < 10; i++) {
+    bolo(i); // prints numbers 0 - 9
 }
 
-shai a = haqq;
-shai i = 0;
-baynama(a) {
-  itha (i < 10) {
-    qul i;
-    // prints 0 
-    i = i + 1;
-    safar;
-  } illa {
-    iftar;
-  }
+rakho i = 0;
+jabtak(i < 0) {
+    bolo(i); // prints numbers 0 - 9
 }
 ```
 
 ### Objects (Classes)
 | Syntax | Meaning/Inspiration | Usage |
 | :----: | :------------------ | :---- |
-| `kitab` | Chapter (literal: Book) (Arabic). In Islamic books, chapters are called kitab. Classes are similar to chapters as they group related data together. | Class definition |
-| `khalaq` | To create (Arabic). The constructor creates the class object. | Class constructor function |
-| `nafs` | Self/Soul. Islamically, nafs is used to describe desires of the self. Represents the state of the instance (self). | Instance accessor (`this` in JavaScript, `self` in Python/Rust) | 
-| `ulya` | Most elevated, superior (Arabic). The superclass is superior to the subclass. | Superclass accessor (`super` in JavaScript) |
-| `ibn` | Son of/Child of (Arabic). Subclasses inherit from the superclass as children inherit from parents | Class inheritance operator |  
+| `jamat` | Group/Class. Self-explanatory. | Class definition |
+| `banao` | To make/build. The constructor makes the class object. | Class constructor function |
+| `yeh` | This. Self-explanatory | Instance accessor (`this` in JavaScript, `self` in Python/Rust) | 
+| `asli` | Original. The superclass is the original (parent) of the class. | Superclass accessor (`super` in JavaScript) |
+| `shamil` | Include. The base class *includes* the functionality of the superclass. | Class inheritance operator |  
 
 ```text
-kitab Animal {
-  khalaq(name, sound) {
-    nafs.name = name;
-    nafs.sound = sound;
-  }
+jamat Shaks {
+    banao(naam) {
+        yeh.naam = naam
+    }
 
-  speak() {
-    qul nafs.sound;
-  }
+    taruf() {
+        bolo("Mere naam " + yeh.naam + " hai!")
+    }
 }
 
-kitab Feline ibn Animal {
-  khalaq(name, sound) {
-    ulya.khalaq(name, sound);
-  }
+jamat Student shamil Shaks {
+    banao(naam, subject) {
+        asli.banao(naam)
+        yeh.subject = subject
+    }
 
-  purr() {
-    qul "purr"
-  }
+    taruf() {
+        asli.taruf()
+        bolo("Mai " yeh.subject + " par ta hoon.")
+    }
 }
 
-shai cat = Feline("Hurayra", "Meow");
-cat.speak();
-// prints "meow"
-cat.purr()
-// prints "purr"
+rakho admi = Shaks("Ammar")
+rakho engineer = Student("Amir", "Engineering")
+
+admi.taruf() 
+// prints Mere naam Ammar hai!
+
+engineer.taruf() 
+// prints 
+// Mere naam Amir hai!
+// Mai Engineering par ta hoon.
+
 ```
 
 ## Types
@@ -194,47 +202,47 @@ I've implemented a few native functions to the program:
 To showcase the functionalty of `qalam`, I've provided an example below of reversing a linked list:
 
 ```
-kitab ListNode {
-  khalaq(value, next) {
-    nafs.value = value;
-    nafs.next = next;
+jamat ListNode {
+  banao(value, next) {
+    yeh.value = value;
+    yeh.next = next;
   }
 }
 
-amal list_to_string(head) {
-  shai string = "";
-  shai curr = head;
-  baynama(curr != ghaib) {
+kaam list_to_string(head) {
+  rakho string = "";
+  rakho curr = head;
+  jabtak(curr != ghaib) {
     string += str(curr.value);
-    itha(curr.next) {
+    agar(curr.next) {
       string += " -> ";
     }
     curr = curr.next; 
   }
 
-  radd string;
+  wapis string;
 }
 
-shai list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
+rakho list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
 
-amal reverse_list(head) {
-  shai prev = ghaib;
-  shai curr = head;
-  shai next = ghaib;
-  baynama(curr != ghaib) {
+kaam reverse_list(head) {
+  rakho prev = ghaib;
+  rakho curr = head;
+  rakho next = ghaib;
+  jabtak(curr != ghaib) {
     next = curr.next;
     curr.next = prev;
     prev = curr;
     curr = next;
   }
 
-  radd prev;
+  wapis prev;
 }
 
-qul "Original list:";
-qul list_to_string(list);
-qul "Reversed list:";
-qul list_to_string(reverse_list(list));
+bolo("Original list:"));
+bolo((list_to_string(list));
+bolo("Reversed list:");
+bolo(list_to_string(reverse_list(list)));
 ```
 
 ### Output
@@ -288,18 +296,18 @@ console.log(`${end - start}`);
 
 ### Qalam
 ```
-amal fib(n) {
-  itha(n <= 1) {
-    radd n;
-  } illa {
-    radd fib(n - 1) + fib(n - 2);
+kaam fib(n) {
+  agra(n <= 1) {
+    wapis n;
+  } magar {
+    wapis fib(n - 1) + fib(n - 2);
   }
 }
 
-shai start = clock();
-shai result = fib(30);
-shai end = clock();
-qul(str(end - start));
+rakho start = clock();
+rakho result = fib(30);
+rakho end = clock();
+bolo(str(end - start));
 ```
 
 Each test was run 10 times and the average runtime is tabulated below:
