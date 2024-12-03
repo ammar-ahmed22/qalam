@@ -232,13 +232,13 @@ impl StmtVisitor for Resolver {
                 if name.lexeme.eq(&superclass_name.lexeme) {
                     return Err(RuntimeError::init(
                         superclass_name,
-                        "A class can't inherit from itself.".to_string(),
+                        "A jamat can't inherit from itself.".to_string(),
                     ));
                 }
             } else {
                 return Err(RuntimeError::init(
                     name,
-                    "class must inherit from class.".to_string(),
+                    "jamat must inherit from a jamat.".to_string(),
                 ));
             }
             self.current_class = Some(ClassType::Subclass);
@@ -247,25 +247,25 @@ impl StmtVisitor for Resolver {
             self.scopes
                 .peek_mut()
                 .unwrap()
-                .insert(String::from("ulya"), true);
+                .insert(String::from("asli"), true);
         }
 
         self.begin_scope();
         self.scopes
             .peek_mut()
             .unwrap()
-            .insert(String::from("nafs"), true);
+            .insert(String::from("yeh"), true);
         for method in methods.iter_mut() {
             let mut declaration = FunctionType::Method;
             if let Stmt::Function { name, params, body } = method {
-                if name.lexeme.eq(&String::from("khalaq")) {
+                if name.lexeme.eq(&String::from("banao")) {
                     declaration = FunctionType::Initializer;
                 }
                 self.resolve_function(name, params, body, Some(declaration))?;
             } else {
                 return Err(RuntimeError::init(
                     name,
-                    format!("class method is not a function!"),
+                    format!("jamat method is not a kaam!"),
                 ));
             }
         }
@@ -361,7 +361,7 @@ impl ExprVisitor for Resolver {
         if let None = self.current_class {
             return Err(RuntimeError::init(
                 keyword,
-                format!("Can't use 'nafs' outside of a kitab."),
+                format!("Can't use 'yeh' outside of a jamat."),
             ));
         }
         self.resolve_local_expr(
@@ -377,7 +377,7 @@ impl ExprVisitor for Resolver {
         if let None = self.current_class {
             return Err(RuntimeError::init(
                 keyword,
-                format!("Can't use 'ulya' outside of a kitab"),
+                format!("Can't use 'asli' outside of a jamat"),
             ));
         }
 
@@ -386,7 +386,7 @@ impl ExprVisitor for Resolver {
         } else {
             return Err(RuntimeError::init(
                 keyword,
-                format!("Can't use 'ulya' in kitab with no superclass"),
+                format!("Can't use 'asli' in jamat with no parent jamat"),
             ));
         }
         self.resolve_local_expr(

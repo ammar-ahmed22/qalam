@@ -51,7 +51,7 @@ impl QalamCallable for QalamClass {
     ) -> Result<Option<Literal>, RuntimeError> {
         let instance = HashableRcRefCell::init(QalamInstance::init(self.clone()));
         // let instance = QalamInstance::init(self.clone());
-        let initializer = self.find_method(&String::from("khalaq"));
+        let initializer = self.find_method(&String::from("banao"));
         if let Some(initializer) = initializer {
             if let Some(initializer) = initializer.as_any().downcast_ref::<QalamFunction>() {
                 initializer
@@ -63,7 +63,7 @@ impl QalamCallable for QalamClass {
     }
 
     fn arity(&self) -> usize {
-        let initializer = self.find_method(&String::from("khalaq"));
+        let initializer = self.find_method(&String::from("banao"));
         if let Some(initializer) = initializer {
             if let Some(initializer) = initializer.as_any().downcast_ref::<QalamFunction>() {
                 return initializer.arity();

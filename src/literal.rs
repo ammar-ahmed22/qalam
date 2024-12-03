@@ -64,7 +64,7 @@ impl PartialEq for Literal {
 impl Literal {
     pub fn to_qalam_string(&self) -> String {
         match self {
-            Self::Bool(val) => format!("{}", if *val { "haqq".yellow().to_string() } else { "batil".yellow().to_string() }),
+            Self::Bool(val) => format!("{}", if *val { "sach".yellow().to_string() } else { "jhoot".yellow().to_string() }),
             Self::Number(val) => format!("{}", val).yellow().to_string(),
             Self::String(val) => val.to_owned(),
             Self::Callable(val) => val.to_string().cyan().to_string(),
@@ -76,7 +76,7 @@ impl Literal {
     pub fn option_string(value: Option<Literal>) -> String {
         match value {
             Some(val) => val.to_qalam_string(),
-            None => String::from("ghaib"),
+            None => String::from("khali"),
         }
     }
 }

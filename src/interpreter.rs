@@ -221,7 +221,7 @@ impl Interpreter {
         } else {
             return Err(RuntimeError::init(
                 bracket,
-                format!("index cannot not be ghaib!"),
+                format!("index cannot not be khali!"),
             ));
         }
     }
@@ -625,7 +625,7 @@ impl ExprVisitor for Interpreter {
             } else {
                 return Err(RuntimeError::init(
                     method,
-                    format!("method is not a function!"),
+                    format!("method is not a kaam!"),
                 ));
             }
         } else {
@@ -677,7 +677,7 @@ impl ExprVisitor for Interpreter {
                 }
             }
         } else {
-            return Err(RuntimeError::init(bracket, format!("Cannot index ghaib!")));
+            return Err(RuntimeError::init(bracket, format!("Cannot index khali!")));
         }
     }
 
@@ -726,7 +726,7 @@ impl StmtVisitor for Interpreter {
         if let Some(val) = value {
             println!("{}", val.to_qalam_string());
         } else {
-            println!("ghaib")
+            println!("khali")
         }
         Ok(())
     }
@@ -860,13 +860,13 @@ impl StmtVisitor for Interpreter {
                     // evaluated superclass is not a class
                     return Err(RuntimeError::init(
                         name,
-                        "Superclass must be a class".to_string(),
+                        "Parent jamat be a jamat".to_string(),
                     ));
                 }
             } else {
                 return Err(RuntimeError::init(
                     name,
-                    "Superclass must be a class.".to_string(),
+                    "Parent jamat must be a jamat.".to_string(),
                 ));
             }
         }
@@ -879,7 +879,7 @@ impl StmtVisitor for Interpreter {
                 self.environment.clone(),
             ))));
             self.environment.borrow_mut().define(
-                String::from("ulya"),
+                String::from("asli"),
                 Some(Literal::Callable(option_superclass.clone().unwrap())),
             )
         }
@@ -893,13 +893,13 @@ impl StmtVisitor for Interpreter {
                         body: body.clone(),
                     },
                     self.environment.clone(),
-                    name.lexeme.eq(&String::from("khalaq")),
+                    name.lexeme.eq(&String::from("banao")),
                 );
                 hash_methods.insert(name.lexeme.to_owned(), Box::new(func));
             } else {
                 return Err(RuntimeError::init(
                     name,
-                    format!("method is not a function!"),
+                    format!("method is not a kaam!"),
                 ));
             }
         }
