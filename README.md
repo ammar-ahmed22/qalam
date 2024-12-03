@@ -9,12 +9,6 @@
 </div>
 </div>
 
-> [!NOTE]
-> Some of you who have been here before remember that Qalam was very different before. It was "Islamic/Arabic terminology inspired". 
-> I decided to change the syntax because this project is more of learning exercise/joke than a real-world or useful product. For this
-> reason, I thought that it's not very appropriate to use Islamically inspired syntax for something that is a joke.
-> 
-> All of this worked out because Qalam actually means the same thing in both Urdu and Arabic, pen. 
 
 
 ## Table of Contents
@@ -36,6 +30,13 @@ As a learning exercise, to really hone my skills, I wanted to write a programmin
 While Robert goes through the entire process, step-by-step, to create a programming language he calls Lox, I didn't want to simply follow a tutorial and copy-paste code. I have found that real learning occurs when you change up tutorials a little so that you can have a deeper understanding.
 
 In order to do this, I decided to create my own syntax for the language with the same general features as Lox. I also decided to use Rust to make the language instead of Java so that I cannot possibly copy-paste code.
+
+> [!NOTE]
+> Some of you who have been here before remember that Qalam was very different before. It was "Islamic/Arabic terminology inspired". 
+> I decided to change the syntax because this project is more of learning exercise/joke than a real-world or useful product. For this
+> reason, I thought that it's not very appropriate to use Islamically inspired syntax for something that is a joke.
+> 
+> All of this worked out because Qalam actually means the same thing in both Urdu and Arabic, pen. 
 
 ## Using `qalam`
 1. Install the `qalam` interpreter
