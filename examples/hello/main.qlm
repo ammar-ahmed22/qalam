@@ -1,0 +1,12 @@
+
+kaam salam(naam) {
+    agar(nahi naam) {
+        bolo("Salam, dost!")
+    } magar {
+        bolo("Salam, " + naam + "!")
+    }
+}
+
+rakho naam = "Ammar";
+salam(khali);
+salam(naam);
