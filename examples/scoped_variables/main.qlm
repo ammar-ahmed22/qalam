@@ -1,21 +1,21 @@
-shai a = "global a";
-shai b = "global b";
-shai c = "global c";
+rakho a = "global a";
+rakho b = "global b";
+rakho c = "global c";
 
 {
-  shai a = "outer a";
-  shai b = "outer b";
+  rakho a = "outer a";
+  rakho b = "outer b";
   {
-    shai a = "inner a";
-    qul a;
-    qul b;
-    qul c;
+    rakho a = "inner a";
+    bolo a;
+    bolo b;
+    bolo c;
   }
-  qul a;
-  qul b;
-  qul c;
+  bolo a;
+  bolo b;
+  bolo c;
 }
 
-qul a;
-qul b;
-qul c;
+bolo a;
+bolo b;
+bolo c;

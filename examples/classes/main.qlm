@@ -1,30 +1,30 @@
-kitab Prayer {
-  khalaq(name, time, rakats) {
-    nafs.name = name;
-    nafs.time = time;
-    nafs.rakats = rakats;
-    nafs.completed = batil;
+jamat Prayer {
+  banao(name, time, rakats) {
+    yeh.name = name;
+    yeh.time = time;
+    yeh.rakats = rakats;
+    yeh.completed = khali;
   }
 
   perform() {
-    shart(la nafs.completed) {
-      qul "Performing " + nafs.name + " prayer, which has " + str(nafs.rakats) + " rakats.";
-      nafs.completed = haqq;
-    } illa {
-      qul nafs.name + " prayer has already been completed.";
+    agar(nahi yeh.completed) {
+      bolo "Performing " + yeh.name + " prayer, which has " + str(nafs.rakats) + " rakats.";
+      yeh.completed = haqq;
+    } magar {
+      bolo yeh.name + " prayer has already been completed.";
     }
   }
 
   status() {
-    shart(nafs.completed) {
-      qul nafs.name + " prayer is completed.";
-    } illa {
-      qul nafs.name + " prayer is pending.";
+    agar(yeh.completed) {
+      bolo yeh.name + " prayer is completed.";
+    } magar {
+      bolo yeh.name + " prayer is pending.";
     }
   }
 }
 
-shai fajr = Prayer("Fajr", "Dawn", 2);
+rakho fajr = Prayer("Fajr", "Dawn", 2);
 // Fajr is pending
 fajr.status();
 // Performing fajr 
@@ -32,6 +32,6 @@ fajr.perform();
 // Fajr is completed
 fajr.status();
 
-shai dhuhr = Prayer("Dhuhr", "Noon", 4);
+rakho dhuhr = Prayer("Dhuhr", "Noon", 4);
 // Dhuhr is pending
 dhuhr.status();

@@ -1,14 +1,14 @@
-amal make_counter() {
-  shai i = 0;
-  amal count() {
+kaam make_counter() {
+  rakho i = 0;
+  kaam count() {
     i = i + 1;
-    qul i;
+    bolo i;
   }
 
-  radd count;
+  wapis count;
 }
 
-shai counter = make_counter();
+rakho counter = make_counter();
 // Prints 1
 counter();
 // Prints 2

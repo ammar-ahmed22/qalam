@@ -1,5 +1,5 @@
-amal add(a, b) {
-  radd a + b;
+kaam add(a, b) {
+    wapis a a + b;
 }
 
-qul add(1, 2);
+bolo(add(3.4, 2.3)) // Prints 5.7

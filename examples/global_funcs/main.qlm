@@ -1,96 +1,96 @@
 
-qul "clock()";
+bolo "clock()";
 // prints the time since the epoch in seconds
-qul clock();
-qul "";
+bolo clock();
+bolo "";
 
-qul "pow(3, 2)";
+bolo "pow(3, 2)";
 // Prints 3^2 = 9
-qul pow(3, 2);
-qul "";
+bolo pow(3, 2);
+bolo "";
 
-shai a = 2;
-shai b = 3;
+rakho a = 2;
+rakho b = 3;
 
-qul "max(2, 3)";
+bolo "max(2, 3)";
 // Prints 3
-qul max(a, b);
-qul "";
+bolo max(a, b);
+bolo "";
 
-qul "min(2, 3)";
+bolo "min(2, 3)";
 // Prints 2
-qul min(a, b);
-qul "";
+bolo min(a, b);
+bolo "";
 
-qul "len(my_name)";
-shai my_name = "Ammar";
+bolo "len(my_name)";
+rakho my_name = "Ammar";
 // Prints 5
-qul len(my_name);
-qul "";
+bolo len(my_name);
+bolo "";
 
-shai num_str = "-1";
+rakho num_str = "-1";
 // Prints 0 (-1 + 1) 
 // str2num("hello") would throw an error
-qul "str2num(-1) + 1";
-qul str2num(num_str) + 1;
-qul "";
+bolo "str2num(-1) + 1";
+bolo str2num(num_str) + 1;
+bolo "";
 
-qul "converting different types to string";
-// Prints haqq batil ghaib 12.34
-qul(str(haqq) + " " + str(batil) + " " + str(ghaib) + " " + str(12.34));
-qul "";
+bolo "converting different types to string";
+// Prints sach jhoot khali 12.34
+bolo(str(sach) + " " + str(jhoot) + " " + str(khali) + " " + str(12.34));
+bolo "";
 
-qul "typeof various types";
+bolo "typeof various types";
 // Prints string
-qul typeof("hello world");
+bolo typeof("hello world");
 // Prints number
-qul typeof(123);
+bolo typeof(123);
 // Prints bool
-qul typeof(batil);
+bolo typeof(jhoot);
 // Prints amal
-qul typeof(typeof);
-// Prints ghaib
-qul typeof(ghaib);
-qul "";
+bolo typeof(typeof);
+// Prints khali
+bolo typeof(khali);
+bolo "";
 
-shai name = "Ammar Ahmed";
-shai first = substr(name, 0, 5);
-shai last = substr(name, 6, 5);
-qul "substring of Ammar Ahmed";
+rakho name = "Ammar Ahmed";
+rakho first = substr(name, 0, 5);
+rakho last = substr(name, 6, 5);
+bolo "substring of Ammar Ahmed";
 // Prints "Ammar"
-qul first;
+bolo first;
 // Prints "Ahmed"
-qul last;
-qul "";
+bolo last;
+bolo "";
 
-qul "iterating over string";
+bolo "iterating over string";
 // We can also use the substr and len methods to iterate over a string
-tawaf(shai i = 0; i < len(name); i = i + 1) {
+har(rakho i = 0; i < len(name); i = i + 1) {
   // Prints each character of name
-  qul str(i) + ": " + substr(name, i, 1);
+  bolo str(i) + ": " + substr(name, i, 1);
 }
-qul "";
+bolo "";
 
-qul "searching for position of substring: 'Ahmed' in 'Ammar Ahmed'";
-qul index_of(name, last);
-qul "";
+bolo "searching for position of substring: 'Ahmed' in 'Ammar Ahmed'";
+bolo index_of(name, last);
+bolo "";
 
-qul "searching for position of substring: 'Hello' in 'Ammar Ahmed'";
-qul index_of(name, "Hello");
-qul "";
+bolo "searching for position of substring: 'Hello' in 'Ammar Ahmed'";
+bolo index_of(name, "Hello");
+bolo "";
 
-qul "replacing substring 'Ammar' with 'Saniya' in 'Ammar Ahmed'";
-qul replace(name, "Ammar", "Saniya");
-qul "";
+bolo "replacing substring 'Ammar' with 'Saniya' in 'Ammar Ahmed'";
+bolo replace(name, "Ammar", "Saniya");
+bolo "";
 
-qul "replacing substring 'Hello' with 'Saniya' in 'Ammar Ahmed' (doesn't do anything)";
-qul replace(name, "Hello", "Saniya");
-qul "";
+bolo "replacing substring 'Hello' with 'Saniya' in 'Ammar Ahmed' (doesn't do anything)";
+bolo replace(name, "Hello", "Saniya");
+bolo "";
 
-qul "generate a random number between -12.3 to 14.5";
-qul random(-12.3, 14.5);
-qul "";
+bolo "generate a random number between -12.3 to 14.5";
+bolo random(-12.3, 14.5);
+bolo "";
 
-qul "genterate a random integer between -13 to 15";
-qul random_int(-13, 15);
-qul "";
+bolo "genterate a random integer between -13 to 15";
+bolo random_int(-13, 15);
+bolo "";

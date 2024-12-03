@@ -1,61 +1,61 @@
-shai a = 10;
+rakho a = 10;
 
 a += 10;
 // 20
-qul a;
+bolo a;
 
 a -= 15;
 // 5
-qul a;
+bolo a;
 
 a *= 15;
 // 75
-qul a;
+bolo a;
 
 a /= 3;
 // 25
-qul a;
+bolo a;
 
 // Also works with classes
-kitab Counter {
-  khalaq(starting) {
-    nafs.count = starting;
+jamat Counter {
+  banao(starting) {
+    yeh.count = starting;
   }
 
   increment(val) {
-    nafs.count += val;
+    yeh.count += val;
   }
 
   decrement(val) {
-    nafs.count -= val;
+    yeh.count -= val;
   }
 
   mult(val) {
-    nafs.count *= val;
+    yeh.count *= val;
   }
 
   div(val) {
-    nafs.count /= val;
+    yeh.count /= val;
   }
 }
 
-shai counter = Counter(10);
+rakho counter = Counter(10);
 counter.increment(10);
-qul counter.count;
+bolo counter.count;
 
 counter.decrement(15);
-qul counter.count;
+bolo counter.count;
 
 counter.mult(15);
-qul counter.count;
+bolo counter.count;
 
 counter.div(5);
-qul counter.count;
+bolo counter.count;
 
 // Increment and decrement operators
-shai a = 0;
+rakho a = 0;
 a++;
 a++;
-qul a;
+bolo a;
 a--;
-qul a;
+bolo a;

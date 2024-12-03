@@ -1,12 +1,12 @@
-shai a = "global";
+rakho a = "global";
 
 {
-  amal showA() {
-    qul a;
+  kaam showA() {
+    bolo a;
   }
 
   // Prints global both times because scope is static (only the values defined before showA are accessible, even if they are set to something else afterwards)
   showA();
-  shai a = "block";
+  rakho a = "block";
   showA();
 }

@@ -1,5 +1,5 @@
-shai i = 0;
-baynama(i < 10) {
-  qul i;
+rakho i = 0;
+jabtak(i < 10) {
+  bolo i;
   i++;
 }

@@ -1,9 +1,9 @@
-amal fib(n) {
-  itha(n <= 1) radd n;
-  radd fib(n - 2) + fib(n - 1);
+kaam fib(n) {
+  agar(n <= 1) wapis n;
+  wapis fib(n - 2) + fib(n - 1);
 }
 
 // First 20 elements of the fibonacci sequence using recursion (very slow but who cares)
-tawaf(shai i = 0; i < 20; i = i + 1) {
-  qul fib(i);
+har(rakho i = 0; i < 20; i = i + 1) {
+  bolo fib(i);
 }

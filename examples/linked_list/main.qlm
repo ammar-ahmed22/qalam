@@ -1,41 +1,41 @@
-kitab ListNode {
-  khalaq(value, next) {
-    nafs.value = value;
-    nafs.next = next;
+jamat ListNode {
+  banao(value, next) {
+    yeh.value = value;
+    yeh.next = next;
   }
 }
 
-amal list_to_string(head) {
-  shai string = "";
-  shai curr = head;
-  baynama(curr != ghaib) {
+kaam list_to_string(head) {
+  rakho string = "";
+  rakho curr = head;
+  jabtak(curr != khali) {
     string += str(curr.value);
-    shart(curr.next) {
+    agar(curr.next) {
       string += " -> ";
     }
     curr = curr.next; 
   }
 
-  radd string;
+  wapis string;
 }
 
-shai list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
+rakho list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, khali)))));
 
-amal reverse_list(head) {
-  shai prev = ghaib;
-  shai curr = head;
-  shai next = ghaib;
-  baynama(curr != ghaib) {
+kaam reverse_list(head) {
+  rakho prev = khali;
+  rakho curr = head;
+  rakho next = khali;
+  jabtak(curr != khali) {
     next = curr.next;
     curr.next = prev;
     prev = curr;
     curr = next;
   }
 
-  radd prev;
+  wapis prev;
 }
 
-qul "Original list:";
-qul list_to_string(list);
-qul "Reversed list:";
-qul list_to_string(reverse_list(list));
+bolo "Original list:";
+bolo list_to_string(list);
+bolo "Reversed list:";
+bolo list_to_string(reverse_list(list));

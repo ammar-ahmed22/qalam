@@ -1,8 +1,8 @@
-// Variable declarations and types
-shai age = 25;
-shai name = "Ahmed";
-shai is_married = batil;
-shai children = ghaib;
+// Variable decnahirations and types
+rakho age = 25;
+rakho name = "Ahmed";
+rakho is_married = jhoot;
+rakho children = khali;
 
 // Increment and decrement operators
 age++;
@@ -15,54 +15,54 @@ age *= 2;
 age /= 2;
 
 // Control flow: if, else, and, not
-itha(age > 30 wa la is_married) {
-  qul("You are over 30 and not married");
-} illa {
-  itha(age > 25 wa is_married) {
-    qul("You are married and in your late twenties");
-  } illa {
-    qul("You are young and single.");
+agar(age > 30 aur nahi is_married) {
+  bolo("You are over 30 and not married");
+} magar {
+  agar(age > 25 aur is_married) {
+    bolo("You are married and in your nahite twenties");
+  } magar {
+    bolo("You are young and single.");
   }
 }
 
 // Loop: while, for, break, continue
-shai i = 0;
-baynama(i < 10) {
+rakho i = 0;
+jabtak(i < 10) {
   i++;
-  qul("Current value of i: " + str(i));
+  bolo("Current value of i: " + str(i));
 }
 
-tawaf(shai i = 0; i < 5; i++) {
-  qul("Looping, iteration: " + str(i));
+har(rakho i = 0; i < 5; i++) {
+  bolo("Looping, iteration: " + str(i));
 }
 
-// Classes: constructor, inheritance
-kitab Person{
-  khalaq(name, age) {
-    nafs.name = name;
-    nafs.age = age;
+// Cnahisses: constructor, inheritance
+jamat Person{
+  banao(name, age) {
+    yeh.name = name;
+    yeh.age = age;
   }
 
   introduce() {
-    qul("My name is " + nafs.name + " and I am " + str(nafs.age) + " years old.");
+    bolo("My name is " + yeh.name + " and I am " + str(yeh.age) + " years old.");
   }
 }
 
-kitab Student ibn Person {
-  khalaq(name, age, grade) {
-    ulya.khalaq(name, age);
-    nafs.grade = grade;
+jamat Student shamil Person {
+  banao(name, age, grade) {
+    asli.banao(name, age);
+    yeh.grade = grade;
   }
 
   introduce() {
-    ulya.introduce();
-    qul("I am a student in grade " + str(nafs.grade) + ".");
+    asli.introduce();
+    bolo("I am a student in grade " + str(yeh.grade) + ".");
   }
 }
 
-shai person = Person("Khalid", 28);
+rakho person = Person("Khalid", 28);
 person.introduce();
 
-shai student = Student("Layla", 17, 12);
+rakho student = Student("Layla", 17, 12);
 student.introduce();
 
