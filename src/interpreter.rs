@@ -589,7 +589,7 @@ impl ExprVisitor for Interpreter {
             .unwrap();
         let superclass;
         if let Some(Literal::Callable(class)) =
-            Environment::get_at(self.environment.clone(), *distance, String::from("ulya"))?
+            Environment::get_at(self.environment.clone(), *distance, String::from("asli"))?
         {
             if let Some(class) = class.as_any().downcast_ref::<QalamClass>() {
                 superclass = class.clone();
@@ -607,7 +607,7 @@ impl ExprVisitor for Interpreter {
         }
         let object;
         if let Some(Literal::Instance(instance)) =
-            Environment::get_at(self.environment.clone(), distance - 1, String::from("nafs"))?
+            Environment::get_at(self.environment.clone(), distance - 1, String::from("yeh"))?
         {
             object = instance;
         } else {

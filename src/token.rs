@@ -67,7 +67,7 @@ impl TokenType {
         match keyword {
             "aur" => Some(Self::And),
             "jamat" => Some(Self::Class),
-            "agar" => Some(Self::Else),
+            "magar" => Some(Self::Else),
             "agarmagar" => Some(Self::ElseIf),
             "jhoot" => Some(Self::False),
             "har" => Some(Self::For),
