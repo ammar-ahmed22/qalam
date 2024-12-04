@@ -5,13 +5,13 @@ rakho age = 16;
 
 agar(age >= 15 aur magrib_time_started aur has_wudu) {
   bolo("You MUST pray magrib now!");
-} magar {
+} warna {
   agar(age < 15) {
     bolo("You are not baligh, you do NOT NEED to pray but you should!");
-  } magar {
+  } warna {
     agar(!has_wudu && magrib_time_started) {
       bolo("Go make wudu and pray magrib now!");
-    } magar {
+    } warna {
       agar(!magrib_time_started) {
         bolo("It is not time for magrib yet!");
       }

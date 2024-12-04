@@ -8,7 +8,7 @@ kaam merge(left, right) {
     agar(left[l] < right[r]) {
       result[k] = left[l];
       l++;
-    } magar {
+    } warna {
       result[k] = right[r];
       r++;
     }

@@ -10,7 +10,7 @@ jamat Prayer {
     agar(nahi yeh.completed) {
       bolo "Performing " + yeh.name + " prayer, which has " + str(yeh.rakats) + " rakats.";
       yeh.completed = sach;
-    } magar {
+    } warna {
       bolo yeh.name + " prayer has already been completed.";
     }
   }
@@ -18,7 +18,7 @@ jamat Prayer {
   status() {
     agar(yeh.completed) {
       bolo yeh.name + " prayer is completed.";
-    } magar {
+    } warna {
       bolo yeh.name + " prayer is pending.";
     }
   }

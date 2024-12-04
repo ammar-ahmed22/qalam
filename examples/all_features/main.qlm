@@ -17,10 +17,10 @@ age /= 2;
 // Control flow: if, else, and, not
 agar(age > 30 aur nahi is_married) {
   bolo("You are over 30 and not married");
-} magar {
+} warna {
   agar(age > 25 aur is_married) {
     bolo("You are married and in your nahite twenties");
-  } magar {
+  } warna {
     bolo("You are young and single.");
   }
 }

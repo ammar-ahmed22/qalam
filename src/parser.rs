@@ -44,7 +44,7 @@ impl<'a> Parser<'a> {
     /// Gets the previous token (static)
     /// ### Returns
     /// `&Token` - Reference to the token
-    fn previous_free(tokens: &'a Vec<Token>, current: usize) -> &Token {
+    fn previous_free(tokens: &'a Vec<Token>, current: usize) -> &'a Token {
         return tokens.get(current - 1).unwrap();
     }
 

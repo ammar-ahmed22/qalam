@@ -2,7 +2,7 @@
 kaam salam(naam) {
     agar(nahi naam) {
         bolo("Salam, dost!")
-    } magar {
+    } warna {
         bolo("Salam, " + naam + "!")
     }
 }

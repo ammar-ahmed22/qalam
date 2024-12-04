@@ -67,6 +67,8 @@ qalam main.qlm
 | `bolo` | To say | Print statement |
 | `khali` | Empty. Signifies a value is not present | Null value |
 
+<img src="./images/qalam-keywords.png" width="1000" />
+
 ```text
 rakho a = 1;
 rakho b = 2;
@@ -112,7 +114,7 @@ agar(a aur b) {
 <!-- | `safar` | Journey or travel. Signifies the loop is going to continue on it's journey. | Continue statement | -->
 
 ```text
-kliye(rakho i = 0; i < 10; i++) {
+har(rakho i = 0; i < 10; i++) {
     bolo(i); // prints numbers 0 - 9
 }
 
