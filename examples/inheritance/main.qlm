@@ -1,66 +1,66 @@
-kitab Prayer {
-  khalaq(name, time, rakats) {
-    nafs.name = name;
-    nafs.time = time;
-    nafs.rakats = rakats;
-    nafs.completed = batil;
+jamat Prayer {
+  banao(name, time, rakats) {
+    yeh.name = name;
+    yeh.time = time;
+    yeh.rakats = rakats;
+    yeh.completed = khali;
   }
 
   perform() {
-    itha(la nafs.completed) {
-      qul "Performing " + nafs.name + " prayer, which has " + str(nafs.rakats) + " rakats.";
-      nafs.completed = haqq;
-    } illa {
-      qul nafs.name + " prayer has already been completed.";
+    agar(na yeh.completed) {
+      bolo "Performing " + yeh.name + " prayer, which has " + str(yeh.rakats) + " rakats.";
+      yeh.completed = sach;
+    } warna {
+      bolo yeh.name + " prayer has already been completed.";
     }
   }
 
   status() {
-    itha(nafs.completed) {
-      qul nafs.name + " prayer is completed.";
-    } illa {
-      qul nafs.name + " prayer is pending.";
+    agar(yeh.completed) {
+      bolo yeh.name + " prayer is completed.";
+    } warna {
+      bolo yeh.name + " prayer is pending.";
     }
   }
 }
 
-kitab Nafl ibn Prayer {
-  khalaq(name, time, rakats) {
-    ulya.khalaq(name, time, rakats);
+jamat Nafl shamil Prayer {
+  banao(name, time, rakats) {
+    asli.banao(name, time, rakats);
   }
 
   status() {
-    ulya.status();
-    itha(la nafs.completed) {
-      qul "You SHOULD complete " + nafs.name + " prayer.";
+    asli.status();
+    agar(na yeh.completed) {
+      bolo "You SHOULD complete " + yeh.name + " prayer.";
     }
   }
 }
 
-kitab Fardh ibn Prayer {
-  khalaq(name, time, rakats) {
-    ulya.khalaq(name, time, rakats);
+jamat Fardh shamil Prayer {
+  banao(name, time, rakats) {
+    asli.banao(name, time, rakats);
   }
 
   status() {
-    ulya.status();
-    itha(la nafs.completed) {
-      qul "You MUST complete " + nafs.name + " prayer now!";
+    asli.status();
+    agar(!yeh.completed) {
+      bolo "You MUST complete " + yeh.name + " prayer now!";
     }
   }
 }
 
-shai magrib = Fardh("Magrib", "Sunset", 3);
-shai witr = Nafl("Witr", "After Isha", 3);
+rakho magrib = Fardh("Magrib", "Sunset", 3);
+rakho witr = Nafl("Witr", "After Isha", 3);
 
 magrib.status();
-qul "";
+bolo "";
 witr.status();
-qul "";
+bolo "";
 
 magrib.perform();
 witr.perform();
 
-qul "";
+bolo "";
 magrib.status();
 witr.status();

@@ -44,7 +44,7 @@ impl<'a> Parser<'a> {
     /// Gets the previous token (static)
     /// ### Returns
     /// `&Token` - Reference to the token
-    fn previous_free(tokens: &'a Vec<Token>, current: usize) -> &Token {
+    fn previous_free(tokens: &'a Vec<Token>, current: usize) -> &'a Token {
         return tokens.get(current - 1).unwrap();
     }
 
@@ -503,7 +503,7 @@ impl<'a> Parser<'a> {
 
         if self.match_types(&[TokenType::Super]) {
             let keyword = Self::previous_free(&self.tokens, self.current);
-            self.consume(&TokenType::Dot, "Expect '.' after 'ulya'.")?;
+            self.consume(&TokenType::Dot, "Expect '.' after 'asli'.")?;
             let method = self.consume(&TokenType::Identifier, "Expect superclass method name.")?;
             return Ok(Expr::Super {
                 keyword: keyword.clone(),
@@ -676,7 +676,7 @@ impl<'a> Parser<'a> {
     }
 
     fn for_statement(&mut self) -> Result<Stmt, ParseError> {
-        self.consume(&TokenType::LeftParen, "Expect '(' after 'tawaf'")?;
+        self.consume(&TokenType::LeftParen, "Expect '(' after 'har'")?;
         let initializer;
         if self.match_types(&[TokenType::Semicolon]) {
             initializer = None;
@@ -691,12 +691,12 @@ impl<'a> Parser<'a> {
             condition = Some(self.expression()?);
         }
 
-        self.consume(&TokenType::Semicolon, "Expect ';' after loop condition.")?;
+        self.consume(&TokenType::Semicolon, "Expect ';' after har condition.")?;
         let mut increment = None;
         if !self.check(&TokenType::RightParen) {
             increment = Some(self.expression()?);
         }
-        self.consume(&TokenType::RightParen, "Expect ')' after 'tawaf' clauses.")?;
+        self.consume(&TokenType::RightParen, "Expect ')' after 'har' clauses.")?;
         let mut body = self.statement()?;
 
         match increment {
@@ -733,7 +733,7 @@ impl<'a> Parser<'a> {
     }
 
     fn while_statement(&mut self) -> Result<Stmt, ParseError> {
-        self.consume(&TokenType::LeftParen, "Expect '(' after 'baynama'")?;
+        self.consume(&TokenType::LeftParen, "Expect '(' after 'jabtak'")?;
         let condition = self.expression()?;
         self.consume(&TokenType::RightParen, "Expect ')' after condition")?;
         let body = self.statement()?;
@@ -744,9 +744,9 @@ impl<'a> Parser<'a> {
     }
 
     fn if_statement(&mut self) -> Result<Stmt, ParseError> {
-        self.consume(&TokenType::LeftParen, "Expect '(' after 'shart'")?;
+        self.consume(&TokenType::LeftParen, "Expect '(' after 'agar'")?;
         let condition = self.expression()?;
-        self.consume(&TokenType::RightParen, "Expect ')' after shart condition")?;
+        self.consume(&TokenType::RightParen, "Expect ')' after 'agar' condition")?;
 
         let then = self.statement()?;
         let mut else_branch = None;
@@ -798,24 +798,24 @@ impl<'a> Parser<'a> {
 
     fn class_declaration(&mut self) -> Result<Stmt, ParseError> {
         let name = self
-            .consume(&TokenType::Identifier, "Expect kitab name.")?
+            .consume(&TokenType::Identifier, "Expect jamat name.")?
             .clone();
 
         let mut superclass = None;
         if self.match_types(&[TokenType::Inherits]) {
-            self.consume(&TokenType::Identifier, "Expect superclass name.")?;
+            self.consume(&TokenType::Identifier, "Expect parent jamat name.")?;
             superclass = Some(Expr::Variable {
                 name: self.previous().clone(),
             });
         }
 
-        self.consume(&TokenType::LeftBrace, "Expect '{' before kitab body.")?;
+        self.consume(&TokenType::LeftBrace, "Expect '{' before jamat body.")?;
         let mut methods = Vec::new();
         while !self.check(&TokenType::RightBrace) && !self.end() {
             methods.push(self.function("method")?);
         }
 
-        self.consume(&TokenType::RightBrace, "Expect '}' after kitab body.")?;
+        self.consume(&TokenType::RightBrace, "Expect '}' after jamat body.")?;
         return Ok(Stmt::Class {
             name,
             methods,

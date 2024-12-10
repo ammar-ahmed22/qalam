@@ -1,4 +1,4 @@
-shai a = 1;
-shai b = 2;
+rakho a = 1;
+rakho b = 2;
 // prints 3
-qul a + b;
+bolo a + b;

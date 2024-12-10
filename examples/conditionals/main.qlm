@@ -1,19 +1,19 @@
-shai has_wudu = batil;
-shai magrib_time_started = haqq;
-shai age = 16;
+rakho has_wudu = jhoot;
+rakho magrib_time_started = sach;
+rakho age = 16;
 
 
-itha(age >= 15 wa magrib_time_started wa has_wudu) {
-  qul("You MUST pray magrib now!");
-} illa {
-  itha(age < 15) {
-    qul("You are not baligh, you do NOT NEED to pray but you should!");
-  } illa {
-    itha(!has_wudu && magrib_time_started) {
-      qul("Go make wudu and pray magrib now!");
-    } illa {
-      itha(!magrib_time_started) {
-        qul("It is not time for magrib yet!");
+agar(age >= 15 aur magrib_time_started aur has_wudu) {
+  bolo("You MUST pray magrib now!");
+} warna {
+  agar(age < 15) {
+    bolo("You are not baligh, you do NOT NEED to pray but you should!");
+  } warna {
+    agar(!has_wudu && magrib_time_started) {
+      bolo("Go make wudu and pray magrib now!");
+    } warna {
+      agar(!magrib_time_started) {
+        bolo("It is not time for magrib yet!");
       }
     }
   }

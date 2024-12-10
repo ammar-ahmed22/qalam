@@ -32,7 +32,7 @@ impl QalamFunction {
 
     pub fn bind(&self, instance: HashableRcRefCell<QalamInstance>) -> Self {
         let mut env = Environment::init(Some(self.closure.clone()));
-        env.define("nafs".to_string(), Some(Literal::Instance(instance)));
+        env.define("yeh".to_string(), Some(Literal::Instance(instance)));
         return Self::init(
             self.declaration.clone(),
             Rc::new(RefCell::new(env)),
@@ -70,7 +70,7 @@ impl QalamCallable for QalamFunction {
                                 return Ok(Environment::get_at(
                                     self.closure.clone(),
                                     0,
-                                    "nafs".to_string(),
+                                    "yeh".to_string(),
                                 )?);
                             }
                             return Ok(e.return_value);
@@ -83,7 +83,7 @@ impl QalamCallable for QalamFunction {
                     return Ok(Environment::get_at(
                         self.closure.clone(),
                         0,
-                        "nafs".to_string(),
+                        "yeh".to_string(),
                     )?);
                 }
                 return Ok(None);
@@ -91,7 +91,7 @@ impl QalamCallable for QalamFunction {
             _ => {
                 return Err(RuntimeError::init(
                     paren,
-                    String::from("Can only call functions!"),
+                    String::from("Can only call kaam's!"),
                 ))
             }
         }
@@ -125,10 +125,10 @@ impl QalamCallable for QalamFunction {
                     .cloned()
                     .collect::<Vec<String>>()
                     .join(", ");
-                return format!("<amal {}({})>", name.lexeme, param_string);
+                return format!("<kaam {}({})>", name.lexeme, param_string);
             }
             _ => {
-                return format!("ghaib");
+                return format!("khali");
             }
         }
     }

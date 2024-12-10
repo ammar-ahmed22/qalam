@@ -1,47 +1,47 @@
-amal merge(left, right) {
-  shai result = Array(len(left) + len(right), ghaib);
-  shai l = 0;
-  shai r = 0;
-  shai k = 0;
+kaam merge(left, right) {
+  rakho result = Array(len(left) + len(right), khali);
+  rakho l = 0;
+  rakho r = 0;
+  rakho k = 0;
 
-  baynama(l < len(left) wa r < len(right)) {
-    itha(left[l] < right[r]) {
+  jabtak(l < len(left) aur r < len(right)) {
+    agar(left[l] < right[r]) {
       result[k] = left[l];
       l++;
-    } illa {
+    } warna {
       result[k] = right[r];
       r++;
     }
     k++;
   }
 
-  baynama(l < len(left)) {
+  jabtak(l < len(left)) {
     result[k] = left[l];
     l++;
     k++;
   }
 
-  baynama(r < len(right)) {
+  jabtak(r < len(right)) {
     result[k] = right[r];
     r++;
     k++;
   }
 
-  radd result;
+  wapis result;
 }
 
-amal merge_sort(arr) {
-  itha(len(arr) <= 1) {
-    radd arr;
+kaam merge_sort(arr) {
+  agar(len(arr) <= 1) {
+    wapis arr;
   }
 
-  shai middle = floor(len(arr) / 2);
-  shai left = slice(arr, 0, middle);
-  shai right = slice(arr, middle, len(arr));
-  radd merge(merge_sort(left), merge_sort(right));
+  rakho middle = floor(len(arr) / 2);
+  rakho left = slice(arr, 0, middle);
+  rakho right = slice(arr, middle, len(arr));
+  wapis merge(merge_sort(left), merge_sort(right));
 }
 
-shai array = [38, 27, 43, 3, 9, 82, 10];
-shai sorted = merge_sort(array);
-qul sorted;
+rakho array = [38, 27, 43, 3, 9, 82, 10];
+rakho sorted = merge_sort(array);
+bolo sorted;
 

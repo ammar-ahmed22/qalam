@@ -1,32 +1,32 @@
-shai arr = [1, "one", haqq, 2, 3, 4];
+rakho arr = [1, "one", sach, 2, 3, 4];
 
 // Printing the array
-qul arr;
+bolo arr;
 
 // Iterating over the array
-tawaf(shai i = 0; i < len(arr); i++) {
-  qul arr[i];
+har(rakho i = 0; i < len(arr); i++) {
+  bolo arr[i];
 }
 
 // Assigning at index
 arr[0] = 2;
-qul arr;
+bolo arr;
 arr[0]++; // arr[0] = 3
-qul arr;
+bolo arr;
 arr[0] -= 1; // arr[0] = 2
-qul arr;
+bolo arr;
 
 // Using helper functions
-shai a = [1, 2, 3];
+rakho a = [1, 2, 3];
 
 push(a, 4);
 push(a, 5);
-qul a; // [1, 2, 3, 4, 5]
+bolo a; // [1, 2, 3, 4, 5]
 
 // 5
-qul pop(a);
-qul a; // [1, 2, 3, 4]
+bolo pop(a);
+bolo a; // [1, 2, 3, 4]
 
 // Creating an array of size with initial values
-shai bool_array = Array(20, haqq);
-qul bool_array;
+rakho bool_array = Array(20, sach);
+bolo bool_array;
