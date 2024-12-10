@@ -1,13 +1,13 @@
 [package]
 name = "qalam"
-version = "0.2.4"
+version = "0.3.0"
 edition = "2021"
 authors = ["Ammar Ahmed <ammar.ahmed2203@gmail.com>"]
 license = "MIT"
 repository = "https://github.com/ammar-ahmed22/qalam"
 readme = "README.md"
-description = "Interpreter for the Qalam programming language. Qalam is a dead-simple, Islamic/Arabic terminology inspired, interpreted programming langauge."
-keywords = ["interpreter", "programming-language", "islamic", "arabic"]
+description = "Interpreter for the Qalam programming language. Qalam is a dead-simple, Urdu inspired, interpreted programming langauge."
+keywords = ["interpreter", "programming-language", "urdu"]
 categories = ["compilers"]
 
 [dependencies]
