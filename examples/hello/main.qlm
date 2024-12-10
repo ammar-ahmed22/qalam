@@ -1,9 +1,9 @@
 
 kaam salam(naam) {
     agar(nahi naam) {
-        bolo("Salam, dost!")
+        bolo("Salam, dost!");
     } warna {
-        bolo("Salam, " + naam + "!")
+        bolo("Salam, " + naam + "!");
     }
 }
 

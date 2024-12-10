@@ -1,5 +1,5 @@
 kaam add(a, b) {
-    wapis a a + b;
+    wapis a + b;
 }
 
-bolo(add(3.4, 2.3)) // Prints 5.7
+bolo(add(3.4, 2.3)); // Prints 5.7

@@ -8,8 +8,8 @@ jamat Prayer {
 
   perform() {
     agar(nahi yeh.completed) {
-      bolo "Performing " + yeh.name + " prayer, which has " + str(nafs.rakats) + " rakats.";
-      yeh.completed = haqq;
+      bolo "Performing " + yeh.name + " prayer, which has " + str(yeh.rakats) + " rakats.";
+      yeh.completed = sach;
     } warna {
       bolo yeh.name + " prayer has already been completed.";
     }

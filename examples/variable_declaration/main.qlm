@@ -1,4 +1,4 @@
 rakho a = 1;
-rgkho b = 2;
+rakho b = 2;
 // prints 3
 bolo a + b;
