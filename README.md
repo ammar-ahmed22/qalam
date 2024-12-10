@@ -68,6 +68,8 @@ qalam main.qlm
 | `khali` | Empty. Signifies a value is not present | Null value |
 
 <img src="./images/qalam-keywords.png" width="1000" />
+<details>
+<summary>Code</summary>
 
 ```text
 rakho a = 1;
@@ -80,6 +82,7 @@ kaam add(a, b) {
 bolo(add(a, b));
 // prints 3
 ```
+</details>
 
 ### Conditionals
 | Syntax | Meaning/Inspiration | Usage |
