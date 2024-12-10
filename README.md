@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./images/QalamLogo.png" width="50" />
+<img src="./images/QalamFullLogoUrdu.png" width="50" />
 <h1>qalam</h1>
 <p><a href="https://en.wikipedia.org/wiki/Roman_Urdu">Roman urdu</a> inspired, interpreted programming language written in Rust.</p>
 <p></p>
