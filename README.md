@@ -324,11 +324,14 @@ console.log(`${end - start}`);
 ```
 
 ### Qalam
-```
+<details>
+<summary>Code</summary>
+
+```text
 kaam fib(n) {
   agra(n <= 1) {
     wapis n;
-  } magar {
+  } warna {
     wapis fib(n - 1) + fib(n - 2);
   }
 }
@@ -338,6 +341,7 @@ rakho result = fib(30);
 rakho end = clock();
 bolo(str(end - start));
 ```
+</details>
 
 Each test was run 10 times and the average runtime is tabulated below:
 | Language | Average Runtime (s) | 
