@@ -192,10 +192,10 @@ engineer.taruf();
 Below are the built-in types supported by `qalam`:
 | Type     | Description                                                                                                                      | Initialization Example          |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| `number` | Numerical value. All numbers are stored as floating point values. Numbers without a fractional part are considered as integers.  | `niyya num = 1.0;`              |
-| `string` | Collection of characters. Characters can be indexed with integers. Initialize with double quotes.                                | `niyya name = "Ammar";`         |
-| `bool`   | Boolean true or false. `haqq` = true, `batil` = false.                                                                           | `niyya is_foo = haqq;`          |
-| `array`  | Collection of any values. Values can be indexed and set with integers. Initialize with square braces.                            | `niyya arr = [1, "one", haqq];` |
+| `number` | Numerical value. All numbers are stored as floating point values. Numbers without a fractional part are considered as integers.  | `rakho num = 1.0;`              |
+| `string` | Collection of characters. Characters can be indexed with integers. Initialize with double quotes.                                | `rakho name = "Ammar";`         |
+| `bool`   | Boolean true or false. `sach` = true, `jhoot` = false.                                                                           | `rakho is_foo = sach;`          |
+| `array`  | Collection of any values. Values can be indexed and set with integers. Initialize with square braces.                            | `rakho arr = [1, "one", sach];` |
 
 ## Native Functions
 I've implemented a few native functions to the program:
@@ -214,8 +214,8 @@ I've implemented a few native functions to the program:
 | `pow`         | `base: number, exp: number`                                                | `number`    | Raises the base to the power of the exponent                                                 |
 | `random`      | `min: number, max: number`                                                 | `number`    | Returns a random number in the range of `min` to `max`                                       |
 | `random_int`  | `min: number (int), max: number (int)`                                     | `number`    | Returns a random integer in the range of `min` to `max`                                      |
-| `push`        | `arr: array, val: any`                                                     | `ghaib`     | Pushes a value to the end of an array                                                        |
-| `pop`         | `arr: array`                                                               | `any`       | Pops a value from the end of the array and returns it. If it does not exist, returns `ghaib` |
+| `push`        | `arr: array, val: any`                                                     | `khali`     | Pushes a value to the end of an array                                                        |
+| `pop`         | `arr: array`                                                               | `any`       | Pops a value from the end of the array and returns it. If it does not exist, returns `khali` |
 | `Array`       | `size: number (positive int), value: any`                                  | `array`     | Creates an array of `size` values all initialized to `value`.                                |
 | `code`        | `char: string`                                                             | `number`    | Returns the character code for a single character string.                                    |
 | `floor`       | `num: number`                                                              | `number`    | Returns the closest integer less than or equal to `num`                                      |
@@ -224,8 +224,12 @@ I've implemented a few native functions to the program:
 
 ## Complete Example
 To showcase the functionalty of `qalam`, I've provided an example below of reversing a linked list:
+<image src="./images/qalam-linkedlist.png" width="1000" />
 
-```
+<details>
+<summary>Code</summary>
+
+```text
 jamat ListNode {
   banao(value, next) {
     yeh.value = value;
@@ -236,7 +240,7 @@ jamat ListNode {
 kaam list_to_string(head) {
   rakho string = "";
   rakho curr = head;
-  jabtak(curr != ghaib) {
+  jabtak(curr != khali) {
     string += str(curr.value);
     agar(curr.next) {
       string += " -> ";
@@ -247,13 +251,13 @@ kaam list_to_string(head) {
   wapis string;
 }
 
-rakho list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ghaib)))));
+rakho list = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, khali)))));
 
 kaam reverse_list(head) {
-  rakho prev = ghaib;
+  rakho prev = khali;
   rakho curr = head;
-  rakho next = ghaib;
-  jabtak(curr != ghaib) {
+  rakho next = khali;
+  jabtak(curr != khali) {
     next = curr.next;
     curr.next = prev;
     prev = curr;
@@ -268,6 +272,7 @@ bolo((list_to_string(list));
 bolo("Reversed list:");
 bolo(list_to_string(reverse_list(list)));
 ```
+</details>
 
 ### Output
 ```
