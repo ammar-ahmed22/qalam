@@ -95,6 +95,10 @@ bolo(add(a, b));
 | `ya` | Or. Self-explanatory. | Or operator. Can also use `\|\|` |
 | `nahi` | Not. Self-explanatory. | Not operator. Can also use `!` |
 
+<image src="./images/qalam-conditionals.png" width="1000" />
+<details>
+<summary>Code</summary>
+
 ```text
 rakho a = sach;
 rakho b = jhoot;
@@ -105,7 +109,7 @@ agar(a aur b) {
   // do something
 }
 ```
-
+</details>
 
 ### Loops
 | Syntax | Meaning/Inspiration | Usage |
