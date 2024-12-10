@@ -120,6 +120,10 @@ agar(a aur b) {
 <!-- | `iftar` | Breaking fast. The time when Muslims break fast is called `iftar`. | Break statement | -->
 <!-- | `safar` | Journey or travel. Signifies the loop is going to continue on it's journey. | Continue statement | -->
 
+<image src="./images/qalam-loops.png" width="1000" />
+<details>
+<summary>Code</summary>
+
 ```text
 har(rakho i = 0; i < 10; i++) {
     bolo(i); // prints numbers 0 - 9
@@ -130,6 +134,7 @@ jabtak(i < 0) {
     bolo(i); // prints numbers 0 - 9
 }
 ```
+</details>
 
 ### Objects (Classes)
 | Syntax | Meaning/Inspiration | Usage |
@@ -140,41 +145,48 @@ jabtak(i < 0) {
 | `asli` | Original. The superclass is the original (parent) of the class. | Superclass accessor (`super` in JavaScript) |
 | `shamil` | Include. The base class *includes* the functionality of the superclass. | Class inheritance operator |  
 
+<image src="./images/qalam-classes.png" width="1000" />
+<details>
+<summary>Code</summary>
+
 ```text
-jamat Shaks {
+jamat Shaks { // Person
     banao(naam) {
-        yeh.naam = naam
+        yeh.naam = naam;
     }
 
-    taruf() {
-        bolo("Mere naam " + yeh.naam + " hai!")
+    taruf() { // introduce
+        // my name is + this.name
+        bolo("Mere naam " + yeh.naam + " hai!"); 
     }
 }
 
 jamat Student shamil Shaks {
     banao(naam, subject) {
-        asli.banao(naam)
-        yeh.subject = subject
+        asli.banao(naam);
+        yeh.subject = subject;
     }
 
     taruf() {
         asli.taruf()
-        bolo("Mai " yeh.subject + " par ta hoon.")
+        // I am studying + this.subject
+        bolo("Mai " yeh.subject + " par ta hoon.");
     }
 }
 
-rakho admi = Shaks("Ammar")
-rakho engineer = Student("Amir", "Engineering")
+rakho admi = Shaks("Ammar");
+rakho engineer = Student("Amir", "Engineering");
 
-admi.taruf() 
+admi.taruf();
 // prints Mere naam Ammar hai!
 
-engineer.taruf() 
+engineer.taruf(); 
 // prints 
 // Mere naam Amir hai!
 // Mai Engineering par ta hoon.
 
 ```
+</details>
 
 ## Types
 Below are the built-in types supported by `qalam`:
