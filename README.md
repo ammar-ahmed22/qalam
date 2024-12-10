@@ -67,7 +67,7 @@ qalam main.qlm
 | `bolo` | To say | Print statement |
 | `khali` | Empty. Signifies a value is not present | Null value |
 
-<img src="./images/qalam-keywords.png" width="1000" />
+<!-- <img src="./images/qalam-keywords.png" width="1000" /> -->
 
 ```text
 rakho a = 1;
