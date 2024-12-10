@@ -324,6 +324,7 @@ console.log(`${end - start}`);
 ```
 
 ### Qalam
+<image src="./images/qalam-fib.png" width="1000" />
 <details>
 <summary>Code</summary>
 
