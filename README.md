@@ -93,7 +93,7 @@ bolo(add(a, b));
 | `jhoot` | Lie. A boolean `false` indicates falsehood, lies, etc. | Boolean `false` value |
 | `aur` | And. Self-explanatory. | And operator. Can also use `&&` |
 | `ya` | Or. Self-explanatory. | Or operator. Can also use `\|\|` |
-| `nahi` | Not. Self-explanatory. | Not operator. Can also use `!` |
+| `na` | Not. Self-explanatory. | Not operator. Can also use `!` |
 
 <image src="./images/qalam-conditionals.png" width="1000" />
 <details>

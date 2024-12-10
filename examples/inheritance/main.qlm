@@ -7,7 +7,7 @@ jamat Prayer {
   }
 
   perform() {
-    agar(nahi yeh.completed) {
+    agar(na yeh.completed) {
       bolo "Performing " + yeh.name + " prayer, which has " + str(yeh.rakats) + " rakats.";
       yeh.completed = sach;
     } warna {
@@ -31,7 +31,7 @@ jamat Nafl shamil Prayer {
 
   status() {
     asli.status();
-    agar(nahi yeh.completed) {
+    agar(na yeh.completed) {
       bolo "You SHOULD complete " + yeh.name + " prayer.";
     }
   }

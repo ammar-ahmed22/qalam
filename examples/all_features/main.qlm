@@ -1,4 +1,4 @@
-// Variable decnahirations and types
+// Variable declarations and types
 rakho age = 25;
 rakho name = "Ahmed";
 rakho is_married = jhoot;
@@ -15,11 +15,11 @@ age *= 2;
 age /= 2;
 
 // Control flow: if, else, and, not
-agar(age > 30 aur nahi is_married) {
+agar(age > 30 aur na is_married) {
   bolo("You are over 30 and not married");
 } warna {
   agar(age > 25 aur is_married) {
-    bolo("You are married and in your nahite twenties");
+    bolo("You are married and in your late twenties");
   } warna {
     bolo("You are young and single.");
   }
@@ -36,7 +36,7 @@ har(rakho i = 0; i < 5; i++) {
   bolo("Looping, iteration: " + str(i));
 }
 
-// Cnahisses: constructor, inheritance
+// Classes: constructor, inheritance
 jamat Person{
   banao(name, age) {
     yeh.name = name;

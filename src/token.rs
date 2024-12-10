@@ -84,7 +84,7 @@ impl TokenType {
             "jabtak" => Some(Self::While),
             "ifta" => Some(Self::Break), // Not yet implemented
             "safar" => Some(Self::Continue), // Not yet implemented
-            "nahi" => Some(Self::Bang),
+            "na" => Some(Self::Bang),
             "shamil" => Some(Self::Inherits),
             _ => None,
         }
