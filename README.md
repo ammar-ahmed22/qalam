@@ -330,7 +330,7 @@ console.log(`${end - start}`);
 
 ```text
 kaam fib(n) {
-  agra(n <= 1) {
+  agar(n <= 1) {
     wapis n;
   } warna {
     wapis fib(n - 1) + fib(n - 2);
