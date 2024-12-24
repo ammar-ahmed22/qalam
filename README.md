@@ -2,6 +2,7 @@
 <img src="./images/QalamFullLogoUrdu.png" width="50" />
 <h1>qalam</h1>
 <p><a href="https://en.wikipedia.org/wiki/Roman_Urdu">Roman urdu</a> inspired, interpreted programming language written in Rust.</p>
+<p>Try out Qalam in the <a href="https://qalam-playground.web.app/">playground</a></p>
 <p></p>
 <div>
   <a href="https://crates.io/crates/qalam"><img alt="Crates.io Version" src="https://img.shields.io/crates/v/qalam"></a>

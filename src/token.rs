@@ -68,7 +68,7 @@ impl TokenType {
             "aur" => Some(Self::And),
             "jamat" => Some(Self::Class),
             "warna" => Some(Self::Else),
-            "agarwarna" => Some(Self::ElseIf), // Not yet implemented
+            "waragar" => Some(Self::ElseIf), // Not yet implemented
             "jhoot" => Some(Self::False),
             "har" => Some(Self::For),
             "kaam" => Some(Self::Fun),
